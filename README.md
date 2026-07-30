@@ -32,7 +32,7 @@ Each assignment focuses on solving real-world data engineering problems while fo
 
 # Repository Structure
 
-
+```text
 aws-data-engineering-assignments/
 │
 ├── Assignment-01-S3-Lambda/
@@ -55,7 +55,7 @@ aws-data-engineering-assignments/
 ├── README.md
 ├── requirements.txt
 └── LICENSE
-
+```
 
 ---
 
@@ -199,27 +199,6 @@ Data Engineer
 # License
 
 This project is licensed under the MIT License.
-
----
-
-# Sample Output -
-
-[
-  {
-    "id": "1",
-    "name": "Akash",
-    "department": "IT",
-    "salary": "50000"
-  },
-  {
-    "id": "2",
-    "name": "Rahul",
-    "department": "HR",
-    "salary": "45000"
-  }
-]
-
-
 
 ---
 
