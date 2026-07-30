@@ -1,0 +1,26 @@
+[
+    {
+        "id": "1",
+        "name": "Akash",
+        "department": "IT",
+        "salary": "50000"
+    },
+    {
+        "id": "2",
+        "name": "Rahul",
+        "department": "HR",
+        "salary": "45000"
+    },
+    {
+        "id": "3",
+        "name": "Priya",
+        "department": "Finance",
+        "salary": "60000"
+    },
+    {
+        "id": "4",
+        "name": "Neha",
+        "department": "Marketing",
+        "salary": "55000"
+    }
+]
