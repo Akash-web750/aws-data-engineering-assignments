@@ -1,21 +1,22 @@
 ![AWS](https://img.shields.io/badge/AWS-S3%20%7C%20Lambda-orange)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-SQL-blue)
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
-![SQL](https://img.shields.io/badge/SQL-PostgreSQL-green)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+![GitHub](https://img.shields.io/badge/GitHub-Portfolio-black)
+![License](https://img.shields.io/badge/License-MIT-green)
 
 # AWS Data Engineering Assignments
 
-A collection of hands-on Data Engineering projects demonstrating real-world implementation using AWS Cloud, Python, SQL, Pandas, and Machine Learning.
+A collection of hands-on Data Engineering projects demonstrating real-world implementation using AWS Cloud, PostgreSQL, Python, SQL, Pandas, and Machine Learning.
 
-These assignments are designed to showcase practical knowledge of cloud-based data engineering, event-driven architecture, ETL pipelines, data transformation, automation, and analytics.
+These assignments showcase practical knowledge of cloud-based data engineering, event-driven architecture, SQL analytics, ETL pipelines, automation, and data processing using industry-standard tools.
 
 ---
 
 # Project Objective
 
-The objective of this repository is to build practical Data Engineering solutions using modern cloud technologies and industry-standard tools.
+The objective of this repository is to build practical Data Engineering solutions using modern cloud technologies and best engineering practices.
 
-Each assignment focuses on solving real-world data engineering problems while following best practices in software development, automation, and cloud architecture.
+Each assignment focuses on solving real-world business problems while improving skills in SQL, cloud computing, automation, data transformation, and analytics.
 
 ---
 
@@ -24,7 +25,7 @@ Each assignment focuses on solving real-world data engineering problems while fo
 | Assignment | Description | Status |
 |------------|-------------|--------|
 | Assignment 1 | AWS S3 Event-Driven CSV to JSON Pipeline using Lambda | ✅ Completed |
-| Assignment 2 | Advanced SQL using CTEs and Window Functions | 🚧 In Progress |
+| Assignment 2 | Advanced SQL using CTEs, Window Functions and Complex JOINs | ✅ Completed |
 | Assignment 3 | IoT Data Engineering and Anomaly Detection | ⏳ Planned |
 | Assignment 4 | Predictive Analytics using Pandas and Scikit-Learn | ⏳ Planned |
 
@@ -44,6 +45,10 @@ aws-data-engineering-assignments/
 │   └── requirements.txt
 │
 ├── Assignment-02-Advanced-SQL/
+│   ├── sql/
+│   ├── screenshots/
+│   ├── docs/
+│   └── README.md
 │
 ├── Assignment-03-IoT-Anomaly/
 │
@@ -61,31 +66,35 @@ aws-data-engineering-assignments/
 
 # Technologies Used
 
-### Cloud
+## Cloud
 
 - Amazon S3
 - AWS Lambda
 - AWS IAM
 - Amazon CloudWatch
 
-### Programming
+## Database
+
+- PostgreSQL
+
+## Programming
 
 - Python 3.12
 - SQL
-- PostgreSQL
 
-### Libraries
+## Libraries
 
 - Boto3
 - Pandas
 - NumPy
 - Scikit-Learn
 
-### Tools
+## Tools
 
 - Git
 - GitHub
 - Visual Studio Code
+- pgAdmin 4
 
 ---
 
@@ -99,25 +108,31 @@ aws-data-engineering-assignments/
 - Python Automation
 - CSV Processing
 - JSON Data Transformation
+- PostgreSQL
 - SQL Query Development
-- Data Engineering Best Practices
+- Window Functions
+- Common Table Expressions (CTE)
+- Complex JOINs
+- Moving Average
+- Analytical SQL
 - Git Version Control
+- Data Engineering Best Practices
 
 ---
 
-# Completed Project
+# Completed Projects
 
 ## Assignment 1
 
 ### AWS S3 Event-Driven CSV to JSON Pipeline
 
-### Project Overview
+#### Project Overview
 
 This project automatically converts CSV files uploaded to an Amazon S3 bucket into JSON format using an AWS Lambda function.
 
 Whenever a CSV file is uploaded to the input bucket, Amazon S3 triggers AWS Lambda. The Lambda function processes the CSV file, converts it into JSON format, and stores the output in another S3 bucket.
 
-### Technologies Used
+#### Technologies Used
 
 - Amazon S3
 - AWS Lambda
@@ -128,41 +143,59 @@ Whenever a CSV file is uploaded to the input bucket, Amazon S3 triggers AWS Lamb
 
 ---
 
-# Upcoming Projects
-
 ## Assignment 2
 
-Advanced SQL Transformations
+### Advanced SQL Transformations
 
-Topics include:
+#### Project Overview
 
-- CTE
-- Recursive CTE
+This project demonstrates advanced SQL concepts using PostgreSQL.
+
+A retail sales dataset consisting of Categories, Products, Customers, and Sales tables is used to solve analytical business problems using SQL.
+
+The project covers analytical SQL queries using Common Table Expressions (CTEs), Window Functions, Moving Average calculations, Ranking Functions, and Complex JOIN operations.
+
+#### SQL Concepts Covered
+
+- Common Table Expressions (CTE)
 - Window Functions
-- Ranking Functions
-- Query Optimization
-- Indexing
-- Performance Tuning
+- RANK()
+- DENSE_RANK()
+- ROW_NUMBER()
+- LEAD()
+- LAG()
+- Moving Average
+- Complex JOIN
+- Aggregate Functions
+- Analytical SQL
+
+#### Technologies Used
+
+- PostgreSQL
+- SQL
+- pgAdmin 4
 
 ---
 
+# Upcoming Projects
+
 ## Assignment 3
 
-IoT Data Engineering
+### IoT Data Engineering
 
 Topics include:
 
-- Data Collection
-- Sensor Data Processing
+- Sensor Data Collection
 - Data Cleaning
-- Anomaly Detection
+- Streaming Data Processing
 - Feature Engineering
+- Anomaly Detection
 
 ---
 
 ## Assignment 4
 
-Machine Learning Pipeline
+### Machine Learning Pipeline
 
 Topics include:
 
@@ -177,14 +210,30 @@ Topics include:
 
 # Future Enhancements
 
-- Apache Airflow Pipelines
+- Apache Airflow
+- Apache Spark
+- PySpark
+- Apache Kafka
+- Snowflake
 - AWS Glue ETL Jobs
-- Terraform Infrastructure as Code
-- Docker Containerization
+- Terraform
+- Docker
 - GitHub Actions CI/CD
 - Unit Testing
 - Data Validation Framework
 - Monitoring and Alerting
+
+---
+
+# Quick Start
+
+```bash
+git clone https://github.com/<your-github-username>/aws-data-engineering-assignments.git
+
+cd aws-data-engineering-assignments
+```
+
+Explore each assignment folder for source code, SQL scripts, documentation, and screenshots.
 
 ---
 
@@ -193,6 +242,8 @@ Topics include:
 **Akash More**
 
 Data Engineer
+
+GitHub: https://github.com/Akash-web750/aws-data-engineering-assignments
 
 ---
 
@@ -204,4 +255,4 @@ This project is licensed under the MIT License.
 
 # Acknowledgement
 
-This repository has been created for learning, portfolio development, interview preparation, and demonstrating practical Data Engineering skills using modern cloud technologies.
+This repository has been created for learning, portfolio development, interview preparation, and demonstrating practical Data Engineering skills using modern cloud technologies and industry-standard tools.
