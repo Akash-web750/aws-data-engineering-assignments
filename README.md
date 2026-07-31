@@ -8,15 +8,15 @@
 
 A collection of hands-on Data Engineering projects demonstrating real-world implementation using AWS Cloud, PostgreSQL, Python, SQL, Pandas, and Machine Learning.
 
-These assignments showcase practical knowledge of cloud-based data engineering, event-driven architecture, SQL analytics, ETL pipelines, automation, and data processing using industry-standard tools.
+These assignments showcase practical knowledge of cloud-based data engineering, event-driven architecture, SQL analytics, ETL pipelines, automation, data processing, and anomaly detection using industry-standard tools.
 
 ---
 
 # Project Objective
 
-The objective of this repository is to build practical Data Engineering solutions using modern cloud technologies and best engineering practices.
+The objective of this repository is to build practical Data Engineering solutions using modern cloud technologies and engineering best practices.
 
-Each assignment focuses on solving real-world business problems while improving skills in SQL, cloud computing, automation, data transformation, and analytics.
+Each assignment focuses on solving real-world business problems while improving skills in SQL, cloud computing, automation, ETL, data transformation, analytics, and machine learning.
 
 ---
 
@@ -26,8 +26,8 @@ Each assignment focuses on solving real-world business problems while improving 
 |------------|-------------|--------|
 | Assignment 1 | AWS S3 Event-Driven CSV to JSON Pipeline using Lambda | ✅ Completed |
 | Assignment 2 | Advanced SQL using CTEs, Window Functions and Complex JOINs | ✅ Completed |
-| Assignment 3 | IoT Data Engineering and Anomaly Detection | ⏳ Planned |
-| Assignment 4 | Predictive Analytics using Pandas and Scikit-Learn | ⏳ Planned |
+| Assignment 3 | IoT Data Engineering & Anomaly Detection | ✅ Completed |
+| Assignment 4 | Predictive Analytics using Pandas & Machine Learning | ⏳ Planned |
 
 ---
 
@@ -51,6 +51,12 @@ aws-data-engineering-assignments/
 │   └── README.md
 │
 ├── Assignment-03-IoT-Anomaly/
+│   ├── data/
+│   ├── docs/
+│   ├── screenshots/
+│   ├── src/
+│   ├── README.md
+│   └── requirements.txt
 │
 ├── Assignment-04-Pandas-ML/
 │
@@ -115,6 +121,11 @@ aws-data-engineering-assignments/
 - Complex JOINs
 - Moving Average
 - Analytical SQL
+- IoT Data Processing
+- Time-Series Data Handling
+- Statistical Anomaly Detection
+- Z-Score Analysis
+- Pandas Data Processing
 - Git Version Control
 - Data Engineering Best Practices
 
@@ -177,29 +188,42 @@ The project covers analytical SQL queries using Common Table Expressions (CTEs),
 
 ---
 
-# Upcoming Projects
-
 ## Assignment 3
 
-### IoT Data Engineering
+### IoT Data Engineering & Anomaly Detection
 
-Topics include:
+#### Project Overview
 
-- Sensor Data Collection
-- Data Cleaning
-- Streaming Data Processing
-- Feature Engineering
-- Anomaly Detection
+This project generates synthetic IoT sensor data from multiple devices and simulates real-world scenarios such as backdated events, late-arriving events, and abnormal sensor readings.
+
+The generated dataset is analyzed using the Z-Score statistical method to detect anomalies and produce a processed anomaly report.
+
+#### Features
+
+- Generate synthetic IoT sensor data
+- Simulate backdated events
+- Simulate late-arriving events
+- Inject sensor anomalies
+- Detect anomalies using Z-Score
+- Generate anomaly report
+
+#### Technologies Used
+
+- Python
+- Pandas
+- CSV
+- Statistics
 
 ---
 
+# Upcoming Projects
+
 ## Assignment 4
 
-### Machine Learning Pipeline
+### Predictive Analytics using Pandas & Machine Learning
 
 Topics include:
 
-- Pandas
 - Data Cleaning
 - Feature Engineering
 - Model Training
@@ -228,7 +252,7 @@ Topics include:
 # Quick Start
 
 ```bash
-git clone https://github.com/<your-github-username>/aws-data-engineering-assignments.git
+git clone https://github.com/Akash-web750/aws-data-engineering-assignments.git
 
 cd aws-data-engineering-assignments
 ```
