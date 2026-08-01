@@ -1,6 +1,6 @@
 ![AWS](https://img.shields.io/badge/AWS-S3%20%7C%20Lambda-orange)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-SQL-blue)
-![Python](https://img.shields.io/badge/Python-3.12-blue)
+![Python](https://img.shields.io/badge/Python-3.10+-blue)
 ![GitHub](https://img.shields.io/badge/GitHub-Portfolio-black)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
@@ -27,7 +27,7 @@ Each assignment focuses on solving real-world business problems while improving 
 | Assignment 1 | AWS S3 Event-Driven CSV to JSON Pipeline using Lambda | ✅ Completed |
 | Assignment 2 | Advanced SQL using CTEs, Window Functions and Complex JOINs | ✅ Completed |
 | Assignment 3 | IoT Data Engineering & Anomaly Detection | ✅ Completed |
-| Assignment 4 | Predictive Analytics using Pandas & Machine Learning | ⏳ Planned |
+| Assignment 4 | Predictive Modelling using Pandas & Machine Learning | ✅ Completed |
 
 ---
 
@@ -59,10 +59,12 @@ aws-data-engineering-assignments/
 │   └── requirements.txt
 │
 ├── Assignment-04-Pandas-ML/
-│
-├── datasets/
-├── docs/
-├── images/
+│   ├── data/
+│   ├── models/
+│   ├── screenshots/
+│   ├── src/
+│   ├── README.md
+│   └── requirements.txt
 ├── README.md
 ├── requirements.txt
 └── LICENSE
@@ -85,7 +87,7 @@ aws-data-engineering-assignments/
 
 ## Programming
 
-- Python 3.12
+- Python 3.10+
 - SQL
 
 ## Libraries
@@ -94,6 +96,8 @@ aws-data-engineering-assignments/
 - Pandas
 - NumPy
 - Scikit-Learn
+- Matplotlib
+- Joblib
 
 ## Tools
 
@@ -128,6 +132,14 @@ aws-data-engineering-assignments/
 - Pandas Data Processing
 - Git Version Control
 - Data Engineering Best Practices
+- Exploratory Data Analysis (EDA)
+- Feature Engineering
+- Logistic Regression
+- Model Evaluation
+- Classification Report
+- Confusion Matrix
+- Model Serialization
+- Predictive Modelling
 
 ---
 
@@ -216,19 +228,40 @@ The generated dataset is analyzed using the Z-Score statistical method to detect
 
 ---
 
-# Upcoming Projects
 
 ## Assignment 4
 
-### Predictive Analytics using Pandas & Machine Learning
+### Predictive Modelling with Pandas
 
-Topics include:
+#### Project Overview
+
+This project demonstrates an end-to-end Machine Learning workflow using the Titanic dataset.
+
+The project includes data preprocessing, feature engineering, exploratory data analysis (EDA), Logistic Regression model training, model evaluation, and passenger survival prediction.
+
+The trained model is saved using Joblib and reused for future predictions.
+
+#### Features
 
 - Data Cleaning
+- Missing Value Handling
 - Feature Engineering
-- Model Training
+- Exploratory Data Analysis (EDA)
+- Logistic Regression
 - Model Evaluation
+- Model Serialization
 - Prediction Pipeline
+
+#### Technologies Used
+
+- Python
+- Pandas
+- NumPy
+- Matplotlib
+- Scikit-learn
+- Joblib
+
+
 
 ---
 
@@ -267,7 +300,9 @@ Explore each assignment folder for source code, SQL scripts, documentation, and 
 
 Data Engineer
 
-GitHub: https://github.com/Akash-web750/aws-data-engineering-assignments
+GitHub Repository:
+
+https://github.com/Akash-web750/aws-data-engineering-assignments
 
 ---
 
