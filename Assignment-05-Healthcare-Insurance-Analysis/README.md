@@ -104,7 +104,16 @@ The **1:1** guarantee between `claims` and `claim_payments` (a UNIQUE index on `
 | Experiment | Business Question | Status | Key Finding | Business Value |
 |---|---|---|---|---|
 | **EXP01 — Disease-wise Claim Cost & Risk** | Which diseases drive the highest cost & risk; volume or severity? | ✅ Complete · 8/8 validated | Cardiovascular = 40.5% of spend; Heart Disease = 30.1% (both volume + severity); ₹1.84B in 2 procedures | Pinpoints the highest-ROI cost + concentration-risk target |
-| EXP02–EXP16 | Hospital, procedure, approval, settlement, profitability, loss-ratio, … | ⏳ Planned | — | See [`PROJECT_PLAN.md`](PROJECT_PLAN.md) |
+| **EXP02 — Hospital / Provider Cost** | Which hospitals drive cost; are any materially more expensive? | ✅ Complete · 9/9 validated · pgAdmin grids | Cost is **NOT** concentrated — top hospital 0.34%, max 1.69× avg; out-of-network not more expensive; avg cost/claim uniform across types | Avoids a low-value "renegotiate top hospital" action; keeps cost focus at disease/procedure level. [details](experiments/EXP02_hospital_cost_analysis.md) |
+| EXP03–EXP16 | Procedure, approval, settlement, profitability, loss-ratio, … | ⏳ Planned | — | See [`PROJECT_PLAN.md`](PROJECT_PLAN.md) |
+
+**EXP02 evidence (actual pgAdmin grids):** top hospital is only **0.34%** of spend, and **out-of-network is not more expensive** —
+
+<img src="screenshots/EXP02_Hospital_Cost/02_Output_V1/EXP02_Output_V1_01_top10_grid.png" alt="EXP02 V1 — top-10 hospitals by claim amount" width="720">
+
+<img src="screenshots/EXP02_Hospital_Cost/04_Output_V2/EXP02_Output_V2_06_network.png" alt="EXP02 V2 — in-network vs out-of-network comparison" width="720">
+
+Full evidence set: [`screenshots/EXP02_Hospital_Cost/`](screenshots/EXP02_Hospital_Cost) · analysis: [`experiments/EXP02_hospital_cost_analysis.md`](experiments/EXP02_hospital_cost_analysis.md).
 
 ---
 

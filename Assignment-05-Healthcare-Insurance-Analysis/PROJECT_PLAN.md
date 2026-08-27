@@ -21,7 +21,7 @@ Ordered so that each experiment builds on prior findings (cost drivers → where
 | # | Experiment | Management question | Primary tables | Status |
 |--:|---|---|---|---|
 | **01** | **Disease / diagnosis cost drivers** | Which diseases drive the highest claim cost & risk; volume vs severity? | claims, diagnoses, claim_payments | ✅ **Complete (8/8 validated)** |
-| 02 | Hospital / provider cost drivers | Which hospitals/networks drive cost; is out-of-network more expensive? | claims, hospitals, claim_payments | ⏳ Planned |
+| **02** | **Hospital / provider cost drivers** | Which hospitals/networks drive cost; is out-of-network more expensive? | claims, hospitals, claim_payments | ✅ **Complete (9/9 validated; 17 pgAdmin grids)** — cost NOT concentrated; out-of-network not more expensive |
 | 03 | Procedure cost drivers | Which procedures drive cost; claim vs base_cost gap? | claims, procedures | ⏳ Planned |
 | 04 | Claim approval & rejection patterns | What drives rejections/partial approvals; where is the claim→approved gap? | claims, diagnoses, hospitals | ⏳ Planned |
 | 05 | Payment / settlement behavior | PAID vs PROCESSING aging; outstanding payables exposure? | claim_payments, claims | ⏳ Planned |
