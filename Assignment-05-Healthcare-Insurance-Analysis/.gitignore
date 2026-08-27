@@ -1,0 +1,11 @@
+# Secrets / credentials — never commit
+.pgpass
+.env
+.env.*
+*.pem
+*.key
+*.p12
+id_*
+*credential*
+*secret*
+*.token
