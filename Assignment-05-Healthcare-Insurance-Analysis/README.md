@@ -116,13 +116,19 @@ The **1:1** guarantee between `claims` and `claim_payments` (a UNIQUE index on `
 ### 🔹 Prompt V1 (basic)
 > 📸 [`01_Prompt_V1/EXP01_Prompt_V1_01.png`](screenshots/EXP01_Disease_Cost/01_Prompt_V1/EXP01_Prompt_V1_01.png) · verbatim in [`experiments/EXP01_prompts.md`](experiments/EXP01_prompts.md)
 
+<img src="screenshots/EXP01_Disease_Cost/01_Prompt_V1/EXP01_Prompt_V1_01.png" alt="Prompt V1 (basic)" width="720">
+
 **V1 Result:** Top-10 diseases by claim amount; Heart Disease ₹2.07B (30.1%), Cardiovascular 40.5%; grand total ₹6,889,700,889.57.
 > 📸 [`02_Output_V1/`](screenshots/EXP01_Disease_Cost/02_Output_V1) — query, top diseases, category rollup, grand total.
+
+<img src="screenshots/EXP01_Disease_Cost/02_Output_V1/EXP01_Output_V1_02_top_diseases.png" alt="V1 output — top diseases by claim amount" width="720">
 
 **V1 Limitation:** used only `claim_amount` (billed) — no approved liability, no paid/settled cash, no volume-vs-severity split, no procedure/network/policy linkage, no validation.
 
 ### 🔹 Prompt V2 (improved)
 > 📸 [`03_Prompt_V2/EXP01_Prompt_V2_01.png`](screenshots/EXP01_Disease_Cost/03_Prompt_V2/EXP01_Prompt_V2_01.png) · verbatim in [`experiments/EXP01_prompts.md`](experiments/EXP01_prompts.md)
+
+<img src="screenshots/EXP01_Disease_Cost/03_Prompt_V2/EXP01_Prompt_V2_01.png" alt="Prompt V2 (improved)" width="720">
 
 **V2 Result (all validated):**
 
@@ -135,9 +141,13 @@ The **1:1** guarantee between `claims` and `claim_payments` (a UNIQUE index on `
 Heart Disease: 7,497 claims · claimed ₹2,072,827,175.57 · approved ₹1,571,375,818.98 · settled ₹854,252,471.66 · **30.1%** of claimed. Cardiovascular category **40.5%**. Cardiac Surgery + Angioplasty = **₹1,844,905,597.78**.
 > 📸 [`04_Output_V2/`](screenshots/EXP01_Disease_Cost/04_Output_V2) — payment check, top-15, grand totals, category, volume/severity, and Heart-Disease linkage (policy / network / procedure).
 
+<img src="screenshots/EXP01_Disease_Cost/04_Output_V2/EXP01_Output_V2_03_top15_diseases.png" alt="V2 output — top-15 diseases: claimed vs approved vs settled" width="720">
+
 ### 🔹 Independent Validation — 8/8 PASS
 Every figure reproduced with different SQL logic; `claim_payments` confirmed 1:1 (no duplicate counting).
 > 📸 [`05_Validation/`](screenshots/EXP01_Disease_Cost/05_Validation) · report: [`validation/EXP01_validation.md`](validation/EXP01_validation.md)
+
+<img src="screenshots/EXP01_Disease_Cost/05_Validation/EXP01_Validation_01_grand_totals_rollup.png" alt="Independent validation — grand totals via ROLLUP (claimed & approved)" width="720">
 
 ### 🔹 V1 vs V2 Comparison
 Written comparison: [`experiments/EXP01_v1_vs_v2_comparison.md`](experiments/EXP01_v1_vs_v2_comparison.md). *(No comparison screenshot in the source set — noted in [`06_Comparison`](screenshots/EXP01_Disease_Cost/06_Comparison).)*
