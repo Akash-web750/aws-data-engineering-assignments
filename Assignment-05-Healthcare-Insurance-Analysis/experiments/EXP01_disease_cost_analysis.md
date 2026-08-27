@@ -2,6 +2,9 @@
 
 > Status: ✅ Complete · V1 + V2 + Independent Validation (8/8 PASS) · Read-only · No DB modification.
 > All figures are actual PostgreSQL 17 output from `healthcare_insurance` / schema `healthcare`. Nothing invented.
+> 📸 **Visual evidence:** [`../screenshots/EXP01_Disease_Cost/`](../screenshots/EXP01_Disease_Cost) — indexed in its [README](../screenshots/EXP01_Disease_Cost/README.md).
+
+**⏱️ 30-second read:** Cardiovascular disease = **40.5%** of all claim cost; **Heart Disease alone = 30.1%** and is the only driver that is *both* high-frequency and high-severity; within it, **2 procedures = ₹1.84B**. Only **54.3%** of approved liability is settled (rest is in-flight, not lost). Every number independently validated (8/8).
 
 ---
 
@@ -73,6 +76,8 @@ ORDER BY total_claimed DESC;
 ## 6. Actual Database Result
 
 ### V1 output — Top 10 diseases by total claim amount
+> 📸 [`02_Output_V1/`](../screenshots/EXP01_Disease_Cost/02_Output_V1): [query](../screenshots/EXP01_Disease_Cost/02_Output_V1/EXP01_Output_V1_01_query.png) · [top diseases](../screenshots/EXP01_Disease_Cost/02_Output_V1/EXP01_Output_V1_02_top_diseases.png) · [category rollup](../screenshots/EXP01_Disease_Cost/02_Output_V1/EXP01_Output_V1_03_category_rollup.png) · [grand total](../screenshots/EXP01_Disease_Cost/02_Output_V1/EXP01_Output_V1_04_grand_total.png)
+
 | # | Disease | Category | Claims | Total Claim ₹ | Avg/Claim ₹ | Approved % | % of Total Spend |
 |--:|---|---|--:|--:|--:|--:|--:|
 | 1 | Heart Disease | Cardiovascular | 7,497 | 2,072,827,175.57 | 276,487.55 | 75.8 | 30.1 |
@@ -89,6 +94,8 @@ ORDER BY total_claimed DESC;
 Grand total claim spend (100,000 claims): **₹6,889,700,889.57**.
 
 ### V2 output — Portfolio grand totals (three money layers)
+> 📸 [payment check](../screenshots/EXP01_Disease_Cost/04_Output_V2/EXP01_Output_V2_01_payment_validation.png) · [grand totals](../screenshots/EXP01_Disease_Cost/04_Output_V2/EXP01_Output_V2_04_grand_totals.png)
+
 | Layer | Amount (₹) | Ratio |
 |---|--:|--:|
 | Total **claimed** | 6,889,700,889.57 | 100% |
@@ -97,6 +104,8 @@ Grand total claim spend (100,000 claims): **₹6,889,700,889.57**.
 | Total paid incl. processing | 5,112,332,456.18 | 97.8% of approved |
 
 ### V2 output — Top 15 diseases (claimed / approved / settled / shares)
+> 📸 [core query](../screenshots/EXP01_Disease_Cost/04_Output_V2/EXP01_Output_V2_02_core_query.png) · [top-15 output](../screenshots/EXP01_Disease_Cost/04_Output_V2/EXP01_Output_V2_03_top15_diseases.png)
+
 | # | Disease | Category | Claims | Claimed ₹ | Avg ₹ | Approved ₹ | Appr% | Settled ₹ | %Claimed |
 |--:|---|---|--:|--:|--:|--:|--:|--:|--:|
 | 1 | Heart Disease | Cardiovascular | 7,497 | 2,072,827,175.57 | 276,488 | 1,571,375,818.98 | 75.8 | 854,252,471.66 | 30.1 |
@@ -116,6 +125,8 @@ Grand total claim spend (100,000 claims): **₹6,889,700,889.57**.
 | 15 | Sepsis | Critical Care | 1,041 | 162,492,389.09 | 156,093 | 124,940,334.96 | 76.9 | 65,483,973.06 | 2.4 |
 
 ### V2 output — Category rollup (top)
+> 📸 [category rollup](../screenshots/EXP01_Disease_Cost/04_Output_V2/EXP01_Output_V2_05_category_rollup.png)
+
 | Category | Claims | Claimed ₹ | Approved ₹ | Settled ₹ | Appr% | %Total |
 |---|--:|--:|--:|--:|--:|--:|
 | Cardiovascular | 9,674 | 2,789,788,039.46 | 2,116,927,521.85 | 1,153,167,908.88 | 75.9 | **40.5** |
@@ -127,6 +138,8 @@ Grand total claim spend (100,000 claims): **₹6,889,700,889.57**.
 | Neurological | 7,118 | 299,812,934.01 | 226,861,078.98 | 121,075,750.99 | 75.7 | 4.4 |
 
 ### V2 output — Volume vs Severity (top drivers)
+> 📸 [volume vs severity](../screenshots/EXP01_Disease_Cost/04_Output_V2/EXP01_Output_V2_06_volume_vs_severity.png)
+
 | Disease | Claims | Avg Claim ₹ | Driver Type |
 |---|--:|--:|---|
 | Heart Disease | 7,497 | 276,488 | **BOTH volume + severity** |
@@ -136,6 +149,8 @@ Grand total claim spend (100,000 claims): **₹6,889,700,889.57**.
 | C-Section | 1,129 | 219,740 | Severity-driven |
 
 ### V2 output — Heart Disease cost-driver linkage
+> 📸 [by policy type](../screenshots/EXP01_Disease_Cost/04_Output_V2/EXP01_Output_V2_07_hd_policy_type.png) · [by network](../screenshots/EXP01_Disease_Cost/04_Output_V2/EXP01_Output_V2_08_hd_network.png) · [by procedure](../screenshots/EXP01_Disease_Cost/04_Output_V2/EXP01_Output_V2_09_hd_procedures.png)
+
 **By procedure:**
 | Procedure | Claims | Claimed ₹ | Avg ₹ | Base Cost ₹ |
 |---|--:|--:|--:|--:|
@@ -151,7 +166,11 @@ Grand total claim spend (100,000 claims): **₹6,889,700,889.57**.
 ---
 
 ## 7. Validation
-Independent validation performed with **different SQL logic** (ROLLUP, scalar/IN/EXISTS subqueries, plain WHERE, standalone-vs-join). **8/8 checks PASS**, all differences 0.00 (only cosmetic share rounding). See `validation/EXP01_validation.md`. Fan-out risk eliminated: `claim_payments.claim_id` is UNIQUE (index `uq_payment_claim`) → structurally 1 payment per claim; standalone PAID total = joined PAID total = ₹2,834,964,771.91.
+Independent validation performed with **different SQL logic** (ROLLUP, scalar/IN/EXISTS subqueries, plain WHERE, standalone-vs-join). **8/8 checks PASS**, all differences 0.00 (only cosmetic share rounding). See [`../validation/EXP01_validation.md`](../validation/EXP01_validation.md). Fan-out risk eliminated: `claim_payments.claim_id` is UNIQUE (index `uq_payment_claim`) → structurally 1 payment per claim; standalone PAID total = joined PAID total = ₹2,834,964,771.91.
+
+> 📸 Evidence [`05_Validation/`](../screenshots/EXP01_Disease_Cost/05_Validation): [grand totals (ROLLUP)](../screenshots/EXP01_Disease_Cost/05_Validation/EXP01_Validation_01_grand_totals_rollup.png) · [settled PAID](../screenshots/EXP01_Disease_Cost/05_Validation/EXP01_Validation_02_settled_paid.png) · [cardiovascular](../screenshots/EXP01_Disease_Cost/05_Validation/EXP01_Validation_03_cardiovascular.png) · [Heart Disease](../screenshots/EXP01_Disease_Cost/05_Validation/EXP01_Validation_04_heart_disease.png) · [HD settled](../screenshots/EXP01_Disease_Cost/05_Validation/EXP01_Validation_05_heart_disease_settled.png) · [CAD](../screenshots/EXP01_Disease_Cost/05_Validation/EXP01_Validation_06_coronary_artery.png) · [HD procedures](../screenshots/EXP01_Disease_Cost/05_Validation/EXP01_Validation_07_hd_procedures.png) · [fan-out check](../screenshots/EXP01_Disease_Cost/05_Validation/EXP01_Validation_08_fanout_check.png)
+
+> **Why this matters:** the reported numbers are not taken on trust — each was reproduced by an independent query path, so a manager can rely on them for decisions.
 
 ---
 

@@ -1,19 +1,17 @@
-# EXPERIMENT 01 — Screenshot Checklist
+# EXPERIMENT 01 — Screenshot Checklist & Capture Status
 
-Screenshots are captured **manually** by the project owner from Claude Code and saved into this `screenshots/` folder using the filenames below. This checklist maps each screenshot to its content and the document section that uses it. (Count is a recommendation, not a hard limit — add more if a result spans multiple screens.)
+Screenshots were captured from **pgAdmin 4 / PostgreSQL 17** and are now organized under
+[`EXP01_Disease_Cost/`](EXP01_Disease_Cost) (full index in its [README](EXP01_Disease_Cost/README.md)).
 
-| # | Filename | Should contain | Used in section |
-|--:|---|---|---|
-| 1 | `EXP01_DiseaseCost_Prompt_V1.png` | The exact V1 prompt text | EXP01_prompts.md — Prompt V1 |
-| 2 | `EXP01_DiseaseCost_Output_V1_1.png` | V1 SQL + Top-10 diseases result | EXP01 §6 (V1 output) |
-| 3 | `EXP01_DiseaseCost_Output_V1_2.png` | V1 category rollup + grand total | EXP01 §6 (V1 output) |
-| 4 | `EXP01_DiseaseCost_Prompt_V2.png` | The exact V2 prompt text | EXP01_prompts.md — Prompt V2 |
-| 5 | `EXP01_DiseaseCost_Output_V2_1.png` | V2 payment validation + grand totals (3 layers) | EXP01 §6 (V2) |
-| 6 | `EXP01_DiseaseCost_Output_V2_2.png` | V2 Top-15 disease table (claimed/approved/settled) | EXP01 §6 (V2) |
-| 7 | `EXP01_DiseaseCost_Output_V2_3.png` | V2 category rollup + volume/severity classification | EXP01 §6 (V2) |
-| 8 | `EXP01_DiseaseCost_Output_V2_4.png` | V2 Heart Disease linkage (procedure/network/policy) | EXP01 §6 (V2) |
-| 9 | `EXP01_DiseaseCost_Validation_1.png` | Validation items 1–5b (grand totals, PAID, cardio, Heart Disease) | EXP01_validation.md |
-| 10 | `EXP01_DiseaseCost_Validation_2.png` | Validation items 6–8 (CAD, procedures, fan-out/standalone-vs-join) | EXP01_validation.md |
-| 11 | `EXP01_DiseaseCost_Comparison.png` | V1 vs V2 comparison summary | EXP01_prompts.md — comparison |
+**Status: 23 captured · 1 optional gap (V1-vs-V2 comparison).**
 
-**Capture tips:** include the `psql` command context where visible so the read-only session and DB name are provable; ensure full result rows (no truncation) or split across the numbered `_1/_2` files.
+| Stage | Folder | Captured | Notes |
+|---|---|:--:|---|
+| Prompt V1 | `01_Prompt_V1/` | ✅ 1 | exact basic prompt |
+| Output V1 | `02_Output_V1/` | ✅ 4 | query, top diseases, category rollup, grand total |
+| Prompt V2 | `03_Prompt_V2/` | ✅ 1 | exact improved prompt |
+| Output V2 | `04_Output_V2/` | ✅ 9 | payment check, core query, top-15, grand totals, category, volume/severity, HD policy/network/procedure |
+| Validation | `05_Validation/` | ✅ 8 | one image per validation check (1–8) |
+| Comparison | `06_Comparison/` | ⬜ 0 | **optional gap** — no source screenshot; written comparison in `experiments/EXP01_v1_vs_v2_comparison.md`. To add later, save as `06_Comparison/EXP01_Comparison_01.png`. |
+
+**Capture standard used:** each image shows the SQL and the pgAdmin data-output grid, so the read-only session, DB name, and exact result rows are visible and provable. Every figure shown matches `results/EXP01_actual_results.md` and `validation/EXP01_validation.md`.
