@@ -1,0 +1,64 @@
+##BUILDSESSION
+{"pid" : 19640, "step" : "I-1", "started" : "2026-09-12T21:51:34.668422+05:30", "settings" : { "maintenance_work_mem" : "65536", "max_parallel_maintenance_workers" : "0", "server_version" : "17.9", "wal_level" : "replica" }}
+##BUILD I-1 I-1a json 1
+{"index" : "access_log_json_i1a_record_validity", "table" : "log_regex_json.access_log_json", "ms" : 80.281, "wal_bytes" : 97416, "size_bytes" : 57344}
+##BUILD I-1 I-1a jsonb 1
+{"index" : "access_log_jsonb_i1a_record_validity", "table" : "log_regex_json.access_log_jsonb", "ms" : 17.316, "wal_bytes" : 36976, "size_bytes" : 57344}
+##BUILD I-1 I-1a jsonb 2
+{"index" : "access_log_jsonb_i1a_record_validity", "table" : "log_regex_json.access_log_jsonb", "ms" : 14.752, "wal_bytes" : 34232, "size_bytes" : 57344}
+##BUILD I-1 I-1a json 2
+{"index" : "access_log_json_i1a_record_validity", "table" : "log_regex_json.access_log_json", "ms" : 62.807, "wal_bytes" : 34184, "size_bytes" : 57344}
+##BUILD I-1 I-1a json 3
+{"index" : "access_log_json_i1a_record_validity", "table" : "log_regex_json.access_log_json", "ms" : 66.252, "wal_bytes" : 34160, "size_bytes" : 57344}
+##BUILD I-1 I-1a jsonb 3
+{"index" : "access_log_jsonb_i1a_record_validity", "table" : "log_regex_json.access_log_jsonb", "ms" : 16.295, "wal_bytes" : 34232, "size_bytes" : 57344}
+##BUILD I-1 I-1b json 1
+{"index" : "access_log_json_i1b_entity_type_code", "table" : "log_regex_json.access_log_json", "ms" : 114.041, "wal_bytes" : 34760, "size_bytes" : 57344}
+##BUILD I-1 I-1b jsonb 1
+{"index" : "access_log_jsonb_i1b_entity_type_code", "table" : "log_regex_json.access_log_jsonb", "ms" : 22.179, "wal_bytes" : 34728, "size_bytes" : 57344}
+##BUILD I-1 I-1b jsonb 2
+{"index" : "access_log_jsonb_i1b_entity_type_code", "table" : "log_regex_json.access_log_jsonb", "ms" : 20.553, "wal_bytes" : 39784, "size_bytes" : 57344}
+##BUILD I-1 I-1b json 2
+{"index" : "access_log_json_i1b_entity_type_code", "table" : "log_regex_json.access_log_json", "ms" : 102.666, "wal_bytes" : 34696, "size_bytes" : 57344}
+##BUILD I-1 I-1b json 3
+{"index" : "access_log_json_i1b_entity_type_code", "table" : "log_regex_json.access_log_json", "ms" : 109.986, "wal_bytes" : 34760, "size_bytes" : 57344}
+##BUILD I-1 I-1b jsonb 3
+{"index" : "access_log_jsonb_i1b_entity_type_code", "table" : "log_regex_json.access_log_jsonb", "ms" : 15.462, "wal_bytes" : 34728, "size_bytes" : 57344}
+##BUILD I-1 I-1c json 1
+{"index" : "access_log_json_i1c_status_code", "table" : "log_regex_json.access_log_json", "ms" : 102.347, "wal_bytes" : 34648, "size_bytes" : 57344}
+##BUILD I-1 I-1c jsonb 1
+{"index" : "access_log_jsonb_i1c_status_code", "table" : "log_regex_json.access_log_jsonb", "ms" : 18.765, "wal_bytes" : 34704, "size_bytes" : 57344}
+##BUILD I-1 I-1c jsonb 2
+{"index" : "access_log_jsonb_i1c_status_code", "table" : "log_regex_json.access_log_jsonb", "ms" : 17.157, "wal_bytes" : 34704, "size_bytes" : 57344}
+##BUILD I-1 I-1c json 2
+{"index" : "access_log_json_i1c_status_code", "table" : "log_regex_json.access_log_json", "ms" : 110.725, "wal_bytes" : 34768, "size_bytes" : 57344}
+##BUILD I-1 I-1c json 3
+{"index" : "access_log_json_i1c_status_code", "table" : "log_regex_json.access_log_json", "ms" : 109.081, "wal_bytes" : 34704, "size_bytes" : 57344}
+##BUILD I-1 I-1c jsonb 3
+{"index" : "access_log_jsonb_i1c_status_code", "table" : "log_regex_json.access_log_jsonb", "ms" : 19.036, "wal_bytes" : 34648, "size_bytes" : 57344}
+##BUILD I-1 I-1d json 1
+{"index" : "access_log_json_i1d_latitude_degrees", "table" : "log_regex_json.access_log_json", "ms" : 109.376, "wal_bytes" : 117416, "size_bytes" : 147456}
+##BUILD I-1 I-1d jsonb 1
+{"index" : "access_log_jsonb_i1d_latitude_degrees", "table" : "log_regex_json.access_log_jsonb", "ms" : 15.598, "wal_bytes" : 117448, "size_bytes" : 147456}
+##BUILD I-1 I-1d jsonb 2
+{"index" : "access_log_jsonb_i1d_latitude_degrees", "table" : "log_regex_json.access_log_jsonb", "ms" : 16.826, "wal_bytes" : 117472, "size_bytes" : 147456}
+##BUILD I-1 I-1d json 2
+{"index" : "access_log_json_i1d_latitude_degrees", "table" : "log_regex_json.access_log_json", "ms" : 105.037, "wal_bytes" : 117448, "size_bytes" : 147456}
+##BUILD I-1 I-1d json 3
+{"index" : "access_log_json_i1d_latitude_degrees", "table" : "log_regex_json.access_log_json", "ms" : 111.682, "wal_bytes" : 117472, "size_bytes" : 147456}
+##BUILD I-1 I-1d jsonb 3
+{"index" : "access_log_jsonb_i1d_latitude_degrees", "table" : "log_regex_json.access_log_jsonb", "ms" : 16.883, "wal_bytes" : 117336, "size_bytes" : 147456}
+##BUILD I-1 I-1e json 1
+{"index" : "access_log_json_i1e_event_timestamp_utc", "table" : "log_regex_json.access_log_json", "ms" : 110.166, "wal_bytes" : 150168, "size_bytes" : 180224}
+##BUILD I-1 I-1e jsonb 1
+{"index" : "access_log_jsonb_i1e_event_timestamp_utc", "table" : "log_regex_json.access_log_jsonb", "ms" : 29.739, "wal_bytes" : 148232, "size_bytes" : 180224}
+##BUILD I-1 I-1e jsonb 2
+{"index" : "access_log_jsonb_i1e_event_timestamp_utc", "table" : "log_regex_json.access_log_jsonb", "ms" : 15.492, "wal_bytes" : 148560, "size_bytes" : 180224}
+##BUILD I-1 I-1e json 2
+{"index" : "access_log_json_i1e_event_timestamp_utc", "table" : "log_regex_json.access_log_json", "ms" : 122.365, "wal_bytes" : 148232, "size_bytes" : 180224}
+##BUILD I-1 I-1e json 3
+{"index" : "access_log_json_i1e_event_timestamp_utc", "table" : "log_regex_json.access_log_json", "ms" : 141.509, "wal_bytes" : 148232, "size_bytes" : 180224}
+##BUILD I-1 I-1e jsonb 3
+{"index" : "access_log_jsonb_i1e_event_timestamp_utc", "table" : "log_regex_json.access_log_jsonb", "ms" : 19.567, "wal_bytes" : 148232, "size_bytes" : 180224}
+##END
+{"finished" : "2026-09-12T21:51:37.432692+05:30"}

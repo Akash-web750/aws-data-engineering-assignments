@@ -1,0 +1,954 @@
+Step 7C spatial index experiment checks
+run at 2026-09-12 21:16:55 UTC
+
+result: 943 PASS, 0 FAIL, 0 FLAG
+
+R-01                               PASS  sql/45-48 match the unchanged Step 7B generator: generated SQL files are up to date: sql/45, sql/46, sql/47, sql/48
+R-02                               PASS  sql/49-52 match the Step 7C generator: generated SQL files are up to date: sql/49, sql/50, sql/51, sql/52
+R-03                               PASS  allowlist: sql/49 = the 10 sql/48 statements x 3 + 20 drops + ANALYZE; sql/50-51 no write; no existing schema: {"49": {"create_executes": 30, "drop_executes": 20, "existing_schema_refs": 0, "outside_allowlist": 0, "statement_lines": 134, "write_words_in_readonly": 0}, "50": {"existing_schema_refs": 0, "outside_allowlist": 0, "statement_lines": 24, "write_words_in_readonly": 0}, "51": {"existing_schema_refs": 0, "explain_statements": 3840, "outside_allowlist": 0, "statement_lines": 3897, "write_words_in_readonly": 0}, "52": {"existing_schema_refs": 0, "outside_allowlist": 0, "statement_lines": 20, "write_words_in_readonly": 0}} static check PASSED
+R-04                               PASS  Step 7C files are ASCII: 6 files
+M-01                               PASS  Step 7B baseline manifest present (created by an earlier run): analysis/step7/step7c_baseline_step7b_sha256.txt
+M-02                               PASS  manifest analysis/step7/step7c_baseline_step7b_sha256.txt: 14 entries (expected 14), 0 mismatches
+B-01                               PASS  PostGIS state before (extensions|schemas|public|event triggers|role settings|preload): plpgsql 1.0 pg_catalog, postgis 3.6.2 postgis|log_regex,log_regex_gis,log_regex_json,log_regex_json_write,postgis,public|0/0/0|0|0|
+B-13                               PASS  log_regex_gis tables|primary keys|secondary indexes|names before: 15|15|0|
+B-14                               PASS  other client sessions before: 0 non-idle of 4 other client sessions
+B-02                               PASS  log_regex digest (raw, parser, flat, answer key) before: f8042db0318656b5929c86ea1f7888d4 over 203 items
+B-03                               PASS  log_regex_json data digest before: 9e6f883112c4a01781bdce5cf9bf3a28 over 10 items
+B-04                               PASS  Step 6D index digest before: e20752ca02d09e89281503569650d0ce over 14 indexes, 9510912 bytes
+B-05                               PASS  raw_access_logs integrity (verify_raw_access_logs checks/passed) before: 10/10
+B-09                               PASS  Step 6E write schema state before: i:access_log_json_w_pkey i:access_log_jsonb_w_pkey i:canonical_doc_pkey i:expected_update_pkey r:access_log_json_w r:access_log_jsonb_w r:canonical_doc r:expected_update|aeaef32371fa8143c088d4fdce9f6e0d|UA-1:238 UA-2:238 UA-3:5000|0/0
+B-11                               PASS  source fingerprints flat|jsonb before: f562354dbf6c155f3ed0a93da433e79c|fb3bc16318e6a81c7930aed2217986ea
+B-12                               PASS  relations per existing schema before: log_regex=49,log_regex_json=16,log_regex_json_write=8
+B-06                               PASS  sql/27 flat foreign keys before: exit 0; access_log_flat foreign-key check PASSED on log_regex.access_log_flat: exactly the 4 expected foreign keys, all validated
+B-07                               PASS  sql/34 Step 6B verification before: exit 0; JSON experiment check PASSED: all 38 checks
+B-08                               PASS  sql/38 phase final verification before: exit 0; JSON index phase final check PASSED: all 70 checks
+B-10a                              PASS  manifest analysis/step6/step6d_baseline_step6c_sha256.txt: 11 entries (expected 11), 0 mismatches
+B-10b                              PASS  manifest analysis/step6/step6e_baseline_step6d_sha256.txt: 26 entries (expected 26), 0 mismatches
+B-15                               PASS  sql/47 Step 7B verification (read-only) before: exit 0; sql/47 PostGIS setup verification PASSED: all 155 checks
+B-16                               PASS  sql/50 phase before (read-only): extension, isolation, no secondary index, construction checks: exit 0; sql/50 phase before PASSED: all 113 checks
+B50:X-01                           PASS  installed extensions: plpgsql 1.0 pg_catalog, postgis 3.6.2 postgis
+B50:X-02                           PASS  postgis_lib_version(): 3.6.2
+B50:X-03                           PASS  spatial_ref_sys SRID 4326 authority: EPSG/4326
+B50:X-04                           PASS  operator classes of the design in schema postgis: brin_geometry_inclusion_ops_2d,gist_geography_ops,gist_geometry_ops_2d,spgist_geography_ops_nd,spgist_geometry_ops_2d
+B50:X-05                           PASS  IMMUTABLE: ST_MakePoint(float8, float8) / ST_SetSRID(geometry, integer) / geography(geometry): i/i/i
+B50:X-06                           PASS  schemas | public relations/functions/types | event triggers: log_regex,log_regex_gis,log_regex_json,log_regex_json_write,postgis,public|0/0/0|0
+B50:A-03a                          PASS  log_regex_gis relations = the 15 tables and 15 primary keys (no secondary index): i:flat_geog_gist_pkey i:flat_geog_pkey i:flat_geog_spgist_pkey i:flat_geom_brin_pkey i:flat_geom_gist_pkey i:flat_geom_pkey i:flat_geom_spgist_pkey i:flat_numeric_btree_pkey i:flat_numeric_pkey i:jsonb_doc_expr_pkey i:jsonb_doc_pkey i:jsonb_geog_gist_pkey i:jsonb_geog_pkey i:jsonb_geom_gist_pkey i:jsonb_geom_pkey r:flat_geog r:flat_geog_gist r:flat_geog_spgist r:flat_geom r:flat_geom_brin r:flat_geom_gist r:flat_geom_spgist r:flat_numeric r:flat_numeric_btree r:jsonb_doc r:jsonb_doc_expr r:jsonb_geog r:jsonb_geog_gist r:jsonb_geom r:jsonb_geom_gist
+B50:A-03b                          PASS  other objects in log_regex_gis (functions, triggers, policies, rules, non-PK constraints, standalone types): 0
+B50:A-04a                          PASS  pg_depend relation edges between log_regex_gis/postgis and log_regex/log_regex_json/log_regex_json_write: 0
+B50:A-04b                          PASS  objects of log_regex/log_regex_json/log_regex_json_write depending on PostGIS types or functions: 0
+B50:O-1a:flat_numeric              PASS  flat_numeric: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+B50:O-1a:flat_numeric_btree        PASS  flat_numeric_btree: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+B50:O-1a:flat_geom                 PASS  flat_geom: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+B50:O-1a:flat_geom_gist            PASS  flat_geom_gist: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+B50:O-1a:flat_geom_spgist          PASS  flat_geom_spgist: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+B50:O-1a:flat_geom_brin            PASS  flat_geom_brin: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+B50:O-1a:flat_geog                 PASS  flat_geog: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+B50:O-1a:flat_geog_gist            PASS  flat_geog_gist: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+B50:O-1a:flat_geog_spgist          PASS  flat_geog_spgist: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+B50:O-1a:jsonb_doc                 PASS  jsonb_doc: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+B50:O-1a:jsonb_doc_expr            PASS  jsonb_doc_expr: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+B50:O-1a:jsonb_geom                PASS  jsonb_geom: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+B50:O-1a:jsonb_geom_gist           PASS  jsonb_geom_gist: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+B50:O-1a:jsonb_geog                PASS  jsonb_geog: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+B50:O-1a:jsonb_geog_gist           PASS  jsonb_geog_gist: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+B50:O-1b:flat_geom                 PASS  flat_geom: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+B50:O-1c:flat_geom                 PASS  flat_geom: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+B50:O-1d:flat_geom                 PASS  flat_geom: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+B50:O-1e:flat_geom                 PASS  flat_geom: byte-identical to flat_geom (EWKB): 5000
+B50:O-1f:flat_geom                 PASS  flat_geom: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+B50:O-1b:flat_geom_gist            PASS  flat_geom_gist: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+B50:O-1c:flat_geom_gist            PASS  flat_geom_gist: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+B50:O-1d:flat_geom_gist            PASS  flat_geom_gist: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+B50:O-1e:flat_geom_gist            PASS  flat_geom_gist: byte-identical to flat_geom (EWKB): 5000
+B50:O-1f:flat_geom_gist            PASS  flat_geom_gist: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+B50:O-1b:flat_geom_spgist          PASS  flat_geom_spgist: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+B50:O-1c:flat_geom_spgist          PASS  flat_geom_spgist: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+B50:O-1d:flat_geom_spgist          PASS  flat_geom_spgist: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+B50:O-1e:flat_geom_spgist          PASS  flat_geom_spgist: byte-identical to flat_geom (EWKB): 5000
+B50:O-1f:flat_geom_spgist          PASS  flat_geom_spgist: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+B50:O-1b:flat_geom_brin            PASS  flat_geom_brin: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+B50:O-1c:flat_geom_brin            PASS  flat_geom_brin: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+B50:O-1d:flat_geom_brin            PASS  flat_geom_brin: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+B50:O-1e:flat_geom_brin            PASS  flat_geom_brin: byte-identical to flat_geom (EWKB): 5000
+B50:O-1f:flat_geom_brin            PASS  flat_geom_brin: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+B50:O-1b:jsonb_geom                PASS  jsonb_geom: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+B50:O-1c:jsonb_geom                PASS  jsonb_geom: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+B50:O-1d:jsonb_geom                PASS  jsonb_geom: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+B50:O-1e:jsonb_geom                PASS  jsonb_geom: byte-identical to flat_geom (EWKB): 5000
+B50:O-1f:jsonb_geom                PASS  jsonb_geom: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+B50:O-1b:jsonb_geom_gist           PASS  jsonb_geom_gist: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+B50:O-1c:jsonb_geom_gist           PASS  jsonb_geom_gist: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+B50:O-1d:jsonb_geom_gist           PASS  jsonb_geom_gist: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+B50:O-1e:jsonb_geom_gist           PASS  jsonb_geom_gist: byte-identical to flat_geom (EWKB): 5000
+B50:O-1f:jsonb_geom_gist           PASS  jsonb_geom_gist: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+B50:O-1b:jsonb_doc_expr:geom       PASS  jsonb_doc_expr:geom: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+B50:O-1c:jsonb_doc_expr:geom       PASS  jsonb_doc_expr:geom: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+B50:O-1d:jsonb_doc_expr:geom       PASS  jsonb_doc_expr:geom: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+B50:O-1e:jsonb_doc_expr:geom       PASS  jsonb_doc_expr:geom: byte-identical to flat_geom (EWKB): 5000
+B50:O-1f:jsonb_doc_expr:geom       PASS  jsonb_doc_expr:geom: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+B50:O-1b:flat_geog                 PASS  flat_geog: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+B50:O-1c:flat_geog                 PASS  flat_geog: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+B50:O-1d:flat_geog                 PASS  flat_geog: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+B50:O-1e:flat_geog                 PASS  flat_geog: byte-identical to flat_geom (EWKB; geography binary = geography(flat_geom)): 5000
+B50:O-1f:flat_geog                 PASS  flat_geog: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+B50:O-1b:flat_geog_gist            PASS  flat_geog_gist: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+B50:O-1c:flat_geog_gist            PASS  flat_geog_gist: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+B50:O-1d:flat_geog_gist            PASS  flat_geog_gist: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+B50:O-1e:flat_geog_gist            PASS  flat_geog_gist: byte-identical to flat_geom (EWKB; geography binary = geography(flat_geom)): 5000
+B50:O-1f:flat_geog_gist            PASS  flat_geog_gist: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+B50:O-1b:flat_geog_spgist          PASS  flat_geog_spgist: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+B50:O-1c:flat_geog_spgist          PASS  flat_geog_spgist: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+B50:O-1d:flat_geog_spgist          PASS  flat_geog_spgist: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+B50:O-1e:flat_geog_spgist          PASS  flat_geog_spgist: byte-identical to flat_geom (EWKB; geography binary = geography(flat_geom)): 5000
+B50:O-1f:flat_geog_spgist          PASS  flat_geog_spgist: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+B50:O-1b:jsonb_geog                PASS  jsonb_geog: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+B50:O-1c:jsonb_geog                PASS  jsonb_geog: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+B50:O-1d:jsonb_geog                PASS  jsonb_geog: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+B50:O-1e:jsonb_geog                PASS  jsonb_geog: byte-identical to flat_geom (EWKB; geography binary = geography(flat_geom)): 5000
+B50:O-1f:jsonb_geog                PASS  jsonb_geog: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+B50:O-1b:jsonb_geog_gist           PASS  jsonb_geog_gist: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+B50:O-1c:jsonb_geog_gist           PASS  jsonb_geog_gist: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+B50:O-1d:jsonb_geog_gist           PASS  jsonb_geog_gist: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+B50:O-1e:jsonb_geog_gist           PASS  jsonb_geog_gist: byte-identical to flat_geom (EWKB; geography binary = geography(flat_geom)): 5000
+B50:O-1f:jsonb_geog_gist           PASS  jsonb_geog_gist: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+B50:O-1b:jsonb_doc_expr:geog       PASS  jsonb_doc_expr:geog: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+B50:O-1c:jsonb_doc_expr:geog       PASS  jsonb_doc_expr:geog: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+B50:O-1d:jsonb_doc_expr:geog       PASS  jsonb_doc_expr:geog: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+B50:O-1e:jsonb_doc_expr:geog       PASS  jsonb_doc_expr:geog: byte-identical to flat_geom (EWKB; geography binary = geography(flat_geom)): 5000
+B50:O-1f:jsonb_doc_expr:geog       PASS  jsonb_doc_expr:geog: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+B50:O-1d-type:flat_geom            PASS  flat_geom.geom column type is geometry(Point,4326): true
+B50:O-1d-type:flat_geom_gist       PASS  flat_geom_gist.geom column type is geometry(Point,4326): true
+B50:O-1d-type:flat_geom_spgist     PASS  flat_geom_spgist.geom column type is geometry(Point,4326): true
+B50:O-1d-type:flat_geom_brin       PASS  flat_geom_brin.geom column type is geometry(Point,4326): true
+B50:O-1d-type:jsonb_geom           PASS  jsonb_geom.geom column type is geometry(Point,4326): true
+B50:O-1d-type:jsonb_geom_gist      PASS  jsonb_geom_gist.geom column type is geometry(Point,4326): true
+B50:O-1d-type:flat_geog            PASS  flat_geog.geog column type is geography(Point,4326): true
+B50:O-1d-type:flat_geog_gist       PASS  flat_geog_gist.geog column type is geography(Point,4326): true
+B50:O-1d-type:flat_geog_spgist     PASS  flat_geog_spgist.geog column type is geography(Point,4326): true
+B50:O-1d-type:jsonb_geog           PASS  jsonb_geog.geog column type is geography(Point,4326): true
+B50:O-1d-type:jsonb_geog_gist      PASS  jsonb_geog_gist.geog column type is geography(Point,4326): true
+B50:O-1g:jsonb_geom                PASS  jsonb_geom.geom is a stored generated column built with ST_MakePoint(longitude, latitude), SRID 4326: s/true
+B50:O-1g:jsonb_geom_gist           PASS  jsonb_geom_gist.geom is a stored generated column built with ST_MakePoint(longitude, latitude), SRID 4326: s/true
+B50:O-1g:jsonb_geog                PASS  jsonb_geog.geog is a stored generated column built with ST_MakePoint(longitude, latitude), SRID 4326: s/true
+B50:O-1g:jsonb_geog_gist           PASS  jsonb_geog_gist.geog is a stored generated column built with ST_MakePoint(longitude, latitude), SRID 4326: s/true
+B50:O-7a                           PASS  flat_numeric fingerprint = source access_log_flat fingerprint: f562354dbf6c155f3ed0a93da433e79c
+B50:O-7b:jsonb_doc                 PASS  jsonb_doc fingerprint = source access_log_jsonb fingerprint: fb3bc16318e6a81c7930aed2217986ea
+B50:O-7b:jsonb_doc_expr            PASS  jsonb_doc_expr.doc = jsonb_doc.doc: 5000
+B50:O-7b:jsonb_geom                PASS  jsonb_geom.doc = jsonb_doc.doc: 5000
+B50:O-7b:jsonb_geom_gist           PASS  jsonb_geom_gist.doc = jsonb_doc.doc: 5000
+B50:O-7b:jsonb_geog                PASS  jsonb_geog.doc = jsonb_doc.doc: 5000
+B50:O-7b:jsonb_geog_gist           PASS  jsonb_geog_gist.doc = jsonb_doc.doc: 5000
+B50:O-7c                           PASS  flat_numeric_btree = flat_numeric (IS NOT DISTINCT FROM on both columns): 5000
+B-17                               PASS  data fingerprints of the 15 tables recorded: flat_numeric: aa8e40226347b042954cb74662f2c990; flat_numeric_btree: aa8e40226347b042954cb74662f2c990; flat_geom: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_gist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_spgist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_brin: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog_gist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog_spgist: 9f32c783e7ea53beefdf1efee8be7aa5; jsonb_doc: 66e5ca3a787032464c934cd2336366f1; jsonb_doc_expr: 66e5ca3a787032464c934cd2336366f1; jsonb_geom: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geom_gist: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geog: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geog_gist: 01db45d3dfeffa423eb79f85e07a9a13
+B-18                               INFO  recorded: pg_class and pg_statistic digests of log_regex_gis before: 0e146575b4c97d409217b6a7918727be over 30 relations | 36 pg_statistic rows fe5ceda549abe57f89b75f08e4804414
+B-19                               PASS  AC power before the harness and builds: power=Online battery=100% (High); cpu 2592/2592 MHz, processor performance 102.1 %, load 5 %
+H-01                               PASS  harness: 10 builds + ANALYZE 15 + sql/50 phase after (C-01..C-04) in one transaction, then ROLLBACK: exit 0; 745 check lines, C-03 606 of 606; no FAIL
+H-02                               PASS  harness: data fingerprints inside the transaction = before: flat_numeric: aa8e40226347b042954cb74662f2c990; flat_numeric_btree: aa8e40226347b042954cb74662f2c990; flat_geom: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_gist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_spgist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_brin: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog_gist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog_spgist: 9f32c783e7ea53beefdf1efee8be7aa5; jsonb_doc: 66e5ca3a787032464c934cd2336366f1; jsonb_doc_expr: 66e5ca3a787032464c934cd2336366f1; jsonb_geom: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geom_gist: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geog: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geog_gist: 01db45d3dfeffa423eb79f85e07a9a13
+H-INFO                             INFO  recorded: INFO K1 (geography, metres) vs K1g (geometry, degrees) at Reykjavik: common log_ids 8
+HR-01                              PASS  PostGIS state after ROLLBACK (extensions|schemas|public|event triggers|role settings|preload): plpgsql 1.0 pg_catalog, postgis 3.6.2 postgis|log_regex,log_regex_gis,log_regex_json,log_regex_json_write,postgis,public|0/0/0|0|0|
+HR-13                              PASS  log_regex_gis tables|primary keys|secondary indexes|names after ROLLBACK: 15|15|0|
+H-03                               PASS  sql/47 Step 7B verification (read-only) after ROLLBACK: exit 0; sql/47 PostGIS setup verification PASSED: all 155 checks
+H-04                               PASS  sql/50 phase before (read-only) after ROLLBACK: exit 0; sql/50 phase before PASSED: all 113 checks
+H-05                               PASS  data fingerprints after ROLLBACK = before: flat_numeric: aa8e40226347b042954cb74662f2c990; flat_numeric_btree: aa8e40226347b042954cb74662f2c990; flat_geom: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_gist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_spgist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_brin: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog_gist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog_spgist: 9f32c783e7ea53beefdf1efee8be7aa5; jsonb_doc: 66e5ca3a787032464c934cd2336366f1; jsonb_doc_expr: 66e5ca3a787032464c934cd2336366f1; jsonb_geom: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geom_gist: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geog: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geog_gist: 01db45d3dfeffa423eb79f85e07a9a13
+H-06                               PASS  pg_class (pages, tuples, relhasindex, filenode) and pg_statistic of log_regex_gis after ROLLBACK = before: 0e146575b4c97d409217b6a7918727be over 30 relations | 36 pg_statistic rows fe5ceda549abe57f89b75f08e4804414
+HB-02                              PASS  log_regex digest (raw, parser, flat, answer key) after harness: f8042db0318656b5929c86ea1f7888d4 over 203 items
+HB-03                              PASS  log_regex_json data digest after harness: 9e6f883112c4a01781bdce5cf9bf3a28 over 10 items
+HB-04                              PASS  Step 6D index digest after harness: e20752ca02d09e89281503569650d0ce over 14 indexes, 9510912 bytes
+HB-05                              PASS  raw_access_logs integrity (verify_raw_access_logs checks/passed) after harness: 10/10
+HB-09                              PASS  Step 6E write schema state after harness: i:access_log_json_w_pkey i:access_log_jsonb_w_pkey i:canonical_doc_pkey i:expected_update_pkey r:access_log_json_w r:access_log_jsonb_w r:canonical_doc r:expected_update|aeaef32371fa8143c088d4fdce9f6e0d|UA-1:238 UA-2:238 UA-3:5000|0/0
+HB-11                              PASS  source fingerprints flat|jsonb after harness: f562354dbf6c155f3ed0a93da433e79c|fb3bc16318e6a81c7930aed2217986ea
+HB-12                              PASS  relations per existing schema after harness: log_regex=49,log_regex_json=16,log_regex_json_write=8
+H-07                               PASS  manifest analysis/step7/step7c_baseline_step7b_sha256.txt: 14 entries (expected 14), 0 mismatches
+S-49                               PASS  sql/49 -v approved_step=7C: 10 indexes x 3 timed builds, third kept, ANALYZE 15 tables: exit 0; @@INDEXSIZE phase=after index=jsonb_geom_gist_idx table=jsonb_geom_gist method=gist bytes=212992 relpages=26 reltuples=5000 options=
+S-49b                              PASS  build records and index sizes: 30 @@BUILD lines (expected 30), 10 index sizes after (expected 10); analysis/step7/step7c_build_log.txt
+S-49c                              PASS  AC power after the builds: power=Online battery=100% (High); cpu 2592/2592 MHz, processor performance 128.7 %, load 3 %
+A49-01                             PASS  PostGIS state after sql/49 (extensions|schemas|public|event triggers|role settings|preload): plpgsql 1.0 pg_catalog, postgis 3.6.2 postgis|log_regex,log_regex_gis,log_regex_json,log_regex_json_write,postgis,public|0/0/0|0|0|
+A49-13                             PASS  log_regex_gis tables|primary keys|secondary indexes|names after sql/49: 15|15|10|flat_geog_gist_idx,flat_geog_spgist_idx,flat_geom_brin_idx,flat_geom_gist_idx,flat_geom_spgist_idx,flat_numeric_btree_lat_lon_idx,jsonb_doc_expr_geog_gist_idx,jsonb_doc_expr_geom_gist_idx,jsonb_geog_gist_idx,jsonb_geom_gist_idx
+A49-stats                          INFO  recorded: pg_class and pg_statistic digests after build and ANALYZE: 559fc36d84e7c2b0d06f2cde4888dd86 over 40 relations | 38 pg_statistic rows add136862deffe6f7eaf5252229ac2ed
+G-50a                              PASS  sql/50 phase after (read-only) before session 1: exit 0; sql/50 phase after PASSED: all 745 checks
+G-50a-C03                          PASS  correctness matrix before session 1: 202 rows x 3 plan modes = plain-SQL oracle: 606 of 606 PASS
+G-50a-FP                           PASS  data fingerprints of the 15 tables = before-build values (before session 1): flat_numeric: aa8e40226347b042954cb74662f2c990; flat_numeric_btree: aa8e40226347b042954cb74662f2c990; flat_geom: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_gist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_spgist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_brin: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog_gist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog_spgist: 9f32c783e7ea53beefdf1efee8be7aa5; jsonb_doc: 66e5ca3a787032464c934cd2336366f1; jsonb_doc_expr: 66e5ca3a787032464c934cd2336366f1; jsonb_geom: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geom_gist: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geog: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geog_gist: 01db45d3dfeffa423eb79f85e07a9a13
+G-50a:X-01                         PASS  installed extensions: plpgsql 1.0 pg_catalog, postgis 3.6.2 postgis
+G-50a:X-02                         PASS  postgis_lib_version(): 3.6.2
+G-50a:X-03                         PASS  spatial_ref_sys SRID 4326 authority: EPSG/4326
+G-50a:X-04                         PASS  operator classes of the design in schema postgis: brin_geometry_inclusion_ops_2d,gist_geography_ops,gist_geometry_ops_2d,spgist_geography_ops_nd,spgist_geometry_ops_2d
+G-50a:X-05                         PASS  IMMUTABLE: ST_MakePoint(float8, float8) / ST_SetSRID(geometry, integer) / geography(geometry): i/i/i
+G-50a:X-06                         PASS  schemas | public relations/functions/types | event triggers: log_regex,log_regex_gis,log_regex_json,log_regex_json_write,postgis,public|0/0/0|0
+G-50a:A-03a                        PASS  log_regex_gis relations = the 15 tables, 15 primary keys and exactly the 10 designed indexes: i:flat_geog_gist_idx i:flat_geog_gist_pkey i:flat_geog_pkey i:flat_geog_spgist_idx i:flat_geog_spgist_pkey i:flat_geom_brin_idx i:flat_geom_brin_pkey i:flat_geom_gist_idx i:flat_geom_gist_pkey i:flat_geom_pkey i:flat_geom_spgist_idx i:flat_geom_spgist_pkey i:flat_numeric_btree_lat_lon_idx i:flat_numeric_btree_pkey i:flat_numeric_pkey i:jsonb_doc_expr_geog_gist_idx i:jsonb_doc_expr_geom_gist_idx i:jsonb_doc_expr_pkey i:jsonb_doc_pkey i:jsonb_geog_gist_idx i:jsonb_geog_gist_pkey i:jsonb_geog_pkey i:jsonb_geom_gist_idx i:jsonb_geom_gist_pkey i:jsonb_geom_pkey r:flat_geog r:flat_geog_gist r:flat_geog_spgist r:flat_geom r:flat_geom_brin r:flat_geom_gist r:flat_geom_spgist r:flat_numeric r:flat_numeric_btree r:jsonb_doc r:jsonb_doc_expr r:jsonb_geog r:jsonb_geog_gist r:jsonb_geom r:jsonb_geom_gist
+G-50a:A-03b                        PASS  other objects in log_regex_gis (functions, triggers, policies, rules, non-PK constraints, standalone types): 0
+G-50a:A-04a                        PASS  pg_depend relation edges between log_regex_gis/postgis and log_regex/log_regex_json/log_regex_json_write: 0
+G-50a:A-04b                        PASS  objects of log_regex/log_regex_json/log_regex_json_write depending on PostGIS types or functions: 0
+G-50a:C-02:N-1                     PASS  index flat_numeric_btree_lat_lon_idx: table|method|opclass|valid|ready|key: flat_numeric_btree|btree|numeric_ops|true|true|latitude_degrees,longitude_degrees
+G-50a:C-02:G-1                     PASS  index flat_geom_gist_idx: table|method|opclass|valid|ready|key: flat_geom_gist|gist|gist_geometry_ops_2d|true|true|geom
+G-50a:C-02:G-2                     PASS  index flat_geom_spgist_idx: table|method|opclass|valid|ready|key: flat_geom_spgist|spgist|spgist_geometry_ops_2d|true|true|geom
+G-50a:C-02:G-3                     PASS  index flat_geom_brin_idx: table|method|opclass|valid|ready|key: flat_geom_brin|brin|brin_geometry_inclusion_ops_2d|true|true|geom
+G-50a:C-02:Y-1                     PASS  index flat_geog_gist_idx: table|method|opclass|valid|ready|key: flat_geog_gist|gist|gist_geography_ops|true|true|geog
+G-50a:C-02:Y-2                     PASS  index flat_geog_spgist_idx: table|method|opclass|valid|ready|key: flat_geog_spgist|spgist|spgist_geography_ops_nd|true|true|geog
+G-50a:C-02:J-1                     PASS  index jsonb_doc_expr_geom_gist_idx: table|method|opclass|valid|ready|key: jsonb_doc_expr|gist|gist_geometry_ops_2d|true|true|expr:true
+G-50a:C-02:J-2                     PASS  index jsonb_doc_expr_geog_gist_idx: table|method|opclass|valid|ready|key: jsonb_doc_expr|gist|gist_geography_ops|true|true|expr:true
+G-50a:C-02:J-3                     PASS  index jsonb_geom_gist_idx: table|method|opclass|valid|ready|key: jsonb_geom_gist|gist|gist_geometry_ops_2d|true|true|geom
+G-50a:C-02:J-4                     PASS  index jsonb_geog_gist_idx: table|method|opclass|valid|ready|key: jsonb_geog_gist|gist|gist_geography_ops|true|true|geog
+G-50a:O-1a:flat_numeric            PASS  flat_numeric: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+G-50a:O-1a:flat_numeric_btree      PASS  flat_numeric_btree: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+G-50a:O-1a:flat_geom               PASS  flat_geom: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+G-50a:O-1a:flat_geom_gist          PASS  flat_geom_gist: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+G-50a:O-1a:flat_geom_spgist        PASS  flat_geom_spgist: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+G-50a:O-1a:flat_geom_brin          PASS  flat_geom_brin: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+G-50a:O-1a:flat_geog               PASS  flat_geog: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+G-50a:O-1a:flat_geog_gist          PASS  flat_geog_gist: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+G-50a:O-1a:flat_geog_spgist        PASS  flat_geog_spgist: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+G-50a:O-1a:jsonb_doc               PASS  jsonb_doc: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+G-50a:O-1a:jsonb_doc_expr          PASS  jsonb_doc_expr: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+G-50a:O-1a:jsonb_geom              PASS  jsonb_geom: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+G-50a:O-1a:jsonb_geom_gist         PASS  jsonb_geom_gist: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+G-50a:O-1a:jsonb_geog              PASS  jsonb_geog: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+G-50a:O-1a:jsonb_geog_gist         PASS  jsonb_geog_gist: 5,000 rows, log_id set = flat_numeric (rows/unmatched): 5000/0
+G-50a:O-1b:flat_geom               PASS  flat_geom: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+G-50a:O-1c:flat_geom               PASS  flat_geom: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+G-50a:O-1d:flat_geom               PASS  flat_geom: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+G-50a:O-1e:flat_geom               PASS  flat_geom: byte-identical to flat_geom (EWKB): 5000
+G-50a:O-1f:flat_geom               PASS  flat_geom: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+G-50a:O-1b:flat_geom_gist          PASS  flat_geom_gist: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+G-50a:O-1c:flat_geom_gist          PASS  flat_geom_gist: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+G-50a:O-1d:flat_geom_gist          PASS  flat_geom_gist: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+G-50a:O-1e:flat_geom_gist          PASS  flat_geom_gist: byte-identical to flat_geom (EWKB): 5000
+G-50a:O-1f:flat_geom_gist          PASS  flat_geom_gist: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+G-50a:O-1b:flat_geom_spgist        PASS  flat_geom_spgist: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+G-50a:O-1c:flat_geom_spgist        PASS  flat_geom_spgist: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+G-50a:O-1d:flat_geom_spgist        PASS  flat_geom_spgist: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+G-50a:O-1e:flat_geom_spgist        PASS  flat_geom_spgist: byte-identical to flat_geom (EWKB): 5000
+G-50a:O-1f:flat_geom_spgist        PASS  flat_geom_spgist: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+G-50a:O-1b:flat_geom_brin          PASS  flat_geom_brin: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+G-50a:O-1c:flat_geom_brin          PASS  flat_geom_brin: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+G-50a:O-1d:flat_geom_brin          PASS  flat_geom_brin: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+G-50a:O-1e:flat_geom_brin          PASS  flat_geom_brin: byte-identical to flat_geom (EWKB): 5000
+G-50a:O-1f:flat_geom_brin          PASS  flat_geom_brin: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+G-50a:O-1b:jsonb_geom              PASS  jsonb_geom: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+G-50a:O-1c:jsonb_geom              PASS  jsonb_geom: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+G-50a:O-1d:jsonb_geom              PASS  jsonb_geom: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+G-50a:O-1e:jsonb_geom              PASS  jsonb_geom: byte-identical to flat_geom (EWKB): 5000
+G-50a:O-1f:jsonb_geom              PASS  jsonb_geom: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+G-50a:O-1b:jsonb_geom_gist         PASS  jsonb_geom_gist: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+G-50a:O-1c:jsonb_geom_gist         PASS  jsonb_geom_gist: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+G-50a:O-1d:jsonb_geom_gist         PASS  jsonb_geom_gist: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+G-50a:O-1e:jsonb_geom_gist         PASS  jsonb_geom_gist: byte-identical to flat_geom (EWKB): 5000
+G-50a:O-1f:jsonb_geom_gist         PASS  jsonb_geom_gist: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+G-50a:O-1b:jsonb_doc_expr:geom     PASS  jsonb_doc_expr:geom: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+G-50a:O-1c:jsonb_doc_expr:geom     PASS  jsonb_doc_expr:geom: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+G-50a:O-1d:jsonb_doc_expr:geom     PASS  jsonb_doc_expr:geom: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+G-50a:O-1e:jsonb_doc_expr:geom     PASS  jsonb_doc_expr:geom: byte-identical to flat_geom (EWKB): 5000
+G-50a:O-1f:jsonb_doc_expr:geom     PASS  jsonb_doc_expr:geom: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+G-50a:O-1b:flat_geog               PASS  flat_geog: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+G-50a:O-1c:flat_geog               PASS  flat_geog: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+G-50a:O-1d:flat_geog               PASS  flat_geog: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+G-50a:O-1e:flat_geog               PASS  flat_geog: byte-identical to flat_geom (EWKB; geography binary = geography(flat_geom)): 5000
+G-50a:O-1f:flat_geog               PASS  flat_geog: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+G-50a:O-1b:flat_geog_gist          PASS  flat_geog_gist: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+G-50a:O-1c:flat_geog_gist          PASS  flat_geog_gist: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+G-50a:O-1d:flat_geog_gist          PASS  flat_geog_gist: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+G-50a:O-1e:flat_geog_gist          PASS  flat_geog_gist: byte-identical to flat_geom (EWKB; geography binary = geography(flat_geom)): 5000
+G-50a:O-1f:flat_geog_gist          PASS  flat_geog_gist: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+G-50a:O-1b:flat_geog_spgist        PASS  flat_geog_spgist: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+G-50a:O-1c:flat_geog_spgist        PASS  flat_geog_spgist: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+G-50a:O-1d:flat_geog_spgist        PASS  flat_geog_spgist: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+G-50a:O-1e:flat_geog_spgist        PASS  flat_geog_spgist: byte-identical to flat_geom (EWKB; geography binary = geography(flat_geom)): 5000
+G-50a:O-1f:flat_geog_spgist        PASS  flat_geog_spgist: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+G-50a:O-1b:jsonb_geog              PASS  jsonb_geog: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+G-50a:O-1c:jsonb_geog              PASS  jsonb_geog: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+G-50a:O-1d:jsonb_geog              PASS  jsonb_geog: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+G-50a:O-1e:jsonb_geog              PASS  jsonb_geog: byte-identical to flat_geom (EWKB; geography binary = geography(flat_geom)): 5000
+G-50a:O-1f:jsonb_geog              PASS  jsonb_geog: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+G-50a:O-1b:jsonb_geog_gist         PASS  jsonb_geog_gist: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+G-50a:O-1c:jsonb_geog_gist         PASS  jsonb_geog_gist: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+G-50a:O-1d:jsonb_geog_gist         PASS  jsonb_geog_gist: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+G-50a:O-1e:jsonb_geog_gist         PASS  jsonb_geog_gist: byte-identical to flat_geom (EWKB; geography binary = geography(flat_geom)): 5000
+G-50a:O-1f:jsonb_geog_gist         PASS  jsonb_geog_gist: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+G-50a:O-1b:jsonb_doc_expr:geog     PASS  jsonb_doc_expr:geog: non-NULL points / NULL where the flat pair is not both VALID (mismatches): 4161/0
+G-50a:O-1c:jsonb_doc_expr:geog     PASS  jsonb_doc_expr:geog: exact coordinates, round(ST_X,7) = longitude and round(ST_Y,7) = latitude: 4161
+G-50a:O-1d:jsonb_doc_expr:geog     PASS  jsonb_doc_expr:geog: SRID 4326, GeometryType POINT, ST_IsValid: 4161
+G-50a:O-1e:jsonb_doc_expr:geog     PASS  jsonb_doc_expr:geog: byte-identical to flat_geom (EWKB; geography binary = geography(flat_geom)): 5000
+G-50a:O-1f:jsonb_doc_expr:geog     PASS  jsonb_doc_expr:geog: axis order (|longitude| > 90 points with ST_X = longitude, |ST_Y| <= 90) | boundary rows: 856|2122=0.0000000,0.0000000;2272=90.0000000,180.0000000;2280=-90.0000000,-180.0000000
+G-50a:O-1d-type:flat_geom          PASS  flat_geom.geom column type is geometry(Point,4326): true
+G-50a:O-1d-type:flat_geom_gist     PASS  flat_geom_gist.geom column type is geometry(Point,4326): true
+G-50a:O-1d-type:flat_geom_spgist   PASS  flat_geom_spgist.geom column type is geometry(Point,4326): true
+G-50a:O-1d-type:flat_geom_brin     PASS  flat_geom_brin.geom column type is geometry(Point,4326): true
+G-50a:O-1d-type:jsonb_geom         PASS  jsonb_geom.geom column type is geometry(Point,4326): true
+G-50a:O-1d-type:jsonb_geom_gist    PASS  jsonb_geom_gist.geom column type is geometry(Point,4326): true
+G-50a:O-1d-type:flat_geog          PASS  flat_geog.geog column type is geography(Point,4326): true
+G-50a:O-1d-type:flat_geog_gist     PASS  flat_geog_gist.geog column type is geography(Point,4326): true
+G-50a:O-1d-type:flat_geog_spgist   PASS  flat_geog_spgist.geog column type is geography(Point,4326): true
+G-50a:O-1d-type:jsonb_geog         PASS  jsonb_geog.geog column type is geography(Point,4326): true
+G-50a:O-1d-type:jsonb_geog_gist    PASS  jsonb_geog_gist.geog column type is geography(Point,4326): true
+G-50a:O-1g:jsonb_geom              PASS  jsonb_geom.geom is a stored generated column built with ST_MakePoint(longitude, latitude), SRID 4326: s/true
+G-50a:O-1g:jsonb_geom_gist         PASS  jsonb_geom_gist.geom is a stored generated column built with ST_MakePoint(longitude, latitude), SRID 4326: s/true
+G-50a:O-1g:jsonb_geog              PASS  jsonb_geog.geog is a stored generated column built with ST_MakePoint(longitude, latitude), SRID 4326: s/true
+G-50a:O-1g:jsonb_geog_gist         PASS  jsonb_geog_gist.geog is a stored generated column built with ST_MakePoint(longitude, latitude), SRID 4326: s/true
+G-50a:O-7a                         PASS  flat_numeric fingerprint = source access_log_flat fingerprint: f562354dbf6c155f3ed0a93da433e79c
+G-50a:O-7b:jsonb_doc               PASS  jsonb_doc fingerprint = source access_log_jsonb fingerprint: fb3bc16318e6a81c7930aed2217986ea
+G-50a:O-7b:jsonb_doc_expr          PASS  jsonb_doc_expr.doc = jsonb_doc.doc: 5000
+G-50a:O-7b:jsonb_geom              PASS  jsonb_geom.doc = jsonb_doc.doc: 5000
+G-50a:O-7b:jsonb_geom_gist         PASS  jsonb_geom_gist.doc = jsonb_doc.doc: 5000
+G-50a:O-7b:jsonb_geog              PASS  jsonb_geog.doc = jsonb_doc.doc: 5000
+G-50a:O-7b:jsonb_geog_gist         PASS  jsonb_geog_gist.doc = jsonb_doc.doc: 5000
+G-50a:O-7c                         PASS  flat_numeric_btree = flat_numeric (IS NOT DISTINCT FROM on both columns): 5000
+G-50a:R-B1                         PASS  B1: plain-SQL oracle = value recorded in Step 7B: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:R-B2                         PASS  B2: plain-SQL oracle = value recorded in Step 7B: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:R-B3                         PASS  B3: plain-SQL oracle = value recorded in Step 7B: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:R-B4                         PASS  B4: plain-SQL oracle = value recorded in Step 7B: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:R-B5                         PASS  B5: plain-SQL oracle = value recorded in Step 7B: 0:-
+G-50a:R-B6                         PASS  B6: plain-SQL oracle = value recorded in Step 7B: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:R-D1                         PASS  D1: plain-SQL oracle = value recorded in Step 7B: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:R-D2                         PASS  D2: plain-SQL oracle = value recorded in Step 7B: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:R-D3                         PASS  D3: plain-SQL oracle = value recorded in Step 7B: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:R-D4                         PASS  D4: plain-SQL oracle = value recorded in Step 7B: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:R-D5                         PASS  D5: plain-SQL oracle = value recorded in Step 7B: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:R-D6                         PASS  D6: plain-SQL oracle = value recorded in Step 7B: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:R-D7                         PASS  D7: plain-SQL oracle = value recorded in Step 7B: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:R-K1                         PASS  K1: plain-SQL oracle = value recorded in Step 7B: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:R-K2                         PASS  K2: plain-SQL oracle = value recorded in Step 7B: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:R-P3                         PASS  P3: rows and non-NULL distances: 5000:4161
+G-50a:C-03:B1@N-0/default          PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@N-0/index            PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@N-0/seq              PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@N-1/default          PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@N-1/index            PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@N-1/seq              PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@G-0/default          PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@G-0/index            PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@G-0/seq              PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@G-1/default          PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@G-1/index            PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@G-1/seq              PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@G-2/default          PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@G-2/index            PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@G-2/seq              PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@G-3/default          PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@G-3/index            PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@G-3/seq              PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@J-0g/default         PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@J-0g/index           PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@J-0g/seq             PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@J-1/default          PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@J-1/index            PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@J-1/seq              PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@J-3c/default         PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@J-3c/index           PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@J-3c/seq             PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@J-3/default          PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@J-3/index            PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B1@J-3/seq              PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:B2@N-0/default          PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@N-0/index            PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@N-0/seq              PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@N-1/default          PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@N-1/index            PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@N-1/seq              PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@G-0/default          PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@G-0/index            PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@G-0/seq              PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@G-1/default          PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@G-1/index            PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@G-1/seq              PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@G-2/default          PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@G-2/index            PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@G-2/seq              PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@G-3/default          PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@G-3/index            PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@G-3/seq              PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@J-0g/default         PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@J-0g/index           PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@J-0g/seq             PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@J-1/default          PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@J-1/index            PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@J-1/seq              PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@J-3c/default         PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@J-3c/index           PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@J-3c/seq             PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@J-3/default          PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@J-3/index            PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B2@J-3/seq              PASS  result = plain-SQL oracle: 416:7e9ec48ea506cadea7792531578fc2d3
+G-50a:C-03:B3@N-0/default          PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@N-0/index            PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@N-0/seq              PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@N-1/default          PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@N-1/index            PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@N-1/seq              PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@G-0/default          PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@G-0/index            PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@G-0/seq              PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@G-1/default          PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@G-1/index            PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@G-1/seq              PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@G-2/default          PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@G-2/index            PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@G-2/seq              PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@G-3/default          PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@G-3/index            PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@G-3/seq              PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@J-0g/default         PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@J-0g/index           PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@J-0g/seq             PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@J-1/default          PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@J-1/index            PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@J-1/seq              PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@J-3c/default         PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@J-3c/index           PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@J-3c/seq             PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@J-3/default          PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@J-3/index            PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B3@J-3/seq              PASS  result = plain-SQL oracle: 1580:e07244d99def3a9fc8fda8c9d49fe520
+G-50a:C-03:B4@N-0/default          PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@N-0/index            PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@N-0/seq              PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@N-1/default          PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@N-1/index            PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@N-1/seq              PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@G-0/default          PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@G-0/index            PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@G-0/seq              PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@G-1/default          PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@G-1/index            PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@G-1/seq              PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@G-2/default          PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@G-2/index            PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@G-2/seq              PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@G-3/default          PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@G-3/index            PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@G-3/seq              PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@J-0g/default         PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@J-0g/index           PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@J-0g/seq             PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@J-1/default          PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@J-1/index            PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@J-1/seq              PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@J-3c/default         PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@J-3c/index           PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@J-3c/seq             PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@J-3/default          PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@J-3/index            PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B4@J-3/seq              PASS  result = plain-SQL oracle: 3897:69112583f9543c5ac7502660e9d42e8c
+G-50a:C-03:B5@N-0/default          PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@N-0/index            PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@N-0/seq              PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@N-1/default          PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@N-1/index            PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@N-1/seq              PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@G-0/default          PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@G-0/index            PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@G-0/seq              PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@G-1/default          PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@G-1/index            PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@G-1/seq              PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@G-2/default          PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@G-2/index            PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@G-2/seq              PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@G-3/default          PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@G-3/index            PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@G-3/seq              PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@J-0g/default         PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@J-0g/index           PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@J-0g/seq             PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@J-1/default          PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@J-1/index            PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@J-1/seq              PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@J-3c/default         PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@J-3c/index           PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@J-3c/seq             PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@J-3/default          PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@J-3/index            PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B5@J-3/seq              PASS  result = plain-SQL oracle: 0:-
+G-50a:C-03:B6@N-0/default          PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@N-0/index            PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@N-0/seq              PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@N-1/default          PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@N-1/index            PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@N-1/seq              PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@G-0/default          PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@G-0/index            PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@G-0/seq              PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@G-1/default          PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@G-1/index            PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@G-1/seq              PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@G-2/default          PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@G-2/index            PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@G-2/seq              PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@G-3/default          PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@G-3/index            PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@G-3/seq              PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@J-0g/default         PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@J-0g/index           PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@J-0g/seq             PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@J-1/default          PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@J-1/index            PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@J-1/seq              PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@J-3c/default         PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@J-3c/index           PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@J-3c/seq             PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@J-3/default          PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@J-3/index            PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:B6@J-3/seq              PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D1@Y-0/default          PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@Y-0/index            PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@Y-0/seq              PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@Y-1/default          PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@Y-1/index            PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@Y-1/seq              PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@Y-2/default          PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@Y-2/index            PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@Y-2/seq              PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@J-0y/default         PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@J-0y/index           PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@J-0y/seq             PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@J-2/default          PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@J-2/index            PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@J-2/seq              PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@J-4c/default         PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@J-4c/index           PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@J-4c/seq             PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@J-4/default          PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@J-4/index            PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1@J-4/seq              PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:MD1@G-0/default         PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:MD1@G-0/index           PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:MD1@G-0/seq             PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:MD1@G-1/default         PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:MD1@G-1/index           PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:MD1@G-1/seq             PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D2@Y-0/default          PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@Y-0/index            PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@Y-0/seq              PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@Y-1/default          PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@Y-1/index            PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@Y-1/seq              PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@Y-2/default          PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@Y-2/index            PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@Y-2/seq              PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@J-0y/default         PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@J-0y/index           PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@J-0y/seq             PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@J-2/default          PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@J-2/index            PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@J-2/seq              PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@J-4c/default         PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@J-4c/index           PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@J-4c/seq             PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@J-4/default          PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@J-4/index            PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2@J-4/seq              PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:MD2@G-0/default         PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:MD2@G-0/index           PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:MD2@G-0/seq             PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:MD2@G-1/default         PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:MD2@G-1/index           PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:MD2@G-1/seq             PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D3@Y-0/default          PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@Y-0/index            PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@Y-0/seq              PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@Y-1/default          PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@Y-1/index            PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@Y-1/seq              PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@Y-2/default          PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@Y-2/index            PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@Y-2/seq              PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@J-0y/default         PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@J-0y/index           PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@J-0y/seq             PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@J-2/default          PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@J-2/index            PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@J-2/seq              PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@J-4c/default         PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@J-4c/index           PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@J-4c/seq             PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@J-4/default          PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@J-4/index            PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3@J-4/seq              PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D4@Y-0/default          PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@Y-0/index            PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@Y-0/seq              PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@Y-1/default          PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@Y-1/index            PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@Y-1/seq              PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@Y-2/default          PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@Y-2/index            PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@Y-2/seq              PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@J-0y/default         PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@J-0y/index           PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@J-0y/seq             PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@J-2/default          PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@J-2/index            PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@J-2/seq              PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@J-4c/default         PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@J-4c/index           PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@J-4c/seq             PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@J-4/default          PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@J-4/index            PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4@J-4/seq              PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D5@Y-0/default          PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@Y-0/index            PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@Y-0/seq              PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@Y-1/default          PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@Y-1/index            PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@Y-1/seq              PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@Y-2/default          PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@Y-2/index            PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@Y-2/seq              PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@J-0y/default         PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@J-0y/index           PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@J-0y/seq             PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@J-2/default          PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@J-2/index            PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@J-2/seq              PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@J-4c/default         PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@J-4c/index           PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@J-4c/seq             PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@J-4/default          PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@J-4/index            PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5@J-4/seq              PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D6@Y-0/default          PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@Y-0/index            PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@Y-0/seq              PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@Y-1/default          PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@Y-1/index            PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@Y-1/seq              PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@Y-2/default          PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@Y-2/index            PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@Y-2/seq              PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@J-0y/default         PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@J-0y/index           PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@J-0y/seq             PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@J-2/default          PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@J-2/index            PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@J-2/seq              PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@J-4c/default         PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@J-4c/index           PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@J-4c/seq             PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@J-4/default          PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@J-4/index            PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6@J-4/seq              PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:MD6@G-0/default         PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:MD6@G-0/index           PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:MD6@G-0/seq             PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:MD6@G-1/default         PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:MD6@G-1/index           PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:MD6@G-1/seq             PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D7@Y-0/default          PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@Y-0/index            PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@Y-0/seq              PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@Y-1/default          PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@Y-1/index            PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@Y-1/seq              PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@Y-2/default          PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@Y-2/index            PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@Y-2/seq              PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@J-0y/default         PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@J-0y/index           PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@J-0y/seq             PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@J-2/default          PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@J-2/index            PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@J-2/seq              PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@J-4c/default         PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@J-4c/index           PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@J-4c/seq             PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@J-4/default          PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@J-4/index            PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7@J-4/seq              PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D1-s@Y-0/default        PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@Y-0/index          PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@Y-0/seq            PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@Y-1/default        PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@Y-1/index          PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@Y-1/seq            PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@Y-2/default        PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@Y-2/index          PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@Y-2/seq            PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@J-0y/default       PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@J-0y/index         PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@J-0y/seq           PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@J-2/default        PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@J-2/index          PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@J-2/seq            PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@J-4c/default       PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@J-4c/index         PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@J-4c/seq           PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@J-4/default        PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@J-4/index          PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D1-s@J-4/seq            PASS  result = plain-SQL oracle: 410:e8583952b4262fd551703878cdd64bb9
+G-50a:C-03:D2-s@Y-0/default        PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@Y-0/index          PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@Y-0/seq            PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@Y-1/default        PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@Y-1/index          PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@Y-1/seq            PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@Y-2/default        PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@Y-2/index          PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@Y-2/seq            PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@J-0y/default       PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@J-0y/index         PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@J-0y/seq           PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@J-2/default        PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@J-2/index          PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@J-2/seq            PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@J-4c/default       PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@J-4c/index         PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@J-4c/seq           PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@J-4/default        PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@J-4/index          PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D2-s@J-4/seq            PASS  result = plain-SQL oracle: 1101:09f877d401cb13d4bdfffdb39a189388
+G-50a:C-03:D3-s@Y-0/default        PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@Y-0/index          PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@Y-0/seq            PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@Y-1/default        PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@Y-1/index          PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@Y-1/seq            PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@Y-2/default        PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@Y-2/index          PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@Y-2/seq            PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@J-0y/default       PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@J-0y/index         PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@J-0y/seq           PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@J-2/default        PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@J-2/index          PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@J-2/seq            PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@J-4c/default       PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@J-4c/index         PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@J-4c/seq           PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@J-4/default        PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@J-4/index          PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D3-s@J-4/seq            PASS  result = plain-SQL oracle: 599:56123c817c3f641bcc4a779662e8fb2a
+G-50a:C-03:D4-s@Y-0/default        PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@Y-0/index          PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@Y-0/seq            PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@Y-1/default        PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@Y-1/index          PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@Y-1/seq            PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@Y-2/default        PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@Y-2/index          PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@Y-2/seq            PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@J-0y/default       PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@J-0y/index         PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@J-0y/seq           PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@J-2/default        PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@J-2/index          PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@J-2/seq            PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@J-4c/default       PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@J-4c/index         PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@J-4c/seq           PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@J-4/default        PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@J-4/index          PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D4-s@J-4/seq            PASS  result = plain-SQL oracle: 2059:5231b94f79b1d93616a898709df2e865
+G-50a:C-03:D5-s@Y-0/default        PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@Y-0/index          PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@Y-0/seq            PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@Y-1/default        PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@Y-1/index          PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@Y-1/seq            PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@Y-2/default        PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@Y-2/index          PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@Y-2/seq            PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@J-0y/default       PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@J-0y/index         PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@J-0y/seq           PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@J-2/default        PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@J-2/index          PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@J-2/seq            PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@J-4c/default       PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@J-4c/index         PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@J-4c/seq           PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@J-4/default        PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@J-4/index          PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D5-s@J-4/seq            PASS  result = plain-SQL oracle: 262:67d6fd7d52288b8729c205b8b7685a1e
+G-50a:C-03:D6-s@Y-0/default        PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@Y-0/index          PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@Y-0/seq            PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@Y-1/default        PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@Y-1/index          PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@Y-1/seq            PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@Y-2/default        PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@Y-2/index          PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@Y-2/seq            PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@J-0y/default       PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@J-0y/index         PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@J-0y/seq           PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@J-2/default        PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@J-2/index          PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@J-2/seq            PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@J-4c/default       PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@J-4c/index         PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@J-4c/seq           PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@J-4/default        PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@J-4/index          PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D6-s@J-4/seq            PASS  result = plain-SQL oracle: 15:1425ecba1e7b5bdf0e0497024ed7ba2e
+G-50a:C-03:D7-s@Y-0/default        PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@Y-0/index          PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@Y-0/seq            PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@Y-1/default        PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@Y-1/index          PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@Y-1/seq            PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@Y-2/default        PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@Y-2/index          PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@Y-2/seq            PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@J-0y/default       PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@J-0y/index         PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@J-0y/seq           PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@J-2/default        PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@J-2/index          PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@J-2/seq            PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@J-4c/default       PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@J-4c/index         PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@J-4c/seq           PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@J-4/default        PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@J-4/index          PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:D7-s@J-4/seq            PASS  result = plain-SQL oracle: 1:743394beff4b1282ba735e5e3723ed74
+G-50a:C-03:K1@Y-0/default          PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@Y-0/index            PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@Y-0/seq              PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@Y-1/default          PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@Y-1/index            PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@Y-1/seq              PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@Y-2/default          PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@Y-2/index            PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@Y-2/seq              PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@J-0y/default         PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@J-0y/index           PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@J-0y/seq             PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@J-2/default          PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@J-2/index            PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@J-2/seq              PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@J-4c/default         PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@J-4c/index           PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@J-4c/seq             PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@J-4/default          PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@J-4/index            PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1@J-4/seq              PASS  result = plain-SQL oracle: 10:b8bcc3f1f5a82199a44fb1cdd495d6b4
+G-50a:C-03:K1g@G-0:multiset/default PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00001832000000,0.00002610000000,0.00009458108210,0.00010805000000,0.00011168000000,0.00011885227136
+G-50a:C-03:K1g@G-0:multiset/index  PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00001832000000,0.00002610000000,0.00009458108210,0.00010805000000,0.00011168000000,0.00011885227136
+G-50a:C-03:K1g@G-0:multiset/seq    PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00001832000000,0.00002610000000,0.00009458108210,0.00010805000000,0.00011168000000,0.00011885227136
+G-50a:C-03:K1g@G-0:set/default     PASS  result = plain-SQL oracle: 347b1c8b5cea24a65e7f564fc6a865cb
+G-50a:C-03:K1g@G-0:set/index       PASS  result = plain-SQL oracle: 347b1c8b5cea24a65e7f564fc6a865cb
+G-50a:C-03:K1g@G-0:set/seq         PASS  result = plain-SQL oracle: 347b1c8b5cea24a65e7f564fc6a865cb
+G-50a:C-03:K1g@G-1:multiset/default PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00001832000000,0.00002610000000,0.00009458108210,0.00010805000000,0.00011168000000,0.00011885227136
+G-50a:C-03:K1g@G-1:multiset/index  PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00001832000000,0.00002610000000,0.00009458108210,0.00010805000000,0.00011168000000,0.00011885227136
+G-50a:C-03:K1g@G-1:multiset/seq    PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00001832000000,0.00002610000000,0.00009458108210,0.00010805000000,0.00011168000000,0.00011885227136
+G-50a:C-03:K1g@G-1:set/default     PASS  result = plain-SQL oracle: 347b1c8b5cea24a65e7f564fc6a865cb
+G-50a:C-03:K1g@G-1:set/index       PASS  result = plain-SQL oracle: 347b1c8b5cea24a65e7f564fc6a865cb
+G-50a:C-03:K1g@G-1:set/seq         PASS  result = plain-SQL oracle: 347b1c8b5cea24a65e7f564fc6a865cb
+G-50a:C-03:K2@Y-0/default          PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@Y-0/index            PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@Y-0/seq              PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@Y-1/default          PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@Y-1/index            PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@Y-1/seq              PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@Y-2/default          PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@Y-2/index            PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@Y-2/seq              PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@J-0y/default         PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@J-0y/index           PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@J-0y/seq             PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@J-2/default          PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@J-2/index            PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@J-2/seq              PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@J-4c/default         PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@J-4c/index           PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@J-4c/seq             PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@J-4/default          PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@J-4/index            PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K2@J-4/seq              PASS  result = plain-SQL oracle: 100:ff4ae07b829ad4de9fa92124f6df18f0
+G-50a:C-03:K3@G-0:multiset/default PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@G-0:multiset/index   PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@G-0:multiset/seq     PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@G-0:set/default      PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@G-0:set/index        PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@G-0:set/seq          PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@G-1:multiset/default PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@G-1:multiset/index   PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@G-1:multiset/seq     PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@G-1:set/default      PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@G-1:set/index        PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@G-1:set/seq          PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@G-2:multiset/default PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@G-2:multiset/index   PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@G-2:multiset/seq     PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@G-2:set/default      PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@G-2:set/index        PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@G-2:set/seq          PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@G-3:multiset/default PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@G-3:multiset/index   PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@G-3:multiset/seq     PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@G-3:set/default      PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@G-3:set/index        PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@G-3:set/seq          PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@J-0g:multiset/default PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@J-0g:multiset/index  PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@J-0g:multiset/seq    PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@J-0g:set/default     PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@J-0g:set/index       PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@J-0g:set/seq         PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@J-1:multiset/default PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@J-1:multiset/index   PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@J-1:multiset/seq     PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@J-1:set/default      PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@J-1:set/index        PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@J-1:set/seq          PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@J-3c:multiset/default PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@J-3c:multiset/index  PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@J-3c:multiset/seq    PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@J-3c:set/default     PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@J-3c:set/index       PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@J-3c:set/seq         PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@J-3:multiset/default PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@J-3:multiset/index   PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@J-3:multiset/seq     PASS  result = plain-SQL oracle: 0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000000000000,0.00000416209778,0.00001044000000,0.00001924000000,0.00002194000000
+G-50a:C-03:K3@J-3:set/default      PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@J-3:set/index        PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:K3@J-3:set/seq          PASS  result = plain-SQL oracle: 81da4e781b5d5732b2526d3e186c87a9
+G-50a:C-03:P1@Y-0/default          PASS  result = plain-SQL oracle: 5000:4161:4cd03979703d4c1f3e97acd328e3c42c
+G-50a:C-03:P1@Y-0/index            PASS  result = plain-SQL oracle: 5000:4161:4cd03979703d4c1f3e97acd328e3c42c
+G-50a:C-03:P1@Y-0/seq              PASS  result = plain-SQL oracle: 5000:4161:4cd03979703d4c1f3e97acd328e3c42c
+G-50a:C-03:P2@Y-0/default          PASS  result = plain-SQL oracle: 5000:4161:true
+G-50a:C-03:P2@Y-0/index            PASS  result = plain-SQL oracle: 5000:4161:true
+G-50a:C-03:P2@Y-0/seq              PASS  result = plain-SQL oracle: 5000:4161:true
+G-50a:C-03:P3@N-0/default          PASS  result = plain-SQL oracle: 5000:4161:4cd03979703d4c1f3e97acd328e3c42c
+G-50a:C-03:P3@N-0/index            PASS  result = plain-SQL oracle: 5000:4161:4cd03979703d4c1f3e97acd328e3c42c
+G-50a:C-03:P3@N-0/seq              PASS  result = plain-SQL oracle: 5000:4161:4cd03979703d4c1f3e97acd328e3c42c
+G-50a:C-03:P4@J-0y/default         PASS  result = plain-SQL oracle: 5000:4161:4cd03979703d4c1f3e97acd328e3c42c
+G-50a:C-03:P4@J-0y/index           PASS  result = plain-SQL oracle: 5000:4161:4cd03979703d4c1f3e97acd328e3c42c
+G-50a:C-03:P4@J-0y/seq             PASS  result = plain-SQL oracle: 5000:4161:4cd03979703d4c1f3e97acd328e3c42c
+G-50a-INFO                         INFO  recorded: INFO K1 (geography, metres) vs K1g (geometry, degrees) at Reykjavik: common log_ids 8
+E-1-sessions                       PASS  other client sessions before session 1: 0 non-idle of 4 other client sessions
+E-1-power-before                   PASS  AC power before session 1: power=Online battery=100% (High); cpu 2592/2592 MHz, processor performance 102.8 %, load 3 %
+E-1-run                            PASS  session 1: sql/51 exit code, no error, not aborted: exit 0; 24.9 s; completed
+E-1-count                          PASS  session 1: 192 series x (3 warm-up + 15 measured + detail + forced) executions: 3840 runs, 3840 plans; @@SESSION_END 2026-09-12 21:14:54.078031+00
+E-1-env                            INFO  recorded: @@ENV session=1 pid=48436 start=2026-09-12 21:14:29.292502+00 PostgreSQL 17.9 on x86_64-windows, compiled by msvc-19.44.35225, 64-bit
+E-1-active                         PASS  session 1: 0 other active client sessions before each of the 23 query blocks: 23 blocks, all 0
+E-1-power-after                    PASS  AC power after session 1: power=Online battery=100% (High); cpu 2592/2592 MHz, processor performance 102.8 %, load 3 %
+G-50b                              PASS  sql/50 phase after (read-only) before session 2: exit 0; sql/50 phase after PASSED: all 745 checks
+G-50b-C03                          PASS  correctness matrix before session 2: 202 rows x 3 plan modes = plain-SQL oracle: 606 of 606 PASS
+G-50b-FP                           PASS  data fingerprints of the 15 tables = before-build values (before session 2): flat_numeric: aa8e40226347b042954cb74662f2c990; flat_numeric_btree: aa8e40226347b042954cb74662f2c990; flat_geom: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_gist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_spgist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_brin: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog_gist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog_spgist: 9f32c783e7ea53beefdf1efee8be7aa5; jsonb_doc: 66e5ca3a787032464c934cd2336366f1; jsonb_doc_expr: 66e5ca3a787032464c934cd2336366f1; jsonb_geom: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geom_gist: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geog: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geog_gist: 01db45d3dfeffa423eb79f85e07a9a13
+E-2-sessions                       PASS  other client sessions before session 2: 0 non-idle of 4 other client sessions
+E-2-power-before                   PASS  AC power before session 2: power=Online battery=100% (High); cpu 2592/2592 MHz, processor performance 114.6 %, load 7 %
+E-2-run                            PASS  session 2: sql/51 exit code, no error, not aborted: exit 0; 24.8 s; completed
+E-2-count                          PASS  session 2: 192 series x (3 warm-up + 15 measured + detail + forced) executions: 3840 runs, 3840 plans; @@SESSION_END 2026-09-12 21:15:52.088649+00
+E-2-env                            INFO  recorded: @@ENV session=2 pid=20940 start=2026-09-12 21:15:27.335919+00 PostgreSQL 17.9 on x86_64-windows, compiled by msvc-19.44.35225, 64-bit
+E-2-active                         PASS  session 2: 0 other active client sessions before each of the 23 query blocks: 23 blocks, all 0
+E-2-power-after                    PASS  AC power after session 2: power=Online battery=100% (High); cpu 2592/2592 MHz, processor performance 122.8 %, load 5 %
+G-50c                              PASS  sql/50 phase after (read-only) after session 2: exit 0; sql/50 phase after PASSED: all 745 checks
+G-50c-C03                          PASS  correctness matrix after session 2: 202 rows x 3 plan modes = plain-SQL oracle: 606 of 606 PASS
+G-50c-FP                           PASS  data fingerprints of the 15 tables = before-build values (after session 2): flat_numeric: aa8e40226347b042954cb74662f2c990; flat_numeric_btree: aa8e40226347b042954cb74662f2c990; flat_geom: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_gist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_spgist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_brin: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog_gist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog_spgist: 9f32c783e7ea53beefdf1efee8be7aa5; jsonb_doc: 66e5ca3a787032464c934cd2336366f1; jsonb_doc_expr: 66e5ca3a787032464c934cd2336366f1; jsonb_geom: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geom_gist: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geog: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geog_gist: 01db45d3dfeffa423eb79f85e07a9a13
+Z-01                               PASS  PostGIS state after (extensions|schemas|public|event triggers|role settings|preload): plpgsql 1.0 pg_catalog, postgis 3.6.2 postgis|log_regex,log_regex_gis,log_regex_json,log_regex_json_write,postgis,public|0/0/0|0|0|
+Z-13                               PASS  log_regex_gis tables|primary keys|secondary indexes|names after: 15|15|10|flat_geog_gist_idx,flat_geog_spgist_idx,flat_geom_brin_idx,flat_geom_gist_idx,flat_geom_spgist_idx,flat_numeric_btree_lat_lon_idx,jsonb_doc_expr_geog_gist_idx,jsonb_doc_expr_geom_gist_idx,jsonb_geog_gist_idx,jsonb_geom_gist_idx
+Z-14                               PASS  pg_class and pg_statistic of log_regex_gis unchanged by the read-only sessions: 559fc36d84e7c2b0d06f2cde4888dd86 over 40 relations | 38 pg_statistic rows add136862deffe6f7eaf5252229ac2ed
+Z-02                               PASS  log_regex digest (raw, parser, flat, answer key) after: f8042db0318656b5929c86ea1f7888d4 over 203 items
+Z-03                               PASS  log_regex_json data digest after: 9e6f883112c4a01781bdce5cf9bf3a28 over 10 items
+Z-04                               PASS  Step 6D index digest after: e20752ca02d09e89281503569650d0ce over 14 indexes, 9510912 bytes
+Z-05                               PASS  raw_access_logs integrity (verify_raw_access_logs checks/passed) after: 10/10
+Z-09                               PASS  Step 6E write schema state after: i:access_log_json_w_pkey i:access_log_jsonb_w_pkey i:canonical_doc_pkey i:expected_update_pkey r:access_log_json_w r:access_log_jsonb_w r:canonical_doc r:expected_update|aeaef32371fa8143c088d4fdce9f6e0d|UA-1:238 UA-2:238 UA-3:5000|0/0
+Z-11                               PASS  source fingerprints flat|jsonb after: f562354dbf6c155f3ed0a93da433e79c|fb3bc16318e6a81c7930aed2217986ea
+Z-12                               PASS  relations per existing schema after: log_regex=49,log_regex_json=16,log_regex_json_write=8
+Z-06                               PASS  sql/27 flat foreign keys after: exit 0; access_log_flat foreign-key check PASSED on log_regex.access_log_flat: exactly the 4 expected foreign keys, all validated
+Z-07                               PASS  sql/34 Step 6B verification after: exit 0; JSON experiment check PASSED: all 38 checks
+Z-08                               PASS  sql/38 phase final verification after: exit 0; JSON index phase final check PASSED: all 70 checks
+Z-10a                              PASS  manifest analysis/step6/step6d_baseline_step6c_sha256.txt: 11 entries (expected 11), 0 mismatches
+Z-10b                              PASS  manifest analysis/step6/step6e_baseline_step6d_sha256.txt: 26 entries (expected 26), 0 mismatches
+Z-15                               PASS  manifest analysis/step7/step7c_baseline_step7b_sha256.txt: 14 entries (expected 14), 0 mismatches
+Z-16                               PASS  sql/45-48 still match the Step 7B generator: generated SQL files are up to date: sql/45, sql/46, sql/47, sql/48
+N-01                               PASS  analysis: 7,680 executions parsed, row counts, no JIT, 30 builds; CSVs and step7c_summary.md written: executions 3840+3840, series 192, class I verdicts 109: {'measurable benefit': 90, 'index not used by the planner': 7, 'index used, no measurable benefit': 5, 'measurable regression': 3, 'not supported (operator class has no ordering operator)': 4}, other comparisons 306, builds 30 PROBLEMS: none

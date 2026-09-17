@@ -1,0 +1,138 @@
+SET
+BEGIN
+SET
+== Environment
+ server_version | block_size | default_toast_compression |           measured_at            
+----------------+------------+---------------------------+----------------------------------
+ 17.9           | 8192       | pglz                      | 2026-09-12 14:56:11.491277+05:30
+
+== M-01 .. M-04  Relations (bytes) after VACUUM (ANALYZE)
+    table_name    | doc_type | storage | compression |         reloptions         | pages | reltuples | main_bytes | fsm_bytes | vm_bytes | toast_bytes | toast_index_bytes | table_bytes | pk_index_bytes | total_bytes 
+------------------+----------+---------+-------------+----------------------------+-------+-----------+------------+-----------+----------+-------------+-------------------+-------------+----------------+-------------
+ access_log_json  | json     | x       | default     | {autovacuum_enabled=false} |  1250 |      5000 |   10240000 |     24576 |     8192 |           0 |              8192 |    10280960 |         131072 |    10412032
+ access_log_jsonb | jsonb    | x       | default     | {autovacuum_enabled=false} |   981 |      5000 |    8036352 |     24576 |     8192 |           0 |              8192 |     8077312 |         131072 |     8208384
+
+    table_name    |   main   |  toast  | table_size | pk_index |  total   | main_bytes_per_row | rows_per_page | n_live_tup | n_dead_tup | vacuums | analyzes 
+------------------+----------+---------+------------+----------+----------+--------------------+---------------+------------+------------+---------+----------
+ access_log_json  | 10000 kB | 0 bytes | 10040 kB   | 128 kB   | 10168 kB |             2048.0 |          4.00 |       5000 |          0 |       1 |        1
+ access_log_jsonb | 7848 kB  | 0 bytes | 7888 kB    | 128 kB   | 8016 kB  |             1607.3 |          5.10 |       5000 |          0 |       1 |        1
+
+== Reference only (not part of the comparison): access_log_flat
+   table_name    | pages | main_bytes | toast_bytes | index_bytes | total_bytes 
+-----------------+-------+------------+-------------+-------------+-------------
+ access_log_flat |   767 |    6283264 |           0 |      262144 |     6586368
+
+== M-05 / M-06  Per document (bytes): stored datum (pg_column_size), text (octet_length(doc::text)), whole row
+   measure    | doc_type | docs | min  | p25  | p50  | p75  | p90  | p99  | max  |  avg   |   sum   
+--------------+----------+------+------+------+------+------+------+------+------+--------+---------
+ output text  | json     | 5000 | 1422 | 1653 | 1679 | 1710 | 1742 | 1804 | 3740 | 1683.2 | 8416033
+ output text  | jsonb    | 5000 | 1573 | 1804 | 1830 | 1861 | 1893 | 1955 | 3891 | 1834.2 | 9171034
+ stored datum | json     | 5000 | 1426 | 1657 | 1683 | 1714 | 1746 | 1808 | 1883 | 1686.8 | 8434066
+ stored datum | jsonb    | 5000 |  974 | 1042 | 1108 | 1968 | 1992 | 2004 | 2004 | 1443.9 | 7219683
+ whole row    | json     | 5000 | 1454 | 1685 | 1711 | 1742 | 1774 | 1836 | 1911 | 1714.8 | 8574066
+ whole row    | jsonb    | 5000 | 1002 | 1070 | 1136 | 1996 | 2020 | 2032 | 2032 | 1471.9 | 7359683
+
+== M-06  Canonical input text (identical input for both types; equals the stored json text, see sql/34 B-03)
+ docs | min  | p50  | max  |   sum   | characters 
+------+------+------+------+---------+------------
+ 5000 | 1422 | 1679 | 3740 | 8416033 |    8415454
+
+== Per-document stored size, jsonb minus json (same log_id)
+ docs | min_diff | p50_diff | max_diff | sum_diff | jsonb_larger | equal | jsonb_smaller | min_output_text_diff | max_output_text_diff 
+------+----------+----------+----------+----------+--------------+-------+---------------+----------------------+----------------------
+ 5000 |     -720 |     -633 |      362 | -1214383 |         2121 |     0 |          2879 |                  151 |                  152
+
+== Uncompressed datum size per document (value rebuilt in memory from its text, never compressed)
+ doc_type | docs | min  | p25  | p50  | p75  | p99  | max  |  avg   |   sum    
+----------+------+------+------+------+------+------+------+--------+----------
+ json     | 5000 | 1426 | 1657 | 1683 | 1714 | 1808 | 3744 | 1687.2 |  8436033
+ jsonb    | 5000 | 1600 | 1980 | 2016 | 2052 | 2152 | 4056 | 2017.0 | 10084876
+
+== jsonb documents split by inline compression, with the same documents in json (bytes)
+     jsonb_group      | docs | json_compressed_docs | avg_json_uncompressed | avg_jsonb_uncompressed | avg_json_stored | avg_jsonb_stored | min_uncompressed_diff | max_uncompressed_diff | min_jsonb_row | max_jsonb_row | max_json_row | sum_json_stored | sum_jsonb_stored 
+----------------------+------+----------------------+-----------------------+------------------------+-----------------+------------------+-----------------------+-----------------------+---------------+---------------+--------------+-----------------+------------------
+ jsonb compressed     | 2880 |                    1 |                1715.7 |                 2053.0 |          1715.1 |           1058.2 |                   290 |                   366 |          1002 |          2004 |         1911 |         4939374 |          3047535
+ jsonb not compressed | 2120 |                    0 |                1648.4 |                 1968.0 |          1648.4 |           1968.0 |                   174 |                   362 |          1628 |          2032 |         1750 |         3494692 |          4172148
+
+== Stored-size distribution (100-byte buckets)
+ from_bytes | to_bytes | json_docs | jsonb_docs 
+------------+----------+-----------+------------
+        900 |      999 |         0 |        114
+       1000 |     1099 |         0 |       2299
+       1100 |     1199 |         0 |        458
+       1200 |     1299 |         0 |          8
+       1400 |     1499 |         9 |          0
+       1500 |     1599 |        59 |          0
+       1600 |     1699 |      3196 |          9
+       1700 |     1799 |      1662 |          0
+       1800 |     1899 |        74 |         39
+       1900 |     1999 |         0 |       1784
+       2000 |     2099 |         0 |        289
+
+== M-07  Compression and out-of-line (TOAST) storage
+ doc_type | docs | compressed | methods | out_of_line | text_2000_bytes_or_more | stored_2000_bytes_or_more 
+----------+------+------------+---------+-------------+-------------------------+---------------------------
+ json     | 5000 |          1 | pglz    |           0 |                       1 |                         0
+ jsonb    | 5000 |       2880 | pglz    |           0 |                       4 |                       289
+
+    table_name    |       toast_table       | toast_chunks | toasted_values | chunk_data_bytes 
+------------------+-------------------------+--------------+----------------+------------------
+ access_log_json  | pg_toast.pg_toast_26959 | 0            | 0              | 0
+ access_log_jsonb | pg_toast.pg_toast_26966 | 0            | 0              | 0
+
+== Documents that are compressed or stored out of line: total per type, then the first 20 by log_id (no rows = none)
+ doc_type | compressed_or_out_of_line 
+----------+---------------------------
+ json     |                         1
+ jsonb    |                      2880
+
+ log_id | doc_type | text_bytes | stored_bytes | row_bytes | compression | out_of_line 
+--------+----------+------------+--------------+-----------+-------------+-------------
+      2 | jsonb    |       1843 |         1061 |      1089 | pglz        | f
+      3 | jsonb    |       1830 |         1012 |      1040 | pglz        | f
+      5 | jsonb    |       1829 |         1034 |      1062 | pglz        | f
+      6 | jsonb    |       1894 |         1084 |      1112 | pglz        | f
+      7 | jsonb    |       1830 |         1009 |      1037 | pglz        | f
+      8 | jsonb    |       1918 |         1138 |      1166 | pglz        | f
+     10 | jsonb    |       1829 |         1003 |      1031 | pglz        | f
+     16 | jsonb    |       1839 |         1033 |      1061 | pglz        | f
+     18 | jsonb    |       1892 |         1129 |      1157 | pglz        | f
+     19 | jsonb    |       1894 |         1118 |      1146 | pglz        | f
+     20 | jsonb    |       1863 |         1054 |      1082 | pglz        | f
+     23 | jsonb    |       1909 |         1117 |      1145 | pglz        | f
+     24 | jsonb    |       1858 |         1083 |      1111 | pglz        | f
+     26 | jsonb    |       1830 |         1032 |      1060 | pglz        | f
+     27 | jsonb    |       1850 |         1008 |      1036 | pglz        | f
+     28 | jsonb    |       1863 |         1035 |      1063 | pglz        | f
+     30 | jsonb    |       1873 |         1063 |      1091 | pglz        | f
+     31 | jsonb    |       1854 |         1053 |      1081 | pglz        | f
+     32 | jsonb    |       1871 |         1092 |      1120 | pglz        | f
+     36 | jsonb    |       1852 |         1064 |      1092 | pglz        | f
+
+== Documents near the TOAST threshold (whole row at least 2,032 bytes before compression is attempted)
+ doc_type | text_1500_or_more | text_2000_or_more | stored_row_2032_or_more | max_stored_row_bytes 
+----------+-------------------+-------------------+-------------------------+----------------------
+ json     |              4991 |                 1 |                       0 |                 1911
+ jsonb    |              5000 |                 4 |                     138 |                 2032
+
+== Five largest documents by stored size
+ doc_type | log_id | text_bytes | stored_bytes | compression | out_of_line 
+----------+--------+------------+--------------+-------------+-------------
+ json     |   1323 |       1879 |         1883 | -           | f
+ json     |   3230 |       1866 |         1870 | -           | f
+ json     |   4595 |       1858 |         1862 | -           | f
+ json     |   3080 |       1846 |         1850 | -           | f
+ json     |   1123 |       1842 |         1846 | -           | f
+ jsonb    |      1 |       1821 |         2004 | -           | f
+ jsonb    |    104 |       1816 |         2004 | -           | f
+ jsonb    |    151 |       1808 |         2004 | -           | f
+ jsonb    |    195 |       1794 |         2004 | -           | f
+ jsonb    |    208 |       1813 |         2004 | -           | f
+
+== Heap accounting: documents, rows and page overhead (bytes)
+    table_name    | doc_bytes | row_bytes | main_bytes | main_minus_rows 
+------------------+-----------+-----------+------------+-----------------
+ access_log_jsonb |   7219683 |   7359683 |    8036352 |          676669
+ access_log_json  |   8434066 |   8574066 |   10240000 |         1665934
+
+ROLLBACK

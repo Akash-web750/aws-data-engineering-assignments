@@ -1,0 +1,53 @@
+Step 7F PostGIS cleanup (Option A) checks
+run at 2026-09-13 05:51:49 UTC (harness only)
+result: 48 PASS, 0 FAIL
+
+R-01                     PASS  sql/45-48 match the Step 7B generator: generated SQL files are up to date: sql/45, sql/46, sql/47, sql/48
+R-02                     PASS  sql/49-52 match the Step 7C generator (sql/52 unchanged): generated SQL files are up to date: sql/49, sql/50, sql/51, sql/52
+R-03                     PASS  allowlist: sql/52 = 10 DROP INDEX IF EXISTS of the designed names + ANALYZE of the affected tables: {"49": {"create_executes": 30, "drop_executes": 20, "existing_schema_refs": 0, "outside_allowlist": 0, "statement_lines": 134, "write_words_in_readonly": 0}, "50": {"existing_schema_refs": 0, "outside_allowlist": 0, "statement_lines": 24, "write_words_in_readonly": 0}, "51": {"existing_schema_refs": 0, "explain_statements": 3840, "outside_allowlist": 0, "statement_lines": 3897, "write_words_in_readonly": 0}, "52": {"existing_schema_refs": 0, "outside_allowlist": 0, "statement_lines": 20, "write_words_in_readonly": 0}} static check PASSED
+R-03b                    PASS  sql/52 drops exactly the 10 Step 7C index names; its only other statements are ANALYZE of 9 log_regex_gis tables: drops: flat_geog_gist_idx,flat_geog_spgist_idx,flat_geom_brin_idx,flat_geom_gist_idx,flat_geom_spgist_idx,flat_numeric_btree_lat_lon_idx,jsonb_doc_expr_geog_gist_idx,jsonb_doc_expr_geom_gist_idx,jsonb_geog_gist_idx,jsonb_geom_gist_idx; 19 statements
+R-04                     PASS  Step 7F runner and harness are ASCII: runner, harness
+M-01a                    PASS  manifest analysis/step6/step6d_baseline_step6c_sha256.txt: 11 entries (expected 11), 0 mismatches
+M-01b                    PASS  manifest analysis/step6/step6e_baseline_step6d_sha256.txt: 26 entries (expected 26), 0 mismatches
+M-01c                    PASS  manifest analysis/step7/step7c_baseline_step7b_sha256.txt: 14 entries (expected 14), 0 mismatches
+M-02                     PASS  Step 7F manifest created (Step 7C outputs, Step 7C-7E reports, sample data): 32 files -> analysis/step7/step7f_baseline_step7c_step7e_sha256.txt
+M-03                     PASS  manifest analysis/step7/step7f_baseline_step7c_step7e_sha256.txt: 32 entries (expected 32), 0 mismatches
+F-01                     PASS  PostGIS installed, extensions|schemas|public|event triggers|role settings|preload before cleanup: plpgsql 1.0 pg_catalog, postgis 3.6.2 postgis|log_regex,log_regex_gis,log_regex_json,log_regex_json_write,postgis,public|0/0/0|0|0|
+F-02                     PASS  log_regex_gis tables|primary keys|secondary indexes|names before cleanup: 15|15|10|flat_geog_gist_idx,flat_geog_spgist_idx,flat_geom_brin_idx,flat_geom_gist_idx,flat_geom_spgist_idx,flat_numeric_btree_lat_lon_idx,jsonb_doc_expr_geog_gist_idx,jsonb_doc_expr_geom_gist_idx,jsonb_geog_gist_idx,jsonb_geom_gist_idx
+F-03                     PASS  relations per schema before cleanup: log_regex=49,log_regex_gis=40,log_regex_json=16,log_regex_json_write=8,postgis=6,public=0
+F-04                     PASS  objects outside postgis/log_regex_gis depending on PostGIS | PostGIS-type columns outside before cleanup: 0|0
+F-05                     PASS  no other non-idle client session (idle in transaction included): 0 non-idle of 4 other client sessions
+B-02                     PASS  log_regex digest (raw_access_logs, access_log_flat, parser, answer key) before cleanup: f8042db0318656b5929c86ea1f7888d4 over 203 items
+B-03                     PASS  log_regex_json data digest (Step 6B JSON/JSONB tables) before cleanup: 9e6f883112c4a01781bdce5cf9bf3a28 over 10 items
+B-04                     PASS  Step 6D index digest before cleanup: e20752ca02d09e89281503569650d0ce over 14 indexes, 9510912 bytes
+B-05                     PASS  raw_access_logs integrity (verify_raw_access_logs checks/passed) before cleanup: 10/10
+B-09                     PASS  Step 6E write schema state before cleanup: i:access_log_json_w_pkey i:access_log_jsonb_w_pkey i:canonical_doc_pkey i:expected_update_pkey r:access_log_json_w r:access_log_jsonb_w r:canonical_doc r:expected_update|aeaef32371fa8143c088d4fdce9f6e0d|UA-1:238 UA-2:238 UA-3:5000|0/0
+B-11                     PASS  source fingerprints access_log_flat|access_log_jsonb before cleanup: f562354dbf6c155f3ed0a93da433e79c|fb3bc16318e6a81c7930aed2217986ea
+B-12                     PASS  relations per existing schema before cleanup: log_regex=49,log_regex_json=16,log_regex_json_write=8
+B-06                     PASS  sql/27 access_log_flat foreign keys before cleanup: exit 0; access_log_flat foreign-key check PASSED on log_regex.access_log_flat: exactly the 4 expected foreign keys, all validated
+B-07                     PASS  sql/34 Step 6B verification before cleanup: exit 0; JSON experiment check PASSED: all 38 checks
+B-08                     PASS  sql/38 phase final (Step 6D indexes) before cleanup: exit 0; JSON index phase final check PASSED: all 70 checks
+B-10a                    PASS  manifest analysis/step6/step6d_baseline_step6c_sha256.txt: 11 entries (expected 11), 0 mismatches
+B-10b                    PASS  manifest analysis/step6/step6e_baseline_step6d_sha256.txt: 26 entries (expected 26), 0 mismatches
+F-06                     PASS  sql/50 phase after (read-only): the 10 index definitions, oracles, 202-row matrix in 3 plan modes: exit 0; sql/50 phase after PASSED: all 745 checks
+F-06b                    PASS  correctness matrix before cleanup: 606 of 606 PASS
+F-07                     PASS  data fingerprints of the 15 GIS tables = Step 7C values: flat_numeric: aa8e40226347b042954cb74662f2c990; flat_numeric_btree: aa8e40226347b042954cb74662f2c990; flat_geom: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_gist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_spgist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_brin: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog_gist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog_spgist: 9f32c783e7ea53beefdf1efee8be7aa5; jsonb_doc: 66e5ca3a787032464c934cd2336366f1; jsonb_doc_expr: 66e5ca3a787032464c934cd2336366f1; jsonb_geom: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geom_gist: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geog: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geog_gist: 01db45d3dfeffa423eb79f85e07a9a13
+F-08                     PASS  pg_class | pg_statistic digests of log_regex_gis = Step 7C after-state: 559fc36d84e7c2b0d06f2cde4888dd86 over 40 relations | 38 pg_statistic rows add136862deffe6f7eaf5252229ac2ed
+F-INFO-size              INFO  recorded: log_regex_gis total bytes 52887552 (heap+toast 48218112, indexes 4669440); database bytes 231921331
+H-01                     PASS  harness: sql/52 (10 drops, ANALYZE) + sql/47 155/155 + sql/50 before 113/113 in one transaction, then ROLLBACK: exit 0; 268 check lines; no FAIL
+H-02                     PASS  harness: data fingerprints inside the transaction = Step 7C values: flat_numeric: aa8e40226347b042954cb74662f2c990; flat_numeric_btree: aa8e40226347b042954cb74662f2c990; flat_geom: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_gist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_spgist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geom_brin: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog_gist: 9f32c783e7ea53beefdf1efee8be7aa5; flat_geog_spgist: 9f32c783e7ea53beefdf1efee8be7aa5; jsonb_doc: 66e5ca3a787032464c934cd2336366f1; jsonb_doc_expr: 66e5ca3a787032464c934cd2336366f1; jsonb_geom: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geom_gist: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geog: 01db45d3dfeffa423eb79f85e07a9a13; jsonb_geog_gist: 01db45d3dfeffa423eb79f85e07a9a13
+HR-01                    PASS  PostGIS installed, extensions|schemas|public|event triggers|role settings|preload after ROLLBACK: plpgsql 1.0 pg_catalog, postgis 3.6.2 postgis|log_regex,log_regex_gis,log_regex_json,log_regex_json_write,postgis,public|0/0/0|0|0|
+HR-02                    PASS  log_regex_gis tables|primary keys|secondary indexes|names after ROLLBACK: 15|15|10|flat_geog_gist_idx,flat_geog_spgist_idx,flat_geom_brin_idx,flat_geom_gist_idx,flat_geom_spgist_idx,flat_numeric_btree_lat_lon_idx,jsonb_doc_expr_geog_gist_idx,jsonb_doc_expr_geom_gist_idx,jsonb_geog_gist_idx,jsonb_geom_gist_idx
+HR-03                    PASS  relations per schema after ROLLBACK: log_regex=49,log_regex_gis=40,log_regex_json=16,log_regex_json_write=8,postgis=6,public=0
+HR-04                    PASS  objects outside postgis/log_regex_gis depending on PostGIS | PostGIS-type columns outside after ROLLBACK: 0|0
+H-04                     PASS  after ROLLBACK: sql/50 phase after (read-only), all 10 indexes and the exact Step 7C state: exit 0; sql/50 phase after PASSED: all 745 checks
+H-04b                    PASS  after ROLLBACK: correctness matrix and fingerprints: C-03 606 of 606; fingerprints equal
+H-05                     PASS  after ROLLBACK: pg_class | pg_statistic digests = before (Step 7C after-state): 559fc36d84e7c2b0d06f2cde4888dd86 over 40 relations | 38 pg_statistic rows add136862deffe6f7eaf5252229ac2ed
+HB-02                    PASS  log_regex digest (raw_access_logs, access_log_flat, parser, answer key) after harness: f8042db0318656b5929c86ea1f7888d4 over 203 items
+HB-03                    PASS  log_regex_json data digest (Step 6B JSON/JSONB tables) after harness: 9e6f883112c4a01781bdce5cf9bf3a28 over 10 items
+HB-04                    PASS  Step 6D index digest after harness: e20752ca02d09e89281503569650d0ce over 14 indexes, 9510912 bytes
+HB-05                    PASS  raw_access_logs integrity (verify_raw_access_logs checks/passed) after harness: 10/10
+HB-09                    PASS  Step 6E write schema state after harness: i:access_log_json_w_pkey i:access_log_jsonb_w_pkey i:canonical_doc_pkey i:expected_update_pkey r:access_log_json_w r:access_log_jsonb_w r:canonical_doc r:expected_update|aeaef32371fa8143c088d4fdce9f6e0d|UA-1:238 UA-2:238 UA-3:5000|0/0
+HB-11                    PASS  source fingerprints access_log_flat|access_log_jsonb after harness: f562354dbf6c155f3ed0a93da433e79c|fb3bc16318e6a81c7930aed2217986ea
+HB-12                    PASS  relations per existing schema after harness: log_regex=49,log_regex_json=16,log_regex_json_write=8
+H-07                     PASS  no other non-idle client session before the real cleanup: 0 non-idle of 4 other client sessions

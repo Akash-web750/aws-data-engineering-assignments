@@ -1,0 +1,11 @@
+id,index,table,method,opclass,build_ms_1,build_ms_2,build_ms_3,build_ms_median,build_ms_min,build_ms_max,wal_bytes_median,wal_bytes_min,wal_bytes_max,bytes_per_build,size_bytes,relpages,reltuples,options,table_heap_bytes,table_relpages,table_total_after
+N-1,flat_numeric_btree_lat_lon_idx,flat_numeric_btree,btree,numeric_ops,14.394,3.688,3.793,3.793,3.688,14.394,149928,149904,157184,180224|180224|180224,180224,22,5000,,253952,31,598016
+G-1,flat_geom_gist_idx,flat_geom_gist,gist,gist_geometry_ops_2d,12.122,8.717,9.073,9.073,8.717,12.122,137576,137576,137600,212992|212992|212992,212992,26,5000,,319488,39,704512
+G-2,flat_geom_spgist_idx,flat_geom_spgist,spgist,spgist_geometry_ops_2d,11.928,10.341,10.607,10.607,10.341,11.928,192840,192616,192920,278528|270336|278528,278528,34,5000,,319488,39,770048
+G-3,flat_geom_brin_idx,flat_geom_brin,brin,brin_geometry_inclusion_ops_2d,4.374,2.967,3.322,3.322,2.967,4.374,2024,2024,2048,24576|24576|24576,24576,3,5000,,319488,39,540672
+Y-1,flat_geog_gist_idx,flat_geog_gist,gist,gist_geography_ops,14.219,13.026,13.137,13.137,13.026,14.219,206888,206672,206960,368640|385024|393216,393216,48,5000,,319488,39,884736
+Y-2,flat_geog_spgist_idx,flat_geog_spgist,spgist,spgist_geography_ops_nd,14.526,13.387,13.154,13.387,13.154,14.526,264896,264464,264928,368640|360448|376832,376832,46,5000,,319488,39,868352
+J-1,jsonb_doc_expr_geom_gist_idx,jsonb_doc_expr,gist,gist_geometry_ops_2d,39.057,36.915,38.385,38.385,36.915,39.057,138824,138824,138824,212992|212992|212992,212992,26,5000,,8036352,981,8814592
+J-2,jsonb_doc_expr_geog_gist_idx,jsonb_doc_expr,gist,gist_geography_ops,40.477,40.83,39.831,40.477,39.831,40.83,208400,208176,208400,393216|368640|393216,393216,48,5000,,8036352,981,8814592
+J-3,jsonb_geom_gist_idx,jsonb_geom_gist,gist,gist_geometry_ops_2d,12.819,9.669,9.643,9.669,9.643,12.819,137600,137576,137600,212992|212992|212992,212992,26,5000,,7200768,879,7585792
+J-4,jsonb_geog_gist_idx,jsonb_geog_gist,gist,gist_geography_ops,17.756,13.411,13.419,13.419,13.411,17.756,207056,206960,207176,401408|401408|393216,393216,48,5000,,7200768,879,7766016

@@ -1,0 +1,14 @@
+step,concept,type,index,builds,ms_each,median_ms,wal_bytes_each,median_wal_bytes,size_bytes,same_size_every_build
+I-1,I-1a,json,access_log_json_i1a_record_validity,3,80.281|62.807|66.252,66.252,97416|34184|34160,34184.0,57344,True
+I-1,I-1a,jsonb,access_log_jsonb_i1a_record_validity,3,17.316|14.752|16.295,16.295,36976|34232|34232,34232.0,57344,True
+I-1,I-1b,json,access_log_json_i1b_entity_type_code,3,114.041|102.666|109.986,109.986,34760|34696|34760,34760.0,57344,True
+I-1,I-1b,jsonb,access_log_jsonb_i1b_entity_type_code,3,22.179|20.553|15.462,20.553,34728|39784|34728,34728.0,57344,True
+I-1,I-1c,json,access_log_json_i1c_status_code,3,102.347|110.725|109.081,109.081,34648|34768|34704,34704.0,57344,True
+I-1,I-1c,jsonb,access_log_jsonb_i1c_status_code,3,18.765|17.157|19.036,18.765,34704|34704|34648,34704.0,57344,True
+I-1,I-1d,json,access_log_json_i1d_latitude_degrees,3,109.376|105.037|111.682,109.376,117416|117448|117472,117448.0,147456,True
+I-1,I-1d,jsonb,access_log_jsonb_i1d_latitude_degrees,3,15.598|16.826|16.883,16.826,117448|117472|117336,117448.0,147456,True
+I-1,I-1e,json,access_log_json_i1e_event_timestamp_utc,3,110.166|122.365|141.509,122.365,150168|148232|148232,148232.0,180224,True
+I-1,I-1e,jsonb,access_log_jsonb_i1e_event_timestamp_utc,3,29.739|15.492|19.567,19.567,148232|148560|148232,148232.0,180224,True
+I-2,I-2,jsonb,access_log_jsonb_i2_gin_jsonb_ops,3,554.394|517.041|581.708,554.394,2421904|2413808|2413808,2413808.0,4521984,True
+I-3,I-3,jsonb,access_log_jsonb_i3_gin_jsonb_path_ops,3,284.38|228.822|243.725,243.725,1966720|1958520|1958528,1958528.0,3727360,True
+final,I-2,jsonb,access_log_jsonb_i2_gin_jsonb_ops,1,500.892,500.892,2425648,2425648.0,4521984,True

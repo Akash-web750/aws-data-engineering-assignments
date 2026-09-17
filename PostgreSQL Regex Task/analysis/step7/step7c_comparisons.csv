@@ -1,0 +1,307 @@
+class,label,block,a,b,metric,a_median,a_p25,a_p75,b_median,b_p25,b_p75,ratio_b_over_a,measurable,faster,result,a_index_used,b_index_used
+IM,index method,B1,B1@G-1,B1@G-2,exec,0.245,0.24,0.252,0.253,0.234,0.275,1.0326530612244897,False,,not measurable,15/15,15/15
+IM,index method,B1,B1@G-1,B1@G-2,plan,0.061,0.059,0.07,0.065,0.057,0.07,1.0655737704918034,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+IM,index method,B1,B1@G-1,B1@G-3,exec,0.245,0.24,0.252,0.884,0.852,0.899,3.6081632653061226,True,B1@G-1,measurable: B1@G-1 faster,15/15,0/15
+IM,index method,B1,B1@G-1,B1@G-3,plan,0.061,0.059,0.07,0.072,0.06,0.086,1.180327868852459,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,0/15
+IM,index method,B1,B1@G-2,B1@G-3,exec,0.253,0.234,0.275,0.884,0.852,0.899,3.494071146245059,True,B1@G-2,measurable: B1@G-2 faster,15/15,0/15
+IM,index method,B1,B1@G-2,B1@G-3,plan,0.065,0.057,0.07,0.072,0.06,0.086,1.1076923076923075,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,0/15
+F,flat vs JSONB (same type and index),B1,B1@G-1,B1@J-3,exec,0.245,0.24,0.252,0.422,0.391,0.442,1.7224489795918367,True,B1@G-1,measurable: B1@G-1 faster,15/15,15/15
+F,flat vs JSONB (same type and index),B1,B1@G-1,B1@J-3,plan,0.061,0.059,0.07,0.061,0.058,0.064,1.0,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+F,flat vs JSONB (same type and index),B1,B1@G-0,B1@J-3c,exec,0.834,0.796,0.883,1.501,1.396,1.617,1.7997601918465227,True,B1@G-0,measurable: B1@G-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),B1,B1@G-0,B1@J-3c,plan,0.042,0.04,0.043,0.044,0.042,0.052,1.0476190476190474,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,B1,B1@J-1,B1@J-3,exec,2.5,2.327,2.6,0.422,0.391,0.442,0.1688,True,B1@J-3,measurable: B1@J-3 faster,15/15,15/15
+J,JSONB storage form,B1,B1@J-1,B1@J-3,plan,0.081,0.077,0.096,0.061,0.058,0.064,0.7530864197530864,True,B1@J-3,measurable: B1@J-3 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+J,JSONB storage form,B1,B1@J-0g,B1@J-3c,exec,24.598,22.922,25.277,1.501,1.396,1.617,0.06102122123749898,True,B1@J-3c,measurable: B1@J-3c faster,0/15,0/15
+J,JSONB storage form,B1,B1@J-0g,B1@J-3c,plan,0.038,0.035,0.04,0.044,0.042,0.052,1.1578947368421053,True,B1@J-0g,measurable: B1@J-0g faster; below 0.1 ms: confirmed in session 2,0/15,0/15
+NB,numeric B-tree vs spatial,B1,B1@N-1,B1@G-1,exec,0.181,0.179,0.198,0.245,0.24,0.252,1.3535911602209945,True,B1@N-1,measurable: B1@N-1 faster,15/15,15/15
+NB,numeric B-tree vs spatial,B1,B1@N-1,B1@G-1,plan,0.073,0.069,0.084,0.061,0.059,0.07,0.8356164383561644,False,,not measurable (session 2 does not confirm),15/15,15/15
+NB,numeric B-tree vs spatial,B1,B1@N-0,B1@G-0,exec,0.569,0.516,0.616,0.834,0.796,0.883,1.4657293497363797,True,B1@N-0,measurable: B1@N-0 faster,0/15,0/15
+NB,numeric B-tree vs spatial,B1,B1@N-0,B1@G-0,plan,0.063,0.059,0.064,0.042,0.04,0.043,0.6666666666666667,True,B1@G-0,measurable: B1@G-0 faster; below 0.1 ms: confirmed in session 2,0/15,0/15
+IM,index method,B2,B2@G-1,B2@G-2,exec,0.254,0.238,0.267,0.279,0.253,0.295,1.0984251968503937,False,,not measurable,15/15,15/15
+IM,index method,B2,B2@G-1,B2@G-2,plan,0.068,0.064,0.072,0.07,0.064,0.075,1.0294117647058825,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+IM,index method,B2,B2@G-1,B2@G-3,exec,0.254,0.238,0.267,0.921,0.893,0.938,3.625984251968504,True,B2@G-1,measurable: B2@G-1 faster,15/15,0/15
+IM,index method,B2,B2@G-1,B2@G-3,plan,0.068,0.064,0.072,0.079,0.066,0.093,1.1617647058823528,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,0/15
+IM,index method,B2,B2@G-2,B2@G-3,exec,0.279,0.253,0.295,0.921,0.893,0.938,3.301075268817204,True,B2@G-2,measurable: B2@G-2 faster,15/15,0/15
+IM,index method,B2,B2@G-2,B2@G-3,plan,0.07,0.064,0.075,0.079,0.066,0.093,1.1285714285714286,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,0/15
+F,flat vs JSONB (same type and index),B2,B2@G-1,B2@J-3,exec,0.254,0.238,0.267,0.419,0.4,0.434,1.6496062992125984,True,B2@G-1,measurable: B2@G-1 faster,15/15,15/15
+F,flat vs JSONB (same type and index),B2,B2@G-1,B2@J-3,plan,0.068,0.064,0.072,0.067,0.065,0.069,0.9852941176470588,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+F,flat vs JSONB (same type and index),B2,B2@G-0,B2@J-3c,exec,0.851,0.826,0.876,1.502,1.468,1.529,1.764982373678026,True,B2@G-0,measurable: B2@G-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),B2,B2@G-0,B2@J-3c,plan,0.043,0.041,0.045,0.045,0.044,0.048,1.0465116279069768,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,B2,B2@J-1,B2@J-3,exec,2.49,2.448,2.57,0.419,0.4,0.434,0.16827309236947788,True,B2@J-3,measurable: B2@J-3 faster,15/15,15/15
+J,JSONB storage form,B2,B2@J-1,B2@J-3,plan,0.088,0.083,0.098,0.067,0.065,0.069,0.7613636363636365,True,B2@J-3,measurable: B2@J-3 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+J,JSONB storage form,B2,B2@J-0g,B2@J-3c,exec,25.293,24.148,25.701,1.502,1.468,1.529,0.05938401929387578,True,B2@J-3c,measurable: B2@J-3c faster,0/15,0/15
+J,JSONB storage form,B2,B2@J-0g,B2@J-3c,plan,0.036,0.034,0.036,0.045,0.044,0.048,1.25,True,B2@J-0g,measurable: B2@J-0g faster; below 0.1 ms: confirmed in session 2,0/15,0/15
+NB,numeric B-tree vs spatial,B2,B2@N-1,B2@G-1,exec,0.268,0.252,0.284,0.254,0.238,0.267,0.9477611940298507,False,,not measurable,15/15,15/15
+NB,numeric B-tree vs spatial,B2,B2@N-1,B2@G-1,plan,0.075,0.073,0.081,0.068,0.064,0.072,0.9066666666666667,False,,not measurable (session 2 does not confirm),15/15,15/15
+NB,numeric B-tree vs spatial,B2,B2@N-0,B2@G-0,exec,0.614,0.549,0.642,0.851,0.826,0.876,1.3859934853420195,True,B2@N-0,measurable: B2@N-0 faster,0/15,0/15
+NB,numeric B-tree vs spatial,B2,B2@N-0,B2@G-0,plan,0.064,0.062,0.069,0.043,0.041,0.045,0.6718749999999999,True,B2@G-0,measurable: B2@G-0 faster; below 0.1 ms: confirmed in session 2,0/15,0/15
+IM,index method,B3,B3@G-1,B3@G-2,exec,1.056,0.952,1.084,0.954,0.893,1.024,0.9034090909090908,False,,not measurable,15/15,15/15
+IM,index method,B3,B3@G-1,B3@G-2,plan,0.062,0.056,0.066,0.062,0.059,0.068,1.0,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+IM,index method,B3,B3@G-1,B3@G-3,exec,1.056,0.952,1.084,1.15,1.089,1.212,1.0890151515151514,False,,not measurable,15/15,0/15
+IM,index method,B3,B3@G-1,B3@G-3,plan,0.062,0.056,0.066,0.069,0.062,0.078,1.1129032258064517,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,0/15
+IM,index method,B3,B3@G-2,B3@G-3,exec,0.954,0.893,1.024,1.15,1.089,1.212,1.2054507337526206,True,B3@G-2,measurable: B3@G-2 faster,15/15,0/15
+IM,index method,B3,B3@G-2,B3@G-3,plan,0.062,0.059,0.068,0.069,0.062,0.078,1.1129032258064517,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,0/15
+F,flat vs JSONB (same type and index),B3,B3@G-1,B3@J-3,exec,1.056,0.952,1.084,1.325,1.242,1.4,1.2547348484848484,True,B3@G-1,measurable: B3@G-1 faster,15/15,15/15
+F,flat vs JSONB (same type and index),B3,B3@G-1,B3@J-3,plan,0.062,0.056,0.066,0.064,0.061,0.067,1.032258064516129,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+F,flat vs JSONB (same type and index),B3,B3@G-0,B3@J-3c,exec,1.132,1.023,1.176,1.799,1.688,1.885,1.5892226148409896,True,B3@G-0,measurable: B3@G-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),B3,B3@G-0,B3@J-3c,plan,0.043,0.04,0.047,0.045,0.041,0.048,1.0465116279069768,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,B3,B3@J-1,B3@J-3,exec,8.877,8.738,9.711,1.325,1.242,1.4,0.14926213810972175,True,B3@J-3,measurable: B3@J-3 faster,15/15,15/15
+J,JSONB storage form,B3,B3@J-1,B3@J-3,plan,0.088,0.081,0.095,0.064,0.061,0.067,0.7272727272727273,True,B3@J-3,measurable: B3@J-3 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+J,JSONB storage form,B3,B3@J-0g,B3@J-3c,exec,25.076,23.906,26.511,1.799,1.688,1.885,0.07174190460998564,True,B3@J-3c,measurable: B3@J-3c faster,0/15,0/15
+J,JSONB storage form,B3,B3@J-0g,B3@J-3c,plan,0.037,0.035,0.041,0.045,0.041,0.048,1.2162162162162162,False,,not measurable (session 2 does not confirm),0/15,0/15
+NB,numeric B-tree vs spatial,B3,B3@N-1,B3@G-1,exec,0.526,0.494,0.553,1.056,0.952,1.084,2.0076045627376424,True,B3@N-1,measurable: B3@N-1 faster,15/15,15/15
+NB,numeric B-tree vs spatial,B3,B3@N-1,B3@G-1,plan,0.084,0.077,0.087,0.062,0.056,0.066,0.738095238095238,True,B3@G-1,measurable: B3@G-1 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+NB,numeric B-tree vs spatial,B3,B3@N-0,B3@G-0,exec,0.869,0.773,0.908,1.132,1.023,1.176,1.3026467203682393,True,B3@N-0,measurable: B3@N-0 faster,0/15,0/15
+NB,numeric B-tree vs spatial,B3,B3@N-0,B3@G-0,plan,0.069,0.068,0.073,0.043,0.04,0.047,0.6231884057971013,True,B3@G-0,measurable: B3@G-0 faster; below 0.1 ms: confirmed in session 2,0/15,0/15
+IM,index method,B4,B4@G-1,B4@G-2,exec,2.528,2.35,2.65,2.354,2.262,2.484,0.9311708860759494,False,,not measurable,15/15,15/15
+IM,index method,B4,B4@G-1,B4@G-2,plan,0.225,0.207,0.238,0.227,0.218,0.238,1.008888888888889,False,,not measurable,15/15,15/15
+IM,index method,B4,B4@G-1,B4@G-3,exec,2.528,2.35,2.65,1.74,1.666,1.799,0.6882911392405063,True,B4@G-3,measurable: B4@G-3 faster,15/15,0/15
+IM,index method,B4,B4@G-1,B4@G-3,plan,0.225,0.207,0.238,0.248,0.241,0.251,1.1022222222222222,False,,not measurable,15/15,0/15
+IM,index method,B4,B4@G-2,B4@G-3,exec,2.354,2.262,2.484,1.74,1.666,1.799,0.7391673746813934,True,B4@G-3,measurable: B4@G-3 faster,15/15,0/15
+IM,index method,B4,B4@G-2,B4@G-3,plan,0.227,0.218,0.238,0.248,0.241,0.251,1.092511013215859,False,,not measurable,15/15,0/15
+F,flat vs JSONB (same type and index),B4,B4@G-1,B4@J-3,exec,2.528,2.35,2.65,2.633,2.462,2.73,1.0415348101265822,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),B4,B4@G-1,B4@J-3,plan,0.225,0.207,0.238,0.217,0.21,0.237,0.9644444444444444,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),B4,B4@G-0,B4@J-3c,exec,1.612,1.488,1.706,2.374,2.311,2.457,1.4727047146401986,True,B4@G-0,measurable: B4@G-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),B4,B4@G-0,B4@J-3c,plan,0.12,0.114,0.134,0.13,0.123,0.137,1.0833333333333335,False,,not measurable,0/15,0/15
+J,JSONB storage form,B4,B4@J-1,B4@J-3,exec,23.15,21.91,23.731,2.633,2.462,2.73,0.11373650107991362,True,B4@J-3,measurable: B4@J-3 faster,15/15,15/15
+J,JSONB storage form,B4,B4@J-1,B4@J-3,plan,0.25,0.243,0.259,0.217,0.21,0.237,0.868,True,B4@J-3,measurable: B4@J-3 faster,15/15,15/15
+J,JSONB storage form,B4,B4@J-0g,B4@J-3c,exec,26.417,24.339,27.429,2.374,2.311,2.457,0.08986637392588107,True,B4@J-3c,measurable: B4@J-3c faster,0/15,0/15
+J,JSONB storage form,B4,B4@J-0g,B4@J-3c,plan,0.043,0.037,0.047,0.13,0.123,0.137,3.023255813953489,True,B4@J-0g,measurable: B4@J-0g faster; below 0.1 ms: confirmed in session 2,0/15,0/15
+NB,numeric B-tree vs spatial,B4,B4@N-1,B4@G-1,exec,1.275,1.186,1.307,2.528,2.35,2.65,1.9827450980392158,True,B4@N-1,measurable: B4@N-1 faster,0/15,15/15
+NB,numeric B-tree vs spatial,B4,B4@N-1,B4@G-1,plan,0.099,0.094,0.104,0.225,0.207,0.238,2.2727272727272725,True,B4@N-1,measurable: B4@N-1 faster; below 0.1 ms: confirmed in session 2,0/15,15/15
+NB,numeric B-tree vs spatial,B4,B4@N-0,B4@G-0,exec,1.224,1.107,1.307,1.612,1.488,1.706,1.3169934640522878,True,B4@N-0,measurable: B4@N-0 faster,0/15,0/15
+NB,numeric B-tree vs spatial,B4,B4@N-0,B4@G-0,plan,0.067,0.065,0.076,0.12,0.114,0.134,1.7910447761194028,True,B4@N-0,measurable: B4@N-0 faster; below 0.1 ms: confirmed in session 2,0/15,0/15
+IM,index method,B5,B5@G-1,B5@G-2,exec,0.038,0.036,0.04,0.067,0.057,0.069,1.7631578947368423,True,B5@G-1,measurable: B5@G-1 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+IM,index method,B5,B5@G-1,B5@G-2,plan,0.098,0.094,0.098,0.098,0.093,0.104,1.0,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+IM,index method,B5,B5@G-1,B5@G-3,exec,0.038,0.036,0.04,1.504,1.42,1.554,39.578947368421055,True,B5@G-1,measurable: B5@G-1 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+IM,index method,B5,B5@G-1,B5@G-3,plan,0.098,0.094,0.098,0.122,0.097,0.134,1.2448979591836733,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+IM,index method,B5,B5@G-2,B5@G-3,exec,0.067,0.057,0.069,1.504,1.42,1.554,22.447761194029848,True,B5@G-2,measurable: B5@G-2 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+IM,index method,B5,B5@G-2,B5@G-3,plan,0.098,0.093,0.104,0.122,0.097,0.134,1.2448979591836733,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+F,flat vs JSONB (same type and index),B5,B5@G-1,B5@J-3,exec,0.038,0.036,0.04,0.038,0.037,0.041,1.0,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+F,flat vs JSONB (same type and index),B5,B5@G-1,B5@J-3,plan,0.098,0.094,0.098,0.098,0.096,0.115,1.0,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+F,flat vs JSONB (same type and index),B5,B5@G-0,B5@J-3c,exec,1.235,1.195,1.271,2.041,1.996,2.082,1.6526315789473682,True,B5@G-0,measurable: B5@G-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),B5,B5@G-0,B5@J-3c,plan,0.061,0.059,0.062,0.068,0.061,0.071,1.1147540983606559,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,B5,B5@J-1,B5@J-3,exec,0.05,0.043,0.054,0.038,0.037,0.041,0.7599999999999999,True,B5@J-3,measurable: B5@J-3 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+J,JSONB storage form,B5,B5@J-1,B5@J-3,plan,0.131,0.123,0.157,0.098,0.096,0.115,0.7480916030534351,True,B5@J-3,measurable: B5@J-3 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+J,JSONB storage form,B5,B5@J-0g,B5@J-3c,exec,46.525,45.32,46.925,2.041,1.996,2.082,0.04386888769478775,True,B5@J-3c,measurable: B5@J-3c faster,0/15,0/15
+J,JSONB storage form,B5,B5@J-0g,B5@J-3c,plan,0.046,0.045,0.048,0.068,0.061,0.071,1.4782608695652175,True,B5@J-0g,measurable: B5@J-0g faster; below 0.1 ms: confirmed in session 2,0/15,0/15
+NB,numeric B-tree vs spatial,B5,B5@N-1,B5@G-1,exec,0.912,0.889,0.925,0.038,0.036,0.04,0.041666666666666664,True,B5@G-1,measurable: B5@G-1 faster; below 0.1 ms: confirmed in session 2,0/15,15/15
+NB,numeric B-tree vs spatial,B5,B5@N-1,B5@G-1,plan,0.104,0.1,0.115,0.098,0.094,0.098,0.9423076923076924,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,15/15
+NB,numeric B-tree vs spatial,B5,B5@N-0,B5@G-0,exec,0.902,0.85,0.935,1.235,1.195,1.271,1.369179600886918,True,B5@N-0,measurable: B5@N-0 faster,0/15,0/15
+NB,numeric B-tree vs spatial,B5,B5@N-0,B5@G-0,plan,0.07,0.067,0.071,0.061,0.059,0.062,0.8714285714285713,True,B5@G-0,measurable: B5@G-0 faster; below 0.1 ms: confirmed in session 2,0/15,0/15
+IM,index method,B6,B6@G-1,B6@G-2,exec,0.024,0.021,0.025,0.042,0.037,0.046,1.75,True,B6@G-1,measurable: B6@G-1 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+IM,index method,B6,B6@G-1,B6@G-2,plan,0.079,0.074,0.091,0.084,0.078,0.09,1.0632911392405064,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+IM,index method,B6,B6@G-1,B6@G-3,exec,0.024,0.021,0.025,0.797,0.734,0.839,33.208333333333336,True,B6@G-1,measurable: B6@G-1 faster; below 0.1 ms: confirmed in session 2,15/15,0/15
+IM,index method,B6,B6@G-1,B6@G-3,plan,0.079,0.074,0.091,0.089,0.072,0.099,1.1265822784810127,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,0/15
+IM,index method,B6,B6@G-2,B6@G-3,exec,0.042,0.037,0.046,0.797,0.734,0.839,18.976190476190474,True,B6@G-2,measurable: B6@G-2 faster; below 0.1 ms: confirmed in session 2,15/15,0/15
+IM,index method,B6,B6@G-2,B6@G-3,plan,0.084,0.078,0.09,0.089,0.072,0.099,1.0595238095238093,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,0/15
+F,flat vs JSONB (same type and index),B6,B6@G-1,B6@J-3,exec,0.024,0.021,0.025,0.024,0.022,0.025,1.0,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+F,flat vs JSONB (same type and index),B6,B6@G-1,B6@J-3,plan,0.079,0.074,0.091,0.079,0.07,0.082,1.0,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+F,flat vs JSONB (same type and index),B6,B6@G-0,B6@J-3c,exec,0.754,0.662,0.779,1.391,1.226,1.472,1.8448275862068966,True,B6@G-0,measurable: B6@G-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),B6,B6@G-0,B6@J-3c,plan,0.05,0.044,0.05,0.052,0.049,0.057,1.0399999999999998,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,B6,B6@J-1,B6@J-3,exec,0.032,0.029,0.035,0.024,0.022,0.025,0.75,True,B6@J-3,measurable: B6@J-3 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+J,JSONB storage form,B6,B6@J-1,B6@J-3,plan,0.1,0.086,0.111,0.079,0.07,0.082,0.7899999999999999,True,B6@J-3,measurable: B6@J-3 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+J,JSONB storage form,B6,B6@J-0g,B6@J-3c,exec,24.026,22.659,25.818,1.391,1.226,1.472,0.057895613085823694,True,B6@J-3c,measurable: B6@J-3c faster,0/15,0/15
+J,JSONB storage form,B6,B6@J-0g,B6@J-3c,plan,0.034,0.029,0.042,0.052,0.049,0.057,1.5294117647058822,True,B6@J-0g,measurable: B6@J-0g faster; below 0.1 ms: confirmed in session 2,0/15,0/15
+NB,numeric B-tree vs spatial,B6,B6@N-1,B6@G-1,exec,0.018,0.016,0.019,0.024,0.021,0.025,1.3333333333333335,True,B6@N-1,measurable: B6@N-1 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+NB,numeric B-tree vs spatial,B6,B6@N-1,B6@G-1,plan,0.093,0.083,0.099,0.079,0.074,0.091,0.8494623655913979,False,,not measurable (session 2 does not confirm),15/15,15/15
+NB,numeric B-tree vs spatial,B6,B6@N-0,B6@G-0,exec,0.434,0.404,0.496,0.754,0.662,0.779,1.737327188940092,True,B6@N-0,measurable: B6@N-0 faster,0/15,0/15
+NB,numeric B-tree vs spatial,B6,B6@N-0,B6@G-0,plan,0.065,0.058,0.067,0.05,0.044,0.05,0.7692307692307693,True,B6@G-0,measurable: B6@G-0 faster; below 0.1 ms: confirmed in session 2,0/15,0/15
+IM,index method,D1,D1@Y-1,D1@Y-2,exec,0.438,0.412,0.452,0.789,0.739,0.878,1.8013698630136987,True,D1@Y-1,measurable: D1@Y-1 faster,15/15,15/15
+IM,index method,D1,D1@Y-1,D1@Y-2,plan,0.48,0.448,0.511,0.496,0.427,0.538,1.0333333333333334,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D1,D1@Y-1,D1@J-4,exec,0.438,0.412,0.452,0.56,0.527,0.709,1.2785388127853883,True,D1@Y-1,measurable: D1@Y-1 faster,15/15,15/15
+F,flat vs JSONB (same type and index),D1,D1@Y-1,D1@J-4,plan,0.48,0.448,0.511,0.469,0.435,0.477,0.9770833333333333,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D1,D1@Y-0,D1@J-4c,exec,7.745,7.609,8.287,8.519,8.267,9.069,1.0999354422207877,False,,not measurable,0/15,0/15
+F,flat vs JSONB (same type and index),D1,D1@Y-0,D1@J-4c,plan,0.034,0.032,0.036,0.034,0.032,0.037,1.0,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,D1,D1@J-2,D1@J-4,exec,2.803,2.657,2.897,0.56,0.527,0.709,0.19978594363182306,True,D1@J-4,measurable: D1@J-4 faster,15/15,15/15
+J,JSONB storage form,D1,D1@J-2,D1@J-4,plan,0.541,0.495,0.561,0.469,0.435,0.477,0.8669131238447318,True,D1@J-4,measurable: D1@J-4 faster,15/15,15/15
+J,JSONB storage form,D1,D1@J-0y,D1@J-4c,exec,33.305,32.254,34.686,8.519,8.267,9.069,0.25578741930641047,True,D1@J-4c,measurable: D1@J-4c faster,0/15,0/15
+J,JSONB storage form,D1,D1@J-0y,D1@J-4c,plan,0.041,0.036,0.045,0.034,0.032,0.037,0.8292682926829269,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+GG,geometry vs geography / method,D1,D1@Y-1,MD1@G-1,exec,0.438,0.412,0.452,0.597,0.54,0.634,1.3630136986301369,True,D1@Y-1,measurable: D1@Y-1 faster,15/15,15/15
+GG,geometry vs geography / method,D1,D1@Y-1,MD1@G-1,plan,0.48,0.448,0.511,0.098,0.079,0.114,0.2041666666666667,True,MD1@G-1,measurable: MD1@G-1 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+GG,geometry vs geography / method,D1,D1@Y-0,MD1@G-0,exec,7.745,7.609,8.287,1.147,1.067,1.171,0.14809554551323434,True,MD1@G-0,measurable: MD1@G-0 faster,0/15,0/15
+GG,geometry vs geography / method,D1,D1@Y-0,MD1@G-0,plan,0.034,0.032,0.036,0.084,0.072,0.096,2.4705882352941178,True,D1@Y-0,measurable: D1@Y-0 faster; below 0.1 ms: confirmed in session 2,0/15,0/15
+IM,index method,D2,D2@Y-1,D2@Y-2,exec,1.146,1.032,1.223,1.519,1.424,1.543,1.3254799301919722,True,D2@Y-1,measurable: D2@Y-1 faster,15/15,15/15
+IM,index method,D2,D2@Y-1,D2@Y-2,plan,0.503,0.462,0.531,0.506,0.463,0.549,1.0059642147117296,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D2,D2@Y-1,D2@J-4,exec,1.146,1.032,1.223,1.487,1.44,1.783,1.2975567190226878,True,D2@Y-1,measurable: D2@Y-1 faster,15/15,15/15
+F,flat vs JSONB (same type and index),D2,D2@Y-1,D2@J-4,plan,0.503,0.462,0.531,0.494,0.448,0.571,0.9821073558648111,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D2,D2@Y-0,D2@J-4c,exec,7.29,6.996,7.802,7.867,7.576,8.272,1.0791495198902605,False,,not measurable,0/15,0/15
+F,flat vs JSONB (same type and index),D2,D2@Y-0,D2@J-4c,plan,0.036,0.034,0.039,0.035,0.034,0.039,0.9722222222222224,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,D2,D2@J-2,D2@J-4,exec,6.95,6.78,7.473,1.487,1.44,1.783,0.2139568345323741,True,D2@J-4,measurable: D2@J-4 faster,15/15,15/15
+J,JSONB storage form,D2,D2@J-2,D2@J-4,plan,0.53,0.484,0.59,0.494,0.448,0.571,0.9320754716981131,False,,not measurable,15/15,15/15
+J,JSONB storage form,D2,D2@J-0y,D2@J-4c,exec,32.492,31.217,35.066,7.867,7.576,8.272,0.2421211375107719,True,D2@J-4c,measurable: D2@J-4c faster,0/15,0/15
+J,JSONB storage form,D2,D2@J-0y,D2@J-4c,plan,0.042,0.039,0.046,0.035,0.034,0.039,0.8333333333333334,False,,not measurable (session 2 does not confirm),0/15,0/15
+GG,geometry vs geography / method,D2,D2@Y-1,MD2@G-1,exec,1.146,1.032,1.223,1.798,1.636,2.079,1.5689354275741711,True,D2@Y-1,measurable: D2@Y-1 faster,15/15,15/15
+GG,geometry vs geography / method,D2,D2@Y-1,MD2@G-1,plan,0.503,0.462,0.531,0.097,0.084,0.107,0.19284294234592445,True,MD2@G-1,measurable: MD2@G-1 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+GG,geometry vs geography / method,D2,D2@Y-0,MD2@G-0,exec,7.29,6.996,7.802,2.111,1.906,2.329,0.2895747599451303,True,MD2@G-0,measurable: MD2@G-0 faster,0/15,0/15
+GG,geometry vs geography / method,D2,D2@Y-0,MD2@G-0,plan,0.036,0.034,0.039,0.094,0.075,0.116,2.611111111111111,True,D2@Y-0,measurable: D2@Y-0 faster; below 0.1 ms: confirmed in session 2,0/15,0/15
+IM,index method,D3,D3@Y-1,D3@Y-2,exec,0.599,0.557,0.641,0.93,0.867,1.002,1.552587646076795,True,D3@Y-1,measurable: D3@Y-1 faster,15/15,15/15
+IM,index method,D3,D3@Y-1,D3@Y-2,plan,0.54,0.527,0.583,0.561,0.533,0.65,1.038888888888889,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D3,D3@Y-1,D3@J-4,exec,0.599,0.557,0.641,0.911,0.824,0.955,1.5208681135225377,True,D3@Y-1,measurable: D3@Y-1 faster,15/15,15/15
+F,flat vs JSONB (same type and index),D3,D3@Y-1,D3@J-4,plan,0.54,0.527,0.583,0.554,0.533,0.621,1.025925925925926,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D3,D3@Y-0,D3@J-4c,exec,7.437,7.28,7.949,8.663,8.135,8.886,1.1648514185827619,True,D3@Y-0,measurable: D3@Y-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),D3,D3@Y-0,D3@J-4c,plan,0.037,0.034,0.04,0.035,0.034,0.039,0.945945945945946,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,D3,D3@J-2,D3@J-4,exec,4.02,3.859,4.282,0.911,0.824,0.955,0.22661691542288562,True,D3@J-4,measurable: D3@J-4 faster,15/15,15/15
+J,JSONB storage form,D3,D3@J-2,D3@J-4,plan,0.606,0.581,0.693,0.554,0.533,0.621,0.9141914191419143,False,,not measurable,15/15,15/15
+J,JSONB storage form,D3,D3@J-0y,D3@J-4c,exec,31.665,30.822,35.195,8.663,8.135,8.886,0.2735828201484289,True,D3@J-4c,measurable: D3@J-4c faster,0/15,0/15
+J,JSONB storage form,D3,D3@J-0y,D3@J-4c,plan,0.041,0.04,0.046,0.035,0.034,0.039,0.853658536585366,False,,not measurable (session 2 does not confirm),0/15,0/15
+IM,index method,D4,D4@Y-1,D4@Y-2,exec,1.847,1.807,2.023,2.259,2.177,2.41,1.223064428803465,True,D4@Y-1,measurable: D4@Y-1 faster,15/15,15/15
+IM,index method,D4,D4@Y-1,D4@Y-2,plan,1.157,1.059,1.2,1.196,1.089,1.227,1.0337078651685392,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D4,D4@Y-1,D4@J-4,exec,1.847,1.807,2.023,2.556,2.29,2.721,1.3838657282079048,True,D4@Y-1,measurable: D4@Y-1 faster,15/15,15/15
+F,flat vs JSONB (same type and index),D4,D4@Y-1,D4@J-4,plan,1.157,1.059,1.2,1.146,1.081,1.322,0.9904926534140016,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D4,D4@Y-0,D4@J-4c,exec,5.657,5.444,6.251,6.876,6.314,7.311,1.2154852395262508,True,D4@Y-0,measurable: D4@Y-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),D4,D4@Y-0,D4@J-4c,plan,0.037,0.033,0.047,0.037,0.036,0.043,1.0,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,D4,D4@J-2,D4@J-4,exec,13.222,12.322,14.085,2.556,2.29,2.721,0.19331417334745124,True,D4@J-4,measurable: D4@J-4 faster,15/15,15/15
+J,JSONB storage form,D4,D4@J-2,D4@J-4,plan,1.304,1.137,1.349,1.146,1.081,1.322,0.8788343558282208,False,,not measurable,15/15,15/15
+J,JSONB storage form,D4,D4@J-0y,D4@J-4c,exec,30.961,30.107,32.892,6.876,6.314,7.311,0.22208584994024744,True,D4@J-4c,measurable: D4@J-4c faster,0/15,0/15
+J,JSONB storage form,D4,D4@J-0y,D4@J-4c,plan,0.043,0.04,0.049,0.037,0.036,0.043,0.8604651162790697,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+IM,index method,D5,D5@Y-1,D5@Y-2,exec,1.36,1.22,1.483,1.632,1.473,1.734,1.1999999999999997,False,,not measurable,15/15,15/15
+IM,index method,D5,D5@Y-1,D5@Y-2,plan,0.892,0.859,0.954,0.954,0.851,1.053,1.069506726457399,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D5,D5@Y-1,D5@J-4,exec,1.36,1.22,1.483,1.625,1.584,1.835,1.1948529411764706,True,D5@Y-1,measurable: D5@Y-1 faster,15/15,15/15
+F,flat vs JSONB (same type and index),D5,D5@Y-1,D5@J-4,plan,0.892,0.859,0.954,0.949,0.917,0.99,1.0639013452914798,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D5,D5@Y-0,D5@J-4c,exec,8.189,7.973,8.538,9.136,8.662,9.598,1.1156429356453779,True,D5@Y-0,measurable: D5@Y-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),D5,D5@Y-0,D5@J-4c,plan,0.038,0.034,0.042,0.033,0.033,0.036,0.868421052631579,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,D5,D5@J-2,D5@J-4,exec,4.736,4.449,5.353,1.625,1.584,1.835,0.34311655405405406,True,D5@J-4,measurable: D5@J-4 faster,15/15,15/15
+J,JSONB storage form,D5,D5@J-2,D5@J-4,plan,1.058,1.011,1.1,0.949,0.917,0.99,0.8969754253308128,True,D5@J-4,measurable: D5@J-4 faster,15/15,15/15
+J,JSONB storage form,D5,D5@J-0y,D5@J-4c,exec,33.55,32.477,35.936,9.136,8.662,9.598,0.2723099850968703,True,D5@J-4c,measurable: D5@J-4c faster,0/15,0/15
+J,JSONB storage form,D5,D5@J-0y,D5@J-4c,plan,0.038,0.037,0.044,0.033,0.033,0.036,0.868421052631579,False,,not measurable (session 2 does not confirm),0/15,0/15
+IM,index method,D6,D6@Y-1,D6@Y-2,exec,0.116,0.105,0.149,0.448,0.42,0.476,3.862068965517241,True,D6@Y-1,measurable: D6@Y-1 faster,15/15,15/15
+IM,index method,D6,D6@Y-1,D6@Y-2,plan,0.463,0.454,0.481,0.468,0.432,0.517,1.0107991360691144,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D6,D6@Y-1,D6@J-4,exec,0.116,0.105,0.149,0.098,0.093,0.118,0.8448275862068966,False,,not measurable (session 2 does not confirm),15/15,15/15
+F,flat vs JSONB (same type and index),D6,D6@Y-1,D6@J-4,plan,0.463,0.454,0.481,0.425,0.419,0.471,0.91792656587473,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D6,D6@Y-0,D6@J-4c,exec,8.168,8.03,8.63,9.1,8.895,9.512,1.114103819784525,True,D6@Y-0,measurable: D6@Y-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),D6,D6@Y-0,D6@J-4c,plan,0.037,0.033,0.039,0.035,0.032,0.039,0.945945945945946,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,D6,D6@J-2,D6@J-4,exec,0.329,0.282,0.357,0.098,0.093,0.118,0.2978723404255319,True,D6@J-4,measurable: D6@J-4 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+J,JSONB storage form,D6,D6@J-2,D6@J-4,plan,0.514,0.456,0.558,0.425,0.419,0.471,0.8268482490272373,False,,not measurable,15/15,15/15
+J,JSONB storage form,D6,D6@J-0y,D6@J-4c,exec,33.963,32.708,35.242,9.1,8.895,9.512,0.2679386391072638,True,D6@J-4c,measurable: D6@J-4c faster,0/15,0/15
+J,JSONB storage form,D6,D6@J-0y,D6@J-4c,plan,0.038,0.037,0.046,0.035,0.032,0.039,0.9210526315789475,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+GG,geometry vs geography / method,D6,D6@Y-1,MD6@G-1,exec,0.116,0.105,0.149,0.071,0.063,0.072,0.6120689655172413,True,MD6@G-1,measurable: MD6@G-1 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+GG,geometry vs geography / method,D6,D6@Y-1,MD6@G-1,plan,0.463,0.454,0.481,0.089,0.077,0.108,0.19222462203023757,True,MD6@G-1,measurable: MD6@G-1 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+GG,geometry vs geography / method,D6,D6@Y-0,MD6@G-0,exec,8.168,8.03,8.63,0.648,0.632,0.697,0.07933398628795299,True,MD6@G-0,measurable: MD6@G-0 faster,0/15,0/15
+GG,geometry vs geography / method,D6,D6@Y-0,MD6@G-0,plan,0.037,0.033,0.039,0.088,0.067,0.098,2.3783783783783785,True,D6@Y-0,measurable: D6@Y-0 faster; below 0.1 ms: confirmed in session 2,0/15,0/15
+IM,index method,D7,D7@Y-1,D7@Y-2,exec,0.042,0.034,0.056,0.419,0.354,0.483,9.976190476190474,True,D7@Y-1,measurable: D7@Y-1 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+IM,index method,D7,D7@Y-1,D7@Y-2,plan,0.471,0.447,0.495,0.482,0.46,0.54,1.0233545647558386,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D7,D7@Y-1,D7@J-4,exec,0.042,0.034,0.056,0.035,0.029,0.041,0.8333333333333334,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+F,flat vs JSONB (same type and index),D7,D7@Y-1,D7@J-4,plan,0.471,0.447,0.495,0.429,0.412,0.453,0.910828025477707,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D7,D7@Y-0,D7@J-4c,exec,4.331,4.162,4.565,5.157,4.971,5.248,1.1907180789655967,True,D7@Y-0,measurable: D7@Y-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),D7,D7@Y-0,D7@J-4c,plan,0.034,0.031,0.042,0.034,0.031,0.039,1.0,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,D7,D7@J-2,D7@J-4,exec,0.057,0.045,0.072,0.035,0.029,0.041,0.6140350877192983,False,,not measurable (session 2 does not confirm),15/15,15/15
+J,JSONB storage form,D7,D7@J-2,D7@J-4,plan,0.513,0.454,0.534,0.429,0.412,0.453,0.8362573099415205,True,D7@J-4,measurable: D7@J-4 faster,15/15,15/15
+J,JSONB storage form,D7,D7@J-0y,D7@J-4c,exec,30.254,29.318,30.602,5.157,4.971,5.248,0.17045679910094533,True,D7@J-4c,measurable: D7@J-4c faster,0/15,0/15
+J,JSONB storage form,D7,D7@J-0y,D7@J-4c,plan,0.039,0.036,0.043,0.034,0.031,0.039,0.8717948717948718,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+IM,index method,D1-s,D1-s@Y-1,D1-s@Y-2,exec,0.431,0.391,0.476,0.787,0.736,0.869,1.825986078886311,True,D1-s@Y-1,measurable: D1-s@Y-1 faster,15/15,15/15
+IM,index method,D1-s,D1-s@Y-1,D1-s@Y-2,plan,0.451,0.418,0.479,0.453,0.431,0.519,1.0044345898004434,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D1-s,D1-s@Y-1,D1-s@J-4,exec,0.431,0.391,0.476,0.535,0.491,0.578,1.2412993039443156,True,D1-s@Y-1,measurable: D1-s@Y-1 faster,15/15,15/15
+F,flat vs JSONB (same type and index),D1-s,D1-s@Y-1,D1-s@J-4,plan,0.451,0.418,0.479,0.434,0.403,0.469,0.9623059866962306,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D1-s,D1-s@Y-0,D1-s@J-4c,exec,2.596,2.4,2.622,3.241,3.13,3.492,1.2484591679506933,True,D1-s@Y-0,measurable: D1-s@Y-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),D1-s,D1-s@Y-0,D1-s@J-4c,plan,0.031,0.03,0.034,0.034,0.031,0.038,1.0967741935483872,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,D1-s,D1-s@J-2,D1-s@J-4,exec,2.735,2.561,2.89,0.535,0.491,0.578,0.19561243144424134,True,D1-s@J-4,measurable: D1-s@J-4 faster,15/15,15/15
+J,JSONB storage form,D1-s,D1-s@J-2,D1-s@J-4,plan,0.474,0.445,0.534,0.434,0.403,0.469,0.9156118143459916,False,,not measurable,15/15,15/15
+J,JSONB storage form,D1-s,D1-s@J-0y,D1-s@J-4c,exec,27.86,27.067,28.707,3.241,3.13,3.492,0.1163316582914573,True,D1-s@J-4c,measurable: D1-s@J-4c faster,0/15,0/15
+J,JSONB storage form,D1-s,D1-s@J-0y,D1-s@J-4c,plan,0.038,0.035,0.041,0.034,0.031,0.038,0.8947368421052633,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+IM,index method,D2-s,D2-s@Y-1,D2-s@Y-2,exec,1.037,0.96,1.18,1.553,1.369,1.663,1.497589199614272,True,D2-s@Y-1,measurable: D2-s@Y-1 faster,15/15,15/15
+IM,index method,D2-s,D2-s@Y-1,D2-s@Y-2,plan,0.443,0.423,0.5,0.486,0.436,0.541,1.0970654627539502,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D2-s,D2-s@Y-1,D2-s@J-4,exec,1.037,0.96,1.18,1.379,1.356,1.486,1.3297974927675988,True,D2-s@Y-1,measurable: D2-s@Y-1 faster,15/15,15/15
+F,flat vs JSONB (same type and index),D2-s,D2-s@Y-1,D2-s@J-4,plan,0.443,0.423,0.5,0.437,0.414,0.454,0.9864559819413092,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D2-s,D2-s@Y-0,D2-s@J-4c,exec,2.532,2.497,2.751,3.263,3.2,3.366,1.2887045813586098,True,D2-s@Y-0,measurable: D2-s@Y-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),D2-s,D2-s@Y-0,D2-s@J-4c,plan,0.032,0.03,0.035,0.032,0.03,0.033,1.0,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,D2-s,D2-s@J-2,D2-s@J-4,exec,6.8,6.742,7.3,1.379,1.356,1.486,0.20279411764705882,True,D2-s@J-4,measurable: D2-s@J-4 faster,15/15,15/15
+J,JSONB storage form,D2-s,D2-s@J-2,D2-s@J-4,plan,0.509,0.459,0.551,0.437,0.414,0.454,0.8585461689587426,True,D2-s@J-4,measurable: D2-s@J-4 faster,15/15,15/15
+J,JSONB storage form,D2-s,D2-s@J-0y,D2-s@J-4c,exec,27.026,26.418,29.215,3.263,3.2,3.366,0.12073558795234218,True,D2-s@J-4c,measurable: D2-s@J-4c faster,0/15,0/15
+J,JSONB storage form,D2-s,D2-s@J-0y,D2-s@J-4c,plan,0.041,0.038,0.049,0.032,0.03,0.033,0.7804878048780488,False,,not measurable (session 2 does not confirm),0/15,0/15
+IM,index method,D3-s,D3-s@Y-1,D3-s@Y-2,exec,0.618,0.584,0.637,0.95,0.821,1.033,1.5372168284789642,True,D3-s@Y-1,measurable: D3-s@Y-1 faster,15/15,15/15
+IM,index method,D3-s,D3-s@Y-1,D3-s@Y-2,plan,0.548,0.5,0.565,0.558,0.496,0.612,1.0182481751824817,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D3-s,D3-s@Y-1,D3-s@J-4,exec,0.618,0.584,0.637,0.856,0.809,0.962,1.3851132686084142,True,D3-s@Y-1,measurable: D3-s@Y-1 faster,15/15,15/15
+F,flat vs JSONB (same type and index),D3-s,D3-s@Y-1,D3-s@J-4,plan,0.548,0.5,0.565,0.552,0.514,0.587,1.0072992700729928,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D3-s,D3-s@Y-0,D3-s@J-4c,exec,2.741,2.584,2.939,3.344,3.234,3.558,1.219992703392922,True,D3-s@Y-0,measurable: D3-s@Y-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),D3-s,D3-s@Y-0,D3-s@J-4c,plan,0.034,0.03,0.037,0.033,0.032,0.036,0.9705882352941176,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,D3-s,D3-s@J-2,D3-s@J-4,exec,4.099,3.994,4.234,0.856,0.809,0.962,0.2088314222981215,True,D3-s@J-4,measurable: D3-s@J-4 faster,15/15,15/15
+J,JSONB storage form,D3-s,D3-s@J-2,D3-s@J-4,plan,0.635,0.586,0.661,0.552,0.514,0.587,0.8692913385826773,False,,not measurable,15/15,15/15
+J,JSONB storage form,D3-s,D3-s@J-0y,D3-s@J-4c,exec,28.743,27.938,29.651,3.344,3.234,3.558,0.11634137007271336,True,D3-s@J-4c,measurable: D3-s@J-4c faster,0/15,0/15
+J,JSONB storage form,D3-s,D3-s@J-0y,D3-s@J-4c,plan,0.038,0.036,0.041,0.033,0.032,0.036,0.868421052631579,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+IM,index method,D4-s,D4-s@Y-1,D4-s@Y-2,exec,1.937,1.857,2.124,2.282,2.154,2.632,1.1781104801239028,True,D4-s@Y-1,measurable: D4-s@Y-1 faster,15/15,15/15
+IM,index method,D4-s,D4-s@Y-1,D4-s@Y-2,plan,1.129,1.079,1.292,1.211,1.137,1.336,1.0726306465899027,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D4-s,D4-s@Y-1,D4-s@J-4,exec,1.937,1.857,2.124,2.361,2.271,2.467,1.2188951987609706,True,D4-s@Y-1,measurable: D4-s@Y-1 faster,15/15,15/15
+F,flat vs JSONB (same type and index),D4-s,D4-s@Y-1,D4-s@J-4,plan,1.129,1.079,1.292,1.16,1.071,1.201,1.0274579273693534,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D4-s,D4-s@Y-0,D4-s@J-4c,exec,2.736,2.609,2.843,3.583,3.425,3.704,1.3095760233918128,True,D4-s@Y-0,measurable: D4-s@Y-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),D4-s,D4-s@Y-0,D4-s@J-4c,plan,0.033,0.032,0.035,0.036,0.035,0.039,1.0909090909090908,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,D4-s,D4-s@J-2,D4-s@J-4,exec,13.641,12.462,13.966,2.361,2.271,2.467,0.17308115240818123,True,D4-s@J-4,measurable: D4-s@J-4 faster,15/15,15/15
+J,JSONB storage form,D4-s,D4-s@J-2,D4-s@J-4,plan,1.261,1.219,1.406,1.16,1.071,1.201,0.9199048374306107,False,,not measurable,15/15,15/15
+J,JSONB storage form,D4-s,D4-s@J-0y,D4-s@J-4c,exec,27.135,26.257,28.683,3.583,3.425,3.704,0.132043486272342,True,D4-s@J-4c,measurable: D4-s@J-4c faster,0/15,0/15
+J,JSONB storage form,D4-s,D4-s@J-0y,D4-s@J-4c,plan,0.043,0.038,0.049,0.036,0.035,0.039,0.8372093023255814,False,,not measurable (session 2 does not confirm),0/15,0/15
+IM,index method,D5-s,D5-s@Y-1,D5-s@Y-2,exec,0.484,0.454,0.531,0.789,0.755,0.846,1.6301652892561984,True,D5-s@Y-1,measurable: D5-s@Y-1 faster,15/15,15/15
+IM,index method,D5-s,D5-s@Y-1,D5-s@Y-2,plan,0.927,0.884,0.944,0.961,0.901,1.035,1.0366774541531822,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D5-s,D5-s@Y-1,D5-s@J-4,exec,0.484,0.454,0.531,0.701,0.668,0.785,1.4483471074380165,True,D5-s@Y-1,measurable: D5-s@Y-1 faster,15/15,15/15
+F,flat vs JSONB (same type and index),D5-s,D5-s@Y-1,D5-s@J-4,plan,0.927,0.884,0.944,0.901,0.869,0.957,0.9719525350593311,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D5-s,D5-s@Y-0,D5-s@J-4c,exec,2.422,2.307,2.531,3.115,2.991,3.322,1.2861271676300579,True,D5-s@Y-0,measurable: D5-s@Y-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),D5-s,D5-s@Y-0,D5-s@J-4c,plan,0.032,0.029,0.034,0.034,0.03,0.037,1.0625,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,D5-s,D5-s@J-2,D5-s@J-4,exec,3.935,3.563,4.145,0.701,0.668,0.785,0.1781448538754765,True,D5-s@J-4,measurable: D5-s@J-4 faster,15/15,15/15
+J,JSONB storage form,D5-s,D5-s@J-2,D5-s@J-4,plan,1.081,0.971,1.144,0.901,0.869,0.957,0.8334875115633673,True,D5-s@J-4,measurable: D5-s@J-4 faster,15/15,15/15
+J,JSONB storage form,D5-s,D5-s@J-0y,D5-s@J-4c,exec,27.399,26.553,28.394,3.115,2.991,3.322,0.11369028066717764,True,D5-s@J-4c,measurable: D5-s@J-4c faster,0/15,0/15
+J,JSONB storage form,D5-s,D5-s@J-0y,D5-s@J-4c,plan,0.037,0.036,0.039,0.034,0.03,0.037,0.9189189189189191,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+IM,index method,D6-s,D6-s@Y-1,D6-s@Y-2,exec,0.093,0.078,0.125,0.449,0.365,0.514,4.827956989247312,True,D6-s@Y-1,measurable: D6-s@Y-1 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+IM,index method,D6-s,D6-s@Y-1,D6-s@Y-2,plan,0.468,0.427,0.51,0.494,0.425,0.531,1.0555555555555556,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D6-s,D6-s@Y-1,D6-s@J-4,exec,0.093,0.078,0.125,0.086,0.071,0.108,0.9247311827956989,False,,not measurable (session 2 does not confirm),15/15,15/15
+F,flat vs JSONB (same type and index),D6-s,D6-s@Y-1,D6-s@J-4,plan,0.468,0.427,0.51,0.456,0.429,0.466,0.9743589743589743,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D6-s,D6-s@Y-0,D6-s@J-4c,exec,2.738,2.611,2.847,3.52,3.417,3.597,1.285609934258583,True,D6-s@Y-0,measurable: D6-s@Y-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),D6-s,D6-s@Y-0,D6-s@J-4c,plan,0.033,0.031,0.038,0.034,0.031,0.039,1.0303030303030303,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,D6-s,D6-s@J-2,D6-s@J-4,exec,0.312,0.28,0.329,0.086,0.071,0.108,0.2756410256410256,True,D6-s@J-4,measurable: D6-s@J-4 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+J,JSONB storage form,D6-s,D6-s@J-2,D6-s@J-4,plan,0.495,0.467,0.565,0.456,0.429,0.466,0.9212121212121213,False,,not measurable,15/15,15/15
+J,JSONB storage form,D6-s,D6-s@J-0y,D6-s@J-4c,exec,29.023,28.071,30.26,3.52,3.417,3.597,0.12128312028391276,True,D6-s@J-4c,measurable: D6-s@J-4c faster,0/15,0/15
+J,JSONB storage form,D6-s,D6-s@J-0y,D6-s@J-4c,plan,0.038,0.035,0.043,0.034,0.031,0.039,0.8947368421052633,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+IM,index method,D7-s,D7-s@Y-1,D7-s@Y-2,exec,0.034,0.029,0.045,0.357,0.343,0.493,10.499999999999998,True,D7-s@Y-1,measurable: D7-s@Y-1 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+IM,index method,D7-s,D7-s@Y-1,D7-s@Y-2,plan,0.429,0.398,0.463,0.459,0.405,0.484,1.06993006993007,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D7-s,D7-s@Y-1,D7-s@J-4,exec,0.034,0.029,0.045,0.03,0.027,0.047,0.8823529411764705,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+F,flat vs JSONB (same type and index),D7-s,D7-s@Y-1,D7-s@J-4,plan,0.429,0.398,0.463,0.438,0.404,0.466,1.020979020979021,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),D7-s,D7-s@Y-0,D7-s@J-4c,exec,2.539,2.383,2.774,3.318,3.033,3.43,1.3068137061835368,True,D7-s@Y-0,measurable: D7-s@Y-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),D7-s,D7-s@Y-0,D7-s@J-4c,plan,0.033,0.031,0.037,0.034,0.03,0.037,1.0303030303030303,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,D7-s,D7-s@J-2,D7-s@J-4,exec,0.042,0.039,0.059,0.03,0.027,0.047,0.7142857142857142,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+J,JSONB storage form,D7-s,D7-s@J-2,D7-s@J-4,plan,0.482,0.439,0.528,0.438,0.404,0.466,0.9087136929460581,False,,not measurable,15/15,15/15
+J,JSONB storage form,D7-s,D7-s@J-0y,D7-s@J-4c,exec,27.586,26.192,28.39,3.318,3.033,3.43,0.12027840208801567,True,D7-s@J-4c,measurable: D7-s@J-4c faster,0/15,0/15
+J,JSONB storage form,D7-s,D7-s@J-0y,D7-s@J-4c,plan,0.039,0.035,0.041,0.034,0.03,0.037,0.8717948717948718,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+IM,index method,K1,K1@Y-1,K1@Y-2,exec,0.105,0.095,0.117,3.289,3.157,3.5,31.323809523809526,True,K1@Y-1,measurable: K1@Y-1 faster,15/15,0/15
+IM,index method,K1,K1@Y-1,K1@Y-2,plan,0.044,0.039,0.049,0.049,0.043,0.063,1.1136363636363638,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,0/15
+F,flat vs JSONB (same type and index),K1,K1@Y-1,K1@J-4,exec,0.105,0.095,0.117,0.11,0.107,0.12,1.0476190476190477,False,,not measurable,15/15,15/15
+F,flat vs JSONB (same type and index),K1,K1@Y-1,K1@J-4,plan,0.044,0.039,0.049,0.044,0.041,0.048,1.0,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+F,flat vs JSONB (same type and index),K1,K1@Y-0,K1@J-4c,exec,3.056,2.838,3.435,3.893,3.704,4.161,1.2738874345549738,True,K1@Y-0,measurable: K1@Y-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),K1,K1@Y-0,K1@J-4c,plan,0.038,0.034,0.044,0.041,0.034,0.046,1.0789473684210527,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,K1,K1@J-2,K1@J-4,exec,0.19,0.181,0.205,0.11,0.107,0.12,0.5789473684210527,True,K1@J-4,measurable: K1@J-4 faster,15/15,15/15
+J,JSONB storage form,K1,K1@J-2,K1@J-4,plan,0.07,0.058,0.081,0.044,0.041,0.048,0.6285714285714284,True,K1@J-4,measurable: K1@J-4 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+J,JSONB storage form,K1,K1@J-0y,K1@J-4c,exec,29.544,27.76,31.96,3.893,3.704,4.161,0.1317695640400758,True,K1@J-4c,measurable: K1@J-4c faster,0/15,0/15
+J,JSONB storage form,K1,K1@J-0y,K1@J-4c,plan,0.048,0.045,0.056,0.041,0.034,0.046,0.8541666666666666,False,,not measurable (session 2 does not confirm),0/15,0/15
+GG,geometry vs geography / method,K1,K1@Y-1,K1g@G-1,exec,0.105,0.095,0.117,0.054,0.051,0.06,0.5142857142857143,True,K1g@G-1,measurable: K1g@G-1 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+GG,geometry vs geography / method,K1,K1@Y-1,K1g@G-1,plan,0.044,0.039,0.049,0.041,0.038,0.046,0.9318181818181819,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+GG,geometry vs geography / method,K1,K1@Y-0,K1g@G-0,exec,3.056,2.838,3.435,1.481,1.421,1.637,0.4846204188481676,True,K1g@G-0,measurable: K1g@G-0 faster,0/15,0/15
+GG,geometry vs geography / method,K1,K1@Y-0,K1g@G-0,plan,0.038,0.034,0.044,0.033,0.031,0.037,0.868421052631579,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+IM,index method,K2,K2@Y-1,K2@Y-2,exec,0.273,0.26,0.288,3.313,3.167,3.372,12.135531135531135,True,K2@Y-1,measurable: K2@Y-1 faster,15/15,0/15
+IM,index method,K2,K2@Y-1,K2@Y-2,plan,0.043,0.04,0.044,0.043,0.039,0.054,1.0,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,0/15
+F,flat vs JSONB (same type and index),K2,K2@Y-1,K2@J-4,exec,0.273,0.26,0.288,0.319,0.302,0.362,1.1684981684981683,True,K2@Y-1,measurable: K2@Y-1 faster,15/15,15/15
+F,flat vs JSONB (same type and index),K2,K2@Y-1,K2@J-4,plan,0.043,0.04,0.044,0.043,0.039,0.052,1.0,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+F,flat vs JSONB (same type and index),K2,K2@Y-0,K2@J-4c,exec,3.128,2.937,3.233,3.866,3.698,4.0,1.235933503836317,True,K2@Y-0,measurable: K2@Y-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),K2,K2@Y-0,K2@J-4c,plan,0.035,0.032,0.037,0.038,0.033,0.041,1.0857142857142856,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,K2,K2@J-2,K2@J-4,exec,1.456,1.394,1.482,0.319,0.302,0.362,0.2190934065934066,True,K2@J-4,measurable: K2@J-4 faster,15/15,15/15
+J,JSONB storage form,K2,K2@J-2,K2@J-4,plan,0.066,0.058,0.073,0.043,0.039,0.052,0.6515151515151514,True,K2@J-4,measurable: K2@J-4 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+J,JSONB storage form,K2,K2@J-0y,K2@J-4c,exec,29.501,28.84,30.558,3.866,3.698,4.0,0.13104640520660316,True,K2@J-4c,measurable: K2@J-4c faster,0/15,0/15
+J,JSONB storage form,K2,K2@J-0y,K2@J-4c,plan,0.046,0.045,0.048,0.038,0.033,0.041,0.8260869565217391,True,K2@J-4c,measurable: K2@J-4c faster; below 0.1 ms: confirmed in session 2,0/15,0/15
+IM,index method,K3,K3@G-1,K3@G-2,exec,0.074,0.067,0.085,1.72,1.632,1.867,23.243243243243246,True,K3@G-1,measurable: K3@G-1 faster; below 0.1 ms: confirmed in session 2,15/15,0/15
+IM,index method,K3,K3@G-1,K3@G-2,plan,0.047,0.043,0.052,0.046,0.04,0.057,0.9787234042553191,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,0/15
+IM,index method,K3,K3@G-1,K3@G-3,exec,0.074,0.067,0.085,1.8,1.627,1.966,24.324324324324326,True,K3@G-1,measurable: K3@G-1 faster; below 0.1 ms: confirmed in session 2,15/15,0/15
+IM,index method,K3,K3@G-1,K3@G-3,plan,0.047,0.043,0.052,0.06,0.045,0.067,1.276595744680851,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,0/15
+IM,index method,K3,K3@G-2,K3@G-3,exec,1.72,1.632,1.867,1.8,1.627,1.966,1.0465116279069768,False,,not measurable,0/15,0/15
+IM,index method,K3,K3@G-2,K3@G-3,plan,0.046,0.04,0.057,0.06,0.045,0.067,1.3043478260869565,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+F,flat vs JSONB (same type and index),K3,K3@G-1,K3@J-3,exec,0.074,0.067,0.085,0.072,0.068,0.086,0.9729729729729729,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+F,flat vs JSONB (same type and index),K3,K3@G-1,K3@J-3,plan,0.047,0.043,0.052,0.048,0.043,0.056,1.0212765957446808,False,,not measurable; below 0.1 ms: confirmed in session 2,15/15,15/15
+F,flat vs JSONB (same type and index),K3,K3@G-0,K3@J-3c,exec,1.648,1.572,1.722,2.389,2.227,2.528,1.449635922330097,True,K3@G-0,measurable: K3@G-0 faster,0/15,0/15
+F,flat vs JSONB (same type and index),K3,K3@G-0,K3@J-3c,plan,0.036,0.035,0.041,0.039,0.036,0.044,1.0833333333333335,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,JSONB storage form,K3,K3@J-1,K3@J-3,exec,0.167,0.152,0.188,0.072,0.068,0.086,0.43113772455089816,True,K3@J-3,measurable: K3@J-3 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+J,JSONB storage form,K3,K3@J-1,K3@J-3,plan,0.075,0.059,0.087,0.048,0.043,0.056,0.64,True,K3@J-3,measurable: K3@J-3 faster; below 0.1 ms: confirmed in session 2,15/15,15/15
+J,JSONB storage form,K3,K3@J-0g,K3@J-3c,exec,28.91,26.308,30.73,2.389,2.227,2.528,0.08263576617087512,True,K3@J-3c,measurable: K3@J-3c faster,0/15,0/15
+J,JSONB storage form,K3,K3@J-0g,K3@J-3c,plan,0.05,0.045,0.059,0.039,0.036,0.044,0.7799999999999999,True,K3@J-3c,measurable: K3@J-3c faster; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,construction cost,P,P4@J-0y,P1@Y-0,exec,36.468,35.16,38.023,10.226,9.99,10.484,0.28041022266096305,True,P1@Y-0,measurable: P1@Y-0 faster,0/15,0/15
+J,construction cost,P,P4@J-0y,P1@Y-0,plan,0.043,0.039,0.045,0.044,0.037,0.05,1.0232558139534884,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,construction cost,P,P4@J-0y,P3@N-0,exec,36.468,35.16,38.023,14.413,13.504,15.011,0.39522320938905336,True,P3@N-0,measurable: P3@N-0 faster,0/15,0/15
+J,construction cost,P,P4@J-0y,P3@N-0,plan,0.043,0.039,0.045,0.038,0.036,0.043,0.8837209302325582,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+J,construction cost,P,P3@N-0,P1@Y-0,exec,14.413,13.504,15.011,10.226,9.99,10.484,0.7094983695275099,True,P1@Y-0,measurable: P1@Y-0 faster,0/15,0/15
+J,construction cost,P,P3@N-0,P1@Y-0,plan,0.038,0.036,0.043,0.044,0.037,0.05,1.1578947368421053,False,,not measurable; below 0.1 ms: confirmed in session 2,0/15,0/15
+GG,geometry vs geography / method,P,P1@Y-0,P2@Y-0,exec,10.226,9.99,10.484,5.188,5.004,5.506,0.507334246039507,True,P2@Y-0,measurable: P2@Y-0 faster,0/15,0/15
+GG,geometry vs geography / method,P,P1@Y-0,P2@Y-0,plan,0.044,0.037,0.05,0.033,0.03,0.035,0.7500000000000001,False,,not measurable (session 2 does not confirm),0/15,0/15

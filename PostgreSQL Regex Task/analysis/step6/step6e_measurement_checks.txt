@@ -1,0 +1,30 @@
+Step 6E measurement runner checks
+run at 2026-09-12 18:48:27 UTC
+result: 26 PASS, 0 FAIL of 26 checks
+
+R-01  PASS  approved sql/41 and sql/42 unchanged: generated SQL files are up to date: sql\41_create_json_write_experiment.sql, sql\42_preflight_json_write_experiment.sql
+R-02  PASS  sql/43 matches scripts/step6e_json_write_measure.py: sql\43_measure_json_writes.sql: up to date
+R-03  PASS  sql/36-40 still match the Step 6C and Step 6D generators: 6C exit 0, 6D exit 0
+R-04  PASS  sql/43: every statement a designed form on log_regex_json_write; no other schema referenced: {"by_keyword": {"BEGIN": 1501, "CHECKPOINT": 1320, "COMMIT": 1320, "CREATE": 5248, "DEALLOCATE": 1, "DO": 1501, "DROP": 5262, "EXECUTE": 8364, "EXPLAIN": 1140, "INSERT": 1234, "PREPARE": 10, "RESET": 1320, "SET": 1328, "TRUNCATE": 1322, "VACUUM": 1320}, "distinct_create_index": 12, "file": "sql/43_measure_json_writes.sql", "first_outside_design": [], "ok": true, "outside_design": 0, "references_to_other_schemas": 0, "statement_lines": 32191}
+R-05  PASS  Step 6E measurement files are ASCII: 3 files
+M-01  PASS  Step 6C outputs preserved (start): 11 files match analysis/step6/step6d_baseline_step6c_sha256.txt
+M-02  PASS  Step 6D outputs preserved (start): 26 files match analysis/step6/step6e_baseline_step6d_sha256.txt
+G-01  PASS  log_regex digest (raw, parser, flat, answer key) before: f8042db0318656b5929c86ea1f7888d4 over 203 items
+G-02  PASS  log_regex_json data digest (Step 6B tables and documents) before: 9e6f883112c4a01781bdce5cf9bf3a28 over 10 items
+G-03  PASS  Step 6D index definitions and sizes digest before: e20752ca02d09e89281503569650d0ce over 14 indexes, 9510912 bytes
+V-01  PASS  sql/34 Step 6B verification before: exit 0; JSON experiment check PASSED: all 38 checks
+V-02  PASS  sql/38 phase final verification before: exit 0; JSON index phase final check PASSED: all 70 checks
+V-03  PASS  sql/42 preflight (sessions idle, staged input, write schema, X-0 .. X-4) before: exit 0; Step 6E preflight PASSED: all 41 checks
+S-01  PASS  measurement session 1 (sql/43) completed: exit 0 after 1919 s; stderr tail: psql:sql/43_measure_json_writes.sql:189: NOTICE:  index "access_log_jsonb_w_i3_gin_jsonb_path_ops" does not exist, skipping psql:sql/43_measure_json_writes.sql:80061: NOTICE:  index "access_log_jsonb_w_i2_gin_jsonb_ops" does not exist, skipping psql:sql/43_measure_json_writes.sql:80062: NOTICE:  index "access_log_jsonb_w_i3_gin_jsonb_path_ops" does not exist, skipping
+A-01  PASS  analysis (session 1): correctness checks, CSV and markdown outputs: attempts 664, runs 660, repeated 4, used runs flagged 5, checks failed 0, series 35, comparisons 457; SESSION2_BLOCKS: W1b
+R-06  PASS  sql/44 generated for blocks W1b and every statement a designed form: {"by_keyword": {"BEGIN": 361, "CHECKPOINT": 180, "COMMIT": 180, "CREATE": 612, "DEALLOCATE": 1, "DO": 361, "DROP": 636, "EXECUTE": 1258, "INSERT": 360, "PREPARE": 10, "RESET": 180, "SET": 188, "TRUNCATE": 182, "VACUUM": 180}, "distinct_create_index": 12, "file": "sql/44_measure_json_writes_session2.sql", "first_outside_design": [], "ok": true, "outside_design": 0, "references_to_other_schemas": 0, "statement_lines": 4689}
+S-02  PASS  measurement session 2 (sql/44, blocks W1b) completed: exit 0 after 281 s
+A-02  PASS  analysis (sessions 1 and 2): correctness checks, CSV and markdown outputs: attempts 756, runs 750, repeated 6, used runs flagged 5, checks failed 0, series 40, comparisons 457; SESSION2_BLOCKS: W1b
+G-04  PASS  log_regex digest (raw, parser, flat, answer key) after: f8042db0318656b5929c86ea1f7888d4 over 203 items
+G-05  PASS  log_regex_json data digest (Step 6B tables and documents) after: 9e6f883112c4a01781bdce5cf9bf3a28 over 10 items
+G-06  PASS  Step 6D index definitions and sizes digest after: e20752ca02d09e89281503569650d0ce over 14 indexes, 9510912 bytes
+V-04  PASS  sql/34 Step 6B verification after: exit 0; JSON experiment check PASSED: all 38 checks
+V-05  PASS  sql/38 phase final verification after: exit 0; JSON index phase final check PASSED: all 70 checks
+V-06  PASS  sql/42 preflight (sessions idle, staged input, write schema, X-0 .. X-4) after: exit 0; Step 6E preflight PASSED: all 41 checks
+M-03  PASS  Step 6C outputs preserved (end): 11 files match analysis/step6/step6d_baseline_step6c_sha256.txt
+M-04  PASS  Step 6D outputs preserved (end): 26 files match analysis/step6/step6e_baseline_step6d_sha256.txt

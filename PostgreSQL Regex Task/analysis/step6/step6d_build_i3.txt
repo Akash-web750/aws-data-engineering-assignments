@@ -1,0 +1,10 @@
+##BUILDSESSION
+{"pid" : 33176, "step" : "I-3", "started" : "2026-09-12T21:52:09.578074+05:30", "settings" : { "maintenance_work_mem" : "65536", "max_parallel_maintenance_workers" : "0", "server_version" : "17.9", "wal_level" : "replica" }}
+##BUILD I-3 I-3 jsonb 1
+{"index" : "access_log_jsonb_i3_gin_jsonb_path_ops", "table" : "log_regex_json.access_log_jsonb", "ms" : 284.380, "wal_bytes" : 1966720, "size_bytes" : 3727360}
+##BUILD I-3 I-3 jsonb 2
+{"index" : "access_log_jsonb_i3_gin_jsonb_path_ops", "table" : "log_regex_json.access_log_jsonb", "ms" : 228.822, "wal_bytes" : 1958520, "size_bytes" : 3727360}
+##BUILD I-3 I-3 jsonb 3
+{"index" : "access_log_jsonb_i3_gin_jsonb_path_ops", "table" : "log_regex_json.access_log_jsonb", "ms" : 243.725, "wal_bytes" : 1958528, "size_bytes" : 3727360}
+##END
+{"finished" : "2026-09-12T21:52:10.475614+05:30"}

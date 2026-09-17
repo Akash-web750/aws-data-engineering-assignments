@@ -1,0 +1,385 @@
+session,block,series,query,config,runs,exec_median,exec_p25,exec_p75,exec_min,exec_max,plan_median,plan_p25,plan_p75,index_used_runs,indexes_used,plan_shapes,shared_hit,top_rows,scan_plan_rows,rows_removed_filter,rows_removed_recheck,exact_heap_blocks,lossy_heap_blocks,rows_ok
+1,B1,B1@G-0,B1,G-0,15,0.834,0.796,0.883,0.758,0.935,0.042,0.04,0.043,0,,Seq Scan on flat_geom,39,410,64,4590,0,0,0,True
+1,B1,B1@G-1,B1,G-1,15,0.245,0.24,0.252,0.221,0.321,0.061,0.059,0.07,15,flat_geom_gist_idx,Bitmap Heap Scan on flat_geom_gist [Bitmap Index Scan using flat_geom_gist_idx],42,410,64,0,0,39,0,True
+1,B1,B1@G-2,B1,G-2,15,0.253,0.234,0.275,0.219,0.299,0.065,0.057,0.07,15,flat_geom_spgist_idx,Bitmap Heap Scan on flat_geom_spgist [Bitmap Index Scan using flat_geom_spgist_idx],45,410,64,0,0,39,0,True
+1,B1,B1@G-3,B1,G-3,15,0.884,0.852,0.899,0.757,0.967,0.072,0.06,0.086,0,,Seq Scan on flat_geom_brin,39,410,64,4590,0,0,0,True
+1,B1,B1@J-0g,B1,J-0g,15,24.598,22.922,25.277,21.41,27.991,0.038,0.035,0.04,0,,Seq Scan on jsonb_doc,981,410,1,4590,0,0,0,True
+1,B1,B1@J-1,B1,J-1,15,2.5,2.327,2.6,2.211,2.997,0.081,0.077,0.096,15,jsonb_doc_expr_geom_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geom_gist_idx],342,410,64,0,0,339,0,True
+1,B1,B1@J-3,B1,J-3,15,0.422,0.391,0.442,0.349,0.526,0.061,0.058,0.064,15,jsonb_geom_gist_idx,Bitmap Heap Scan on jsonb_geom_gist [Bitmap Index Scan using jsonb_geom_gist_idx],331,410,64,0,0,328,0,True
+1,B1,B1@J-3c,B1,J-3c,15,1.501,1.396,1.617,1.34,1.785,0.044,0.042,0.052,0,,Seq Scan on jsonb_geom,879,410,64,4590,0,0,0,True
+1,B1,B1@N-0,B1,N-0,15,0.569,0.516,0.616,0.504,0.669,0.063,0.059,0.064,0,,Seq Scan on flat_numeric,31,410,29,4590,0,0,0,True
+1,B1,B1@N-1,B1,N-1,15,0.181,0.179,0.198,0.156,0.23,0.073,0.069,0.084,15,flat_numeric_btree_lat_lon_idx,Bitmap Heap Scan on flat_numeric_btree [Bitmap Index Scan using flat_numeric_btree_lat_lon_idx],35,410,29,0,0,31,0,True
+1,B2,B2@G-0,B2,G-0,15,0.851,0.826,0.876,0.757,0.94,0.043,0.041,0.045,0,,Seq Scan on flat_geom,39,416,500,4584,0,0,0,True
+1,B2,B2@G-1,B2,G-1,15,0.254,0.238,0.267,0.221,0.275,0.068,0.064,0.072,15,flat_geom_gist_idx,Bitmap Heap Scan on flat_geom_gist [Bitmap Index Scan using flat_geom_gist_idx],43,416,500,0,0,39,0,True
+1,B2,B2@G-2,B2,G-2,15,0.279,0.253,0.295,0.237,0.307,0.07,0.064,0.075,15,flat_geom_spgist_idx,Bitmap Heap Scan on flat_geom_spgist [Bitmap Index Scan using flat_geom_spgist_idx],57,416,500,0,0,39,0,True
+1,B2,B2@G-3,B2,G-3,15,0.921,0.893,0.938,0.75,0.989,0.079,0.066,0.093,0,,Seq Scan on flat_geom_brin,39,416,500,4584,0,0,0,True
+1,B2,B2@J-0g,B2,J-0g,15,25.293,24.148,25.701,22.262,25.955,0.036,0.034,0.036,0,,Seq Scan on jsonb_doc,981,416,1,4584,0,0,0,True
+1,B2,B2@J-1,B2,J-1,15,2.49,2.448,2.57,2.233,2.611,0.088,0.083,0.098,15,jsonb_doc_expr_geom_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geom_gist_idx],336,416,500,0,0,332,0,True
+1,B2,B2@J-3,B2,J-3,15,0.419,0.4,0.434,0.337,0.604,0.067,0.065,0.069,15,jsonb_geom_gist_idx,Bitmap Heap Scan on jsonb_geom_gist [Bitmap Index Scan using jsonb_geom_gist_idx],351,416,500,0,0,347,0,True
+1,B2,B2@J-3c,B2,J-3c,15,1.502,1.468,1.529,1.322,1.687,0.045,0.044,0.048,0,,Seq Scan on jsonb_geom,879,416,500,4584,0,0,0,True
+1,B2,B2@N-0,B2,N-0,15,0.614,0.549,0.642,0.544,1.266,0.064,0.062,0.069,0,,Seq Scan on flat_numeric,31,416,101,4584,0,0,0,True
+1,B2,B2@N-1,B2,N-1,15,0.268,0.252,0.284,0.249,0.414,0.075,0.073,0.081,15,flat_numeric_btree_lat_lon_idx,Bitmap Heap Scan on flat_numeric_btree [Bitmap Index Scan using flat_numeric_btree_lat_lon_idx],37,416,101,0,0,31,0,True
+1,B3,B3@G-0,B3,G-0,15,1.132,1.023,1.176,0.992,1.245,0.043,0.04,0.047,0,,Seq Scan on flat_geom,39,1580,1899,3420,0,0,0,True
+1,B3,B3@G-1,B3,G-1,15,1.056,0.952,1.084,0.94,1.124,0.062,0.056,0.066,15,flat_geom_gist_idx,Index Scan using flat_geom_gist_idx,1556,1580,1899,0,0,0,0,True
+1,B3,B3@G-2,B3,G-2,15,0.954,0.893,1.024,0.837,1.09,0.062,0.059,0.068,15,flat_geom_spgist_idx,Index Scan using flat_geom_spgist_idx,870,1580,1899,0,0,0,0,True
+1,B3,B3@G-3,B3,G-3,15,1.15,1.089,1.212,0.995,1.264,0.069,0.062,0.078,0,,Seq Scan on flat_geom_brin,39,1580,1899,3420,0,0,0,True
+1,B3,B3@J-0g,B3,J-0g,15,25.076,23.906,26.511,23.085,26.59,0.037,0.035,0.041,0,,Seq Scan on jsonb_doc,981,1580,1,3420,0,0,0,True
+1,B3,B3@J-1,B3,J-1,15,8.877,8.738,9.711,8.342,10.228,0.088,0.081,0.095,15,jsonb_doc_expr_geom_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geom_gist_idx],832,1580,1899,0,0,823,0,True
+1,B3,B3@J-3,B3,J-3,15,1.325,1.242,1.4,1.177,1.444,0.064,0.061,0.067,15,jsonb_geom_gist_idx,Bitmap Heap Scan on jsonb_geom_gist [Bitmap Index Scan using jsonb_geom_gist_idx],765,1580,1899,0,0,756,0,True
+1,B3,B3@J-3c,B3,J-3c,15,1.799,1.688,1.885,1.598,1.988,0.045,0.041,0.048,0,,Seq Scan on jsonb_geom,879,1580,1899,3420,0,0,0,True
+1,B3,B3@N-0,B3,N-0,15,0.869,0.773,0.908,0.754,0.949,0.069,0.068,0.073,0,,Seq Scan on flat_numeric,31,1580,511,3420,0,0,0,True
+1,B3,B3@N-1,B3,N-1,15,0.526,0.494,0.553,0.461,0.595,0.084,0.077,0.087,15,flat_numeric_btree_lat_lon_idx,Bitmap Heap Scan on flat_numeric_btree [Bitmap Index Scan using flat_numeric_btree_lat_lon_idx],40,1580,511,0,0,31,0,True
+1,B4,B4@G-0,B4,G-0,15,1.612,1.488,1.706,1.427,1.893,0.12,0.114,0.134,0,,Seq Scan on flat_geom,39,3897,4740,1103,0,0,0,True
+1,B4,B4@G-1,B4,G-1,15,2.528,2.35,2.65,2.225,2.799,0.225,0.207,0.238,15,flat_geom_gist_idx,Index Scan using flat_geom_gist_idx,3828,3897,4740,0,0,0,0,True
+1,B4,B4@G-2,B4,G-2,15,2.354,2.262,2.484,2.01,2.628,0.227,0.218,0.238,15,flat_geom_spgist_idx,Index Scan using flat_geom_spgist_idx,2134,3897,4740,0,0,0,0,True
+1,B4,B4@G-3,B4,G-3,15,1.74,1.666,1.799,1.458,3.772,0.248,0.241,0.251,0,,Seq Scan on flat_geom_brin,39,3897,4740,1103,0,0,0,True
+1,B4,B4@J-0g,B4,J-0g,15,26.417,24.339,27.429,23.425,29.9,0.043,0.037,0.047,0,,Seq Scan on jsonb_doc,981,3897,1,1103,0,0,0,True
+1,B4,B4@J-1,B4,J-1,15,23.15,21.91,23.731,21.155,24.987,0.25,0.243,0.259,15,jsonb_doc_expr_geom_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geom_gist_idx],1002,3897,4740,0,0,980,0,True
+1,B4,B4@J-3,B4,J-3,15,2.633,2.462,2.73,2.445,2.803,0.217,0.21,0.237,15,jsonb_geom_gist_idx,Bitmap Heap Scan on jsonb_geom_gist [Bitmap Index Scan using jsonb_geom_gist_idx],900,3897,4740,0,0,878,0,True
+1,B4,B4@J-3c,B4,J-3c,15,2.374,2.311,2.457,2.25,2.551,0.13,0.123,0.137,0,,Seq Scan on jsonb_geom,879,3897,4740,1103,0,0,0,True
+1,B4,B4@N-0,B4,N-0,15,1.224,1.107,1.307,1.081,1.39,0.067,0.065,0.076,0,,Seq Scan on flat_numeric,31,3897,3347,1103,0,0,0,True
+1,B4,B4@N-1,B4,N-1,15,1.275,1.186,1.307,1.107,1.509,0.099,0.094,0.104,0,,Seq Scan on flat_numeric_btree,31,3897,3347,1103,0,0,0,True
+1,B5,B5@G-0,B5,G-0,15,1.235,1.195,1.271,1.081,1.304,0.061,0.059,0.062,0,,Seq Scan on flat_geom,39,0,1,5000,0,0,0,True
+1,B5,B5@G-1,B5,G-1,15,0.038,0.036,0.04,0.032,0.041,0.098,0.094,0.098,15,flat_geom_gist_idx,Bitmap Heap Scan on flat_geom_gist [BitmapOr [Bitmap Index Scan using flat_geom_gist_idx; Bitmap Index Scan using flat_geom_gist_idx]],4,0,1,0,0,0,0,True
+1,B5,B5@G-2,B5,G-2,15,0.067,0.057,0.069,0.054,0.089,0.098,0.093,0.104,15,flat_geom_spgist_idx,Bitmap Heap Scan on flat_geom_spgist [BitmapOr [Bitmap Index Scan using flat_geom_spgist_idx; Bitmap Index Scan using flat_geom_spgist_idx]],20,0,1,0,0,0,0,True
+1,B5,B5@G-3,B5,G-3,15,1.504,1.42,1.554,1.205,1.6,0.122,0.097,0.134,15,flat_geom_brin_idx,Bitmap Heap Scan on flat_geom_brin [BitmapOr [Bitmap Index Scan using flat_geom_brin_idx; Bitmap Index Scan using flat_geom_brin_idx]],43,0,1,0,5000,0,39,True
+1,B5,B5@J-0g,B5,J-0g,15,46.525,45.32,46.925,41.916,47.16,0.046,0.045,0.048,0,,Seq Scan on jsonb_doc,981,0,1,5000,0,0,0,True
+1,B5,B5@J-1,B5,J-1,15,0.05,0.043,0.054,0.041,0.057,0.131,0.123,0.157,15,jsonb_doc_expr_geom_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [BitmapOr [Bitmap Index Scan using jsonb_doc_expr_geom_gist_idx; Bitmap Index Scan using jsonb_doc_expr_geom_gist_idx]],4,0,1,0,0,0,0,True
+1,B5,B5@J-3,B5,J-3,15,0.038,0.037,0.041,0.034,0.06,0.098,0.096,0.115,15,jsonb_geom_gist_idx,Bitmap Heap Scan on jsonb_geom_gist [BitmapOr [Bitmap Index Scan using jsonb_geom_gist_idx; Bitmap Index Scan using jsonb_geom_gist_idx]],4,0,1,0,0,0,0,True
+1,B5,B5@J-3c,B5,J-3c,15,2.041,1.996,2.082,1.778,3.327,0.068,0.061,0.071,0,,Seq Scan on jsonb_geom,879,0,1,5000,0,0,0,True
+1,B5,B5@N-0,B5,N-0,15,0.902,0.85,0.935,0.781,1.031,0.07,0.067,0.071,0,,Seq Scan on flat_numeric,31,0,16,5000,0,0,0,True
+1,B5,B5@N-1,B5,N-1,15,0.912,0.889,0.925,0.803,1.009,0.104,0.1,0.115,0,,Seq Scan on flat_numeric_btree,31,0,16,5000,0,0,0,True
+1,B6,B6@G-0,B6,G-0,15,0.754,0.662,0.779,0.643,0.858,0.05,0.044,0.05,0,,Seq Scan on flat_geom,39,1,1,4999,0,0,0,True
+1,B6,B6@G-1,B6,G-1,15,0.024,0.021,0.025,0.019,0.039,0.079,0.074,0.091,15,flat_geom_gist_idx,Index Scan using flat_geom_gist_idx,3,1,1,0,0,0,0,True
+1,B6,B6@G-2,B6,G-2,15,0.042,0.037,0.046,0.034,0.053,0.084,0.078,0.09,15,flat_geom_spgist_idx,Index Scan using flat_geom_spgist_idx,13,1,1,0,0,0,0,True
+1,B6,B6@G-3,B6,G-3,15,0.797,0.734,0.839,0.653,0.941,0.089,0.072,0.099,0,,Seq Scan on flat_geom_brin,39,1,1,4999,0,0,0,True
+1,B6,B6@J-0g,B6,J-0g,15,24.026,22.659,25.818,21.671,34.752,0.034,0.029,0.042,0,,Seq Scan on jsonb_doc,981,1,1,4999,0,0,0,True
+1,B6,B6@J-1,B6,J-1,15,0.032,0.029,0.035,0.026,0.04,0.1,0.086,0.111,15,jsonb_doc_expr_geom_gist_idx,Index Scan using jsonb_doc_expr_geom_gist_idx,3,1,1,0,0,0,0,True
+1,B6,B6@J-3,B6,J-3,15,0.024,0.022,0.025,0.02,0.027,0.079,0.07,0.082,15,jsonb_geom_gist_idx,Index Scan using jsonb_geom_gist_idx,3,1,1,0,0,0,0,True
+1,B6,B6@J-3c,B6,J-3c,15,1.391,1.226,1.472,1.181,1.568,0.052,0.049,0.057,0,,Seq Scan on jsonb_geom,879,1,1,4999,0,0,0,True
+1,B6,B6@N-0,B6,N-0,15,0.434,0.404,0.496,0.397,0.52,0.065,0.058,0.067,0,,Seq Scan on flat_numeric,31,1,13,4999,0,0,0,True
+1,B6,B6@N-1,B6,N-1,15,0.018,0.016,0.019,0.015,0.02,0.093,0.083,0.099,15,flat_numeric_btree_lat_lon_idx,Bitmap Heap Scan on flat_numeric_btree [Bitmap Index Scan using flat_numeric_btree_lat_lon_idx],3,1,14,0,0,1,0,True
+1,D1,D1@J-0y,D1,J-0y,15,33.305,32.254,34.686,30.188,38.788,0.041,0.036,0.045,0,,Seq Scan on jsonb_doc,981,410,1,4590,0,0,0,True
+1,D1,D1@J-2,D1,J-2,15,2.803,2.657,2.897,2.474,3.02,0.541,0.495,0.561,15,jsonb_doc_expr_geog_gist_idx,Index Scan using jsonb_doc_expr_geog_gist_idx,395,410,1,0,0,0,0,True
+1,D1,D1@J-4,D1,J-4,15,0.56,0.527,0.709,0.474,1.06,0.469,0.435,0.477,15,jsonb_geog_gist_idx,Index Scan using jsonb_geog_gist_idx,393,410,1,0,0,0,0,True
+1,D1,D1@J-4c,D1,J-4c,15,8.519,8.267,9.069,8.146,12.981,0.034,0.032,0.037,0,,Seq Scan on jsonb_geog,879,410,1,4590,0,0,0,True
+1,D1,D1@Y-0,D1,Y-0,15,7.745,7.609,8.287,7.497,8.505,0.034,0.032,0.036,0,,Seq Scan on flat_geog,39,410,1,4590,0,0,0,True
+1,D1,D1@Y-1,D1,Y-1,15,0.438,0.412,0.452,0.383,0.52,0.48,0.448,0.511,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,149,410,1,0,0,0,0,True
+1,D1,D1@Y-2,D1,Y-2,15,0.789,0.739,0.878,0.66,1.082,0.496,0.427,0.538,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,425,410,1,0,0,0,0,True
+1,D1,MD1@G-0,MD1,G-0,15,1.147,1.067,1.171,1.042,1.233,0.084,0.072,0.096,0,,Seq Scan on flat_geom,39,410,2,4590,0,0,0,True
+1,D1,MD1@G-1,MD1,G-1,15,0.597,0.54,0.634,0.522,0.693,0.098,0.079,0.114,15,flat_geom_gist_idx,Bitmap Heap Scan on flat_geom_gist [Bitmap Index Scan using flat_geom_gist_idx],42,410,2,0,0,39,0,True
+1,D1-s,D1-s@J-0y,D1-s,J-0y,15,27.86,27.067,28.707,25.766,36.381,0.038,0.035,0.041,0,,Seq Scan on jsonb_doc,981,410,1,4590,0,0,0,True
+1,D1-s,D1-s@J-2,D1-s,J-2,15,2.735,2.561,2.89,2.449,3.055,0.474,0.445,0.534,15,jsonb_doc_expr_geog_gist_idx,Index Scan using jsonb_doc_expr_geog_gist_idx,395,410,1,0,0,0,0,True
+1,D1-s,D1-s@J-4,D1-s,J-4,15,0.535,0.491,0.578,0.439,0.666,0.434,0.403,0.469,15,jsonb_geog_gist_idx,Index Scan using jsonb_geog_gist_idx,393,410,1,0,0,0,0,True
+1,D1-s,D1-s@J-4c,D1-s,J-4c,15,3.241,3.13,3.492,2.976,3.706,0.034,0.031,0.038,0,,Seq Scan on jsonb_geog,879,410,1,4590,0,0,0,True
+1,D1-s,D1-s@Y-0,D1-s,Y-0,15,2.596,2.4,2.622,2.315,2.889,0.031,0.03,0.034,0,,Seq Scan on flat_geog,39,410,1,4590,0,0,0,True
+1,D1-s,D1-s@Y-1,D1-s,Y-1,15,0.431,0.391,0.476,0.372,0.855,0.451,0.418,0.479,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,149,410,1,0,0,0,0,True
+1,D1-s,D1-s@Y-2,D1-s,Y-2,15,0.787,0.736,0.869,0.669,1.077,0.453,0.431,0.519,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,425,410,1,0,0,0,0,True
+1,D2,D2@J-0y,D2,J-0y,15,32.492,31.217,35.066,28.667,38.553,0.042,0.039,0.046,0,,Seq Scan on jsonb_doc,981,1101,1,3899,0,0,0,True
+1,D2,D2@J-2,D2,J-2,15,6.95,6.78,7.473,6.583,11.232,0.53,0.484,0.59,15,jsonb_doc_expr_geog_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geog_gist_idx],710,1101,1,0,0,699,0,True
+1,D2,D2@J-4,D2,J-4,15,1.487,1.44,1.783,1.305,1.958,0.494,0.448,0.571,15,jsonb_geog_gist_idx,Bitmap Heap Scan on jsonb_geog_gist [Bitmap Index Scan using jsonb_geog_gist_idx],682,1101,1,0,0,668,0,True
+1,D2,D2@J-4c,D2,J-4c,15,7.867,7.576,8.272,7.352,10.95,0.035,0.034,0.039,0,,Seq Scan on jsonb_geog,879,1101,1,3899,0,0,0,True
+1,D2,D2@Y-0,D2,Y-0,15,7.29,6.996,7.802,6.541,11.571,0.036,0.034,0.039,0,,Seq Scan on flat_geog,39,1101,1,3899,0,0,0,True
+1,D2,D2@Y-1,D2,Y-1,15,1.146,1.032,1.223,0.978,1.761,0.503,0.462,0.531,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,418,1101,1,0,0,0,0,True
+1,D2,D2@Y-2,D2,Y-2,15,1.519,1.424,1.543,1.309,1.862,0.506,0.463,0.549,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,951,1101,1,0,0,0,0,True
+1,D2,MD2@G-0,MD2,G-0,15,2.111,1.906,2.329,1.802,4.152,0.094,0.075,0.116,0,,Seq Scan on flat_geom,39,1101,441,3899,0,0,0,True
+1,D2,MD2@G-1,MD2,G-1,15,1.798,1.636,2.079,1.616,2.481,0.097,0.084,0.107,15,flat_geom_gist_idx,Index Scan using flat_geom_gist_idx,1080,1101,441,0,0,0,0,True
+1,D2-s,D2-s@J-0y,D2-s,J-0y,15,27.026,26.418,29.215,26.216,36.777,0.041,0.038,0.049,0,,Seq Scan on jsonb_doc,981,1101,1,3899,0,0,0,True
+1,D2-s,D2-s@J-2,D2-s,J-2,15,6.8,6.742,7.3,6.397,7.967,0.509,0.459,0.551,15,jsonb_doc_expr_geog_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geog_gist_idx],710,1101,1,0,0,699,0,True
+1,D2-s,D2-s@J-4,D2-s,J-4,15,1.379,1.356,1.486,1.266,1.988,0.437,0.414,0.454,15,jsonb_geog_gist_idx,Bitmap Heap Scan on jsonb_geog_gist [Bitmap Index Scan using jsonb_geog_gist_idx],682,1101,1,0,0,668,0,True
+1,D2-s,D2-s@J-4c,D2-s,J-4c,15,3.263,3.2,3.366,3.048,3.885,0.032,0.03,0.033,0,,Seq Scan on jsonb_geog,879,1101,1,3899,0,0,0,True
+1,D2-s,D2-s@Y-0,D2-s,Y-0,15,2.532,2.497,2.751,2.417,3.981,0.032,0.03,0.035,0,,Seq Scan on flat_geog,39,1101,1,3899,0,0,0,True
+1,D2-s,D2-s@Y-1,D2-s,Y-1,15,1.037,0.96,1.18,0.887,1.423,0.443,0.423,0.5,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,418,1101,1,0,0,0,0,True
+1,D2-s,D2-s@Y-2,D2-s,Y-2,15,1.553,1.369,1.663,1.244,3.006,0.486,0.436,0.541,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,951,1101,1,0,0,0,0,True
+1,D3,D3@J-0y,D3,J-0y,15,31.665,30.822,35.195,29.904,39.07,0.041,0.04,0.046,0,,Seq Scan on jsonb_doc,981,599,1,4401,0,0,0,True
+1,D3,D3@J-2,D3,J-2,15,4.02,3.859,4.282,3.664,4.665,0.606,0.581,0.693,15,jsonb_doc_expr_geog_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geog_gist_idx],463,599,1,0,0,454,0,True
+1,D3,D3@J-4,D3,J-4,15,0.911,0.824,0.955,0.778,1.134,0.554,0.533,0.621,15,jsonb_geog_gist_idx,Bitmap Heap Scan on jsonb_geog_gist [Bitmap Index Scan using jsonb_geog_gist_idx],463,599,1,0,0,454,0,True
+1,D3,D3@J-4c,D3,J-4c,15,8.663,8.135,8.886,7.679,11.104,0.035,0.034,0.039,0,,Seq Scan on jsonb_geog,879,599,1,4401,0,0,0,True
+1,D3,D3@Y-0,D3,Y-0,15,7.437,7.28,7.949,7.12,8.761,0.037,0.034,0.04,0,,Seq Scan on flat_geog,39,599,1,4401,0,0,0,True
+1,D3,D3@Y-1,D3,Y-1,15,0.599,0.557,0.641,0.511,0.708,0.54,0.527,0.583,15,flat_geog_gist_idx,Bitmap Heap Scan on flat_geog_gist [Bitmap Index Scan using flat_geog_gist_idx],45,599,1,0,0,39,0,True
+1,D3,D3@Y-2,D3,Y-2,15,0.93,0.867,1.002,0.763,1.58,0.561,0.533,0.65,15,flat_geog_spgist_idx,Bitmap Heap Scan on flat_geog_spgist [Bitmap Index Scan using flat_geog_spgist_idx],188,599,1,0,0,39,0,True
+1,D3-s,D3-s@J-0y,D3-s,J-0y,15,28.743,27.938,29.651,25.998,41.997,0.038,0.036,0.041,0,,Seq Scan on jsonb_doc,981,599,1,4401,0,0,0,True
+1,D3-s,D3-s@J-2,D3-s,J-2,15,4.099,3.994,4.234,3.537,5.721,0.635,0.586,0.661,15,jsonb_doc_expr_geog_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geog_gist_idx],463,599,1,0,0,454,0,True
+1,D3-s,D3-s@J-4,D3-s,J-4,15,0.856,0.809,0.962,0.766,1.038,0.552,0.514,0.587,15,jsonb_geog_gist_idx,Bitmap Heap Scan on jsonb_geog_gist [Bitmap Index Scan using jsonb_geog_gist_idx],463,599,1,0,0,454,0,True
+1,D3-s,D3-s@J-4c,D3-s,J-4c,15,3.344,3.234,3.558,3.114,3.897,0.033,0.032,0.036,0,,Seq Scan on jsonb_geog,879,599,1,4401,0,0,0,True
+1,D3-s,D3-s@Y-0,D3-s,Y-0,15,2.741,2.584,2.939,2.376,3.568,0.034,0.03,0.037,0,,Seq Scan on flat_geog,39,599,1,4401,0,0,0,True
+1,D3-s,D3-s@Y-1,D3-s,Y-1,15,0.618,0.584,0.637,0.518,0.846,0.548,0.5,0.565,15,flat_geog_gist_idx,Bitmap Heap Scan on flat_geog_gist [Bitmap Index Scan using flat_geog_gist_idx],45,599,1,0,0,39,0,True
+1,D3-s,D3-s@Y-2,D3-s,Y-2,15,0.95,0.821,1.033,0.753,1.595,0.558,0.496,0.612,15,flat_geog_spgist_idx,Bitmap Heap Scan on flat_geog_spgist [Bitmap Index Scan using flat_geog_spgist_idx],188,599,1,0,0,39,0,True
+1,D4,D4@J-0y,D4,J-0y,15,30.961,30.107,32.892,28.371,43.597,0.043,0.04,0.049,0,,Seq Scan on jsonb_doc,981,2059,1,2941,0,0,0,True
+1,D4,D4@J-2,D4,J-2,15,13.222,12.322,14.085,12.013,16.045,1.304,1.137,1.349,15,jsonb_doc_expr_geog_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geog_gist_idx],936,2059,1,0,0,914,0,True
+1,D4,D4@J-4,D4,J-4,15,2.556,2.29,2.721,2.193,3.127,1.146,1.081,1.322,15,jsonb_geog_gist_idx,Bitmap Heap Scan on jsonb_geog_gist [Bitmap Index Scan using jsonb_geog_gist_idx],852,2059,1,0,0,826,0,True
+1,D4,D4@J-4c,D4,J-4c,15,6.876,6.314,7.311,6.208,9.631,0.037,0.036,0.043,0,,Seq Scan on jsonb_geog,879,2059,1,2941,0,0,0,True
+1,D4,D4@Y-0,D4,Y-0,15,5.657,5.444,6.251,5.391,7.015,0.037,0.033,0.047,0,,Seq Scan on flat_geog,39,2059,1,2941,0,0,0,True
+1,D4,D4@Y-1,D4,Y-1,15,1.847,1.807,2.023,1.714,2.244,1.157,1.059,1.2,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,685,2059,1,0,0,0,0,True
+1,D4,D4@Y-2,D4,Y-2,15,2.259,2.177,2.41,2.066,2.741,1.196,1.089,1.227,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,1552,2059,1,0,0,0,0,True
+1,D4-s,D4-s@J-0y,D4-s,J-0y,15,27.135,26.257,28.683,25.539,38.884,0.043,0.038,0.049,0,,Seq Scan on jsonb_doc,981,2059,1,2941,0,0,0,True
+1,D4-s,D4-s@J-2,D4-s,J-2,15,13.641,12.462,13.966,12.242,24.286,1.261,1.219,1.406,15,jsonb_doc_expr_geog_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geog_gist_idx],936,2059,1,0,0,914,0,True
+1,D4-s,D4-s@J-4,D4-s,J-4,15,2.361,2.271,2.467,2.191,2.541,1.16,1.071,1.201,15,jsonb_geog_gist_idx,Bitmap Heap Scan on jsonb_geog_gist [Bitmap Index Scan using jsonb_geog_gist_idx],852,2059,1,0,0,826,0,True
+1,D4-s,D4-s@J-4c,D4-s,J-4c,15,3.583,3.425,3.704,3.253,4.358,0.036,0.035,0.039,0,,Seq Scan on jsonb_geog,879,2059,1,2941,0,0,0,True
+1,D4-s,D4-s@Y-0,D4-s,Y-0,15,2.736,2.609,2.843,2.528,4.303,0.033,0.032,0.035,0,,Seq Scan on flat_geog,39,2059,1,2941,0,0,0,True
+1,D4-s,D4-s@Y-1,D4-s,Y-1,15,1.937,1.857,2.124,1.778,2.696,1.129,1.079,1.292,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,685,2059,1,0,0,0,0,True
+1,D4-s,D4-s@Y-2,D4-s,Y-2,15,2.282,2.154,2.632,2.012,4.697,1.211,1.137,1.336,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,1552,2059,1,0,0,0,0,True
+1,D5,D5@J-0y,D5,J-0y,15,33.55,32.477,35.936,31.937,47.058,0.038,0.037,0.044,0,,Seq Scan on jsonb_doc,981,262,1,4738,0,0,0,True
+1,D5,D5@J-2,D5,J-2,15,4.736,4.449,5.353,4.165,5.844,1.058,1.011,1.1,15,jsonb_doc_expr_geog_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geog_gist_idx],455,262,1,309,0,449,0,True
+1,D5,D5@J-4,D5,J-4,15,1.625,1.584,1.835,1.483,2.053,0.949,0.917,0.99,15,jsonb_geog_gist_idx,Bitmap Heap Scan on jsonb_geog_gist [Bitmap Index Scan using jsonb_geog_gist_idx],439,262,1,309,0,432,0,True
+1,D5,D5@J-4c,D5,J-4c,15,9.136,8.662,9.598,8.224,10.803,0.033,0.033,0.036,0,,Seq Scan on jsonb_geog,879,262,1,4738,0,0,0,True
+1,D5,D5@Y-0,D5,Y-0,15,8.189,7.973,8.538,7.777,9.363,0.038,0.034,0.042,0,,Seq Scan on flat_geog,39,262,1,4738,0,0,0,True
+1,D5,D5@Y-1,D5,Y-1,15,1.36,1.22,1.483,1.186,1.565,0.892,0.859,0.954,15,flat_geog_gist_idx,Bitmap Heap Scan on flat_geog_gist [Bitmap Index Scan using flat_geog_gist_idx],46,262,1,309,0,39,0,True
+1,D5,D5@Y-2,D5,Y-2,15,1.632,1.473,1.734,1.437,1.95,0.954,0.851,1.053,15,flat_geog_spgist_idx,Bitmap Heap Scan on flat_geog_spgist [Bitmap Index Scan using flat_geog_spgist_idx],188,262,1,309,0,39,0,True
+1,D5-s,D5-s@J-0y,D5-s,J-0y,15,27.399,26.553,28.394,24.757,29.695,0.037,0.036,0.039,0,,Seq Scan on jsonb_doc,981,262,1,4738,0,0,0,True
+1,D5-s,D5-s@J-2,D5-s,J-2,15,3.935,3.563,4.145,3.505,8.203,1.081,0.971,1.144,15,jsonb_doc_expr_geog_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geog_gist_idx],455,262,1,309,0,449,0,True
+1,D5-s,D5-s@J-4,D5-s,J-4,15,0.701,0.668,0.785,0.613,0.926,0.901,0.869,0.957,15,jsonb_geog_gist_idx,Bitmap Heap Scan on jsonb_geog_gist [Bitmap Index Scan using jsonb_geog_gist_idx],439,262,1,309,0,432,0,True
+1,D5-s,D5-s@J-4c,D5-s,J-4c,15,3.115,2.991,3.322,2.854,4.716,0.034,0.03,0.037,0,,Seq Scan on jsonb_geog,879,262,1,4738,0,0,0,True
+1,D5-s,D5-s@Y-0,D5-s,Y-0,15,2.422,2.307,2.531,2.254,2.628,0.032,0.029,0.034,0,,Seq Scan on flat_geog,39,262,1,4738,0,0,0,True
+1,D5-s,D5-s@Y-1,D5-s,Y-1,15,0.484,0.454,0.531,0.442,0.706,0.927,0.884,0.944,15,flat_geog_gist_idx,Bitmap Heap Scan on flat_geog_gist [Bitmap Index Scan using flat_geog_gist_idx],46,262,1,309,0,39,0,True
+1,D5-s,D5-s@Y-2,D5-s,Y-2,15,0.789,0.755,0.846,0.723,1.037,0.961,0.901,1.035,15,flat_geog_spgist_idx,Bitmap Heap Scan on flat_geog_spgist [Bitmap Index Scan using flat_geog_spgist_idx],188,262,1,309,0,39,0,True
+1,D6,D6@J-0y,D6,J-0y,15,33.963,32.708,35.242,30.825,43.8,0.038,0.037,0.046,0,,Seq Scan on jsonb_doc,981,15,1,4985,0,0,0,True
+1,D6,D6@J-2,D6,J-2,15,0.329,0.282,0.357,0.25,0.411,0.514,0.456,0.558,15,jsonb_doc_expr_geog_gist_idx,Index Scan using jsonb_doc_expr_geog_gist_idx,30,15,1,13,0,0,0,True
+1,D6,D6@J-4,D6,J-4,15,0.098,0.093,0.118,0.078,0.187,0.425,0.419,0.471,15,jsonb_geog_gist_idx,Index Scan using jsonb_geog_gist_idx,31,15,1,13,0,0,0,True
+1,D6,D6@J-4c,D6,J-4c,15,9.1,8.895,9.512,8.67,10.07,0.035,0.032,0.039,0,,Seq Scan on jsonb_geog,879,15,1,4985,0,0,0,True
+1,D6,D6@Y-0,D6,Y-0,15,8.168,8.03,8.63,7.901,9.014,0.037,0.033,0.039,0,,Seq Scan on flat_geog,39,15,1,4985,0,0,0,True
+1,D6,D6@Y-1,D6,Y-1,15,0.116,0.105,0.149,0.089,0.19,0.463,0.454,0.481,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,26,15,1,13,0,0,0,True
+1,D6,D6@Y-2,D6,Y-2,15,0.448,0.42,0.476,0.367,0.587,0.468,0.432,0.517,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,173,15,1,13,0,0,0,True
+1,D6,MD6@G-0,MD6,G-0,15,0.648,0.632,0.697,0.623,0.74,0.088,0.067,0.098,0,,Seq Scan on flat_geom,39,15,1,4985,0,0,0,True
+1,D6,MD6@G-1,MD6,G-1,15,0.071,0.063,0.072,0.058,0.082,0.089,0.077,0.108,15,flat_geom_gist_idx,Index Scan using flat_geom_gist_idx,25,15,1,7,0,0,0,True
+1,D6-s,D6-s@J-0y,D6-s,J-0y,15,29.023,28.071,30.26,24.459,41.466,0.038,0.035,0.043,0,,Seq Scan on jsonb_doc,981,15,1,4985,0,0,0,True
+1,D6-s,D6-s@J-2,D6-s,J-2,15,0.312,0.28,0.329,0.253,0.378,0.495,0.467,0.565,15,jsonb_doc_expr_geog_gist_idx,Index Scan using jsonb_doc_expr_geog_gist_idx,30,15,1,13,0,0,0,True
+1,D6-s,D6-s@J-4,D6-s,J-4,15,0.086,0.071,0.108,0.066,0.177,0.456,0.429,0.466,15,jsonb_geog_gist_idx,Index Scan using jsonb_geog_gist_idx,31,15,1,13,0,0,0,True
+1,D6-s,D6-s@J-4c,D6-s,J-4c,15,3.52,3.417,3.597,3.14,4.435,0.034,0.031,0.039,0,,Seq Scan on jsonb_geog,879,15,1,4985,0,0,0,True
+1,D6-s,D6-s@Y-0,D6-s,Y-0,15,2.738,2.611,2.847,2.372,3.743,0.033,0.031,0.038,0,,Seq Scan on flat_geog,39,15,1,4985,0,0,0,True
+1,D6-s,D6-s@Y-1,D6-s,Y-1,15,0.093,0.078,0.125,0.067,0.187,0.468,0.427,0.51,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,26,15,1,13,0,0,0,True
+1,D6-s,D6-s@Y-2,D6-s,Y-2,15,0.449,0.365,0.514,0.317,0.627,0.494,0.425,0.531,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,173,15,1,13,0,0,0,True
+1,D7,D7@J-0y,D7,J-0y,15,30.254,29.318,30.602,26.465,41.338,0.039,0.036,0.043,0,,Seq Scan on jsonb_doc,981,1,1,4999,0,0,0,True
+1,D7,D7@J-2,D7,J-2,15,0.057,0.045,0.072,0.04,0.138,0.513,0.454,0.534,15,jsonb_doc_expr_geog_gist_idx,Index Scan using jsonb_doc_expr_geog_gist_idx,3,1,1,0,0,0,0,True
+1,D7,D7@J-4,D7,J-4,15,0.035,0.029,0.041,0.026,0.052,0.429,0.412,0.453,15,jsonb_geog_gist_idx,Index Scan using jsonb_geog_gist_idx,3,1,1,0,0,0,0,True
+1,D7,D7@J-4c,D7,J-4c,15,5.157,4.971,5.248,4.649,6.173,0.034,0.031,0.039,0,,Seq Scan on jsonb_geog,879,1,1,4999,0,0,0,True
+1,D7,D7@Y-0,D7,Y-0,15,4.331,4.162,4.565,4.001,8.051,0.034,0.031,0.042,0,,Seq Scan on flat_geog,39,1,1,4999,0,0,0,True
+1,D7,D7@Y-1,D7,Y-1,15,0.042,0.034,0.056,0.027,0.097,0.471,0.447,0.495,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,3,1,1,0,0,0,0,True
+1,D7,D7@Y-2,D7,Y-2,15,0.419,0.354,0.483,0.271,0.574,0.482,0.46,0.54,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,150,1,1,0,0,0,0,True
+1,D7-s,D7-s@J-0y,D7-s,J-0y,15,27.586,26.192,28.39,25.421,35.312,0.039,0.035,0.041,0,,Seq Scan on jsonb_doc,981,1,1,4999,0,0,0,True
+1,D7-s,D7-s@J-2,D7-s,J-2,15,0.042,0.039,0.059,0.034,0.11,0.482,0.439,0.528,15,jsonb_doc_expr_geog_gist_idx,Index Scan using jsonb_doc_expr_geog_gist_idx,3,1,1,0,0,0,0,True
+1,D7-s,D7-s@J-4,D7-s,J-4,15,0.03,0.027,0.047,0.025,0.072,0.438,0.404,0.466,15,jsonb_geog_gist_idx,Index Scan using jsonb_geog_gist_idx,3,1,1,0,0,0,0,True
+1,D7-s,D7-s@J-4c,D7-s,J-4c,15,3.318,3.033,3.43,2.992,3.643,0.034,0.03,0.037,0,,Seq Scan on jsonb_geog,879,1,1,4999,0,0,0,True
+1,D7-s,D7-s@Y-0,D7-s,Y-0,15,2.539,2.383,2.774,2.294,3.679,0.033,0.031,0.037,0,,Seq Scan on flat_geog,39,1,1,4999,0,0,0,True
+1,D7-s,D7-s@Y-1,D7-s,Y-1,15,0.034,0.029,0.045,0.026,0.064,0.429,0.398,0.463,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,3,1,1,0,0,0,0,True
+1,D7-s,D7-s@Y-2,D7-s,Y-2,15,0.357,0.343,0.493,0.288,0.58,0.459,0.405,0.484,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,150,1,1,0,0,0,0,True
+1,K1,K1@J-0y,K1,J-0y,15,29.544,27.76,31.96,26.811,34.04,0.048,0.045,0.056,0,,Limit [Sort [Seq Scan on jsonb_doc]],981,10,5000,0,0,0,0,True
+1,K1,K1@J-2,K1,J-2,15,0.19,0.181,0.205,0.175,0.367,0.07,0.058,0.081,15,jsonb_doc_expr_geog_gist_idx,Limit [Index Scan using jsonb_doc_expr_geog_gist_idx],14,10,5000,0,0,0,0,True
+1,K1,K1@J-4,K1,J-4,15,0.11,0.107,0.12,0.101,0.188,0.044,0.041,0.048,15,jsonb_geog_gist_idx,Limit [Index Scan using jsonb_geog_gist_idx],14,10,5000,0,0,0,0,True
+1,K1,K1@J-4c,K1,J-4c,15,3.893,3.704,4.161,3.595,6.942,0.041,0.034,0.046,0,,Limit [Sort [Seq Scan on jsonb_geog]],879,10,5000,0,0,0,0,True
+1,K1,K1@Y-0,K1,Y-0,15,3.056,2.838,3.435,2.647,5.248,0.038,0.034,0.044,0,,Limit [Sort [Seq Scan on flat_geog]],39,10,5000,0,0,0,0,True
+1,K1,K1@Y-1,K1,Y-1,15,0.105,0.095,0.117,0.087,0.193,0.044,0.039,0.049,15,flat_geog_gist_idx,Limit [Index Scan using flat_geog_gist_idx],13,10,5000,0,0,0,0,True
+1,K1,K1@Y-2,K1,Y-2,15,3.289,3.157,3.5,2.664,5.624,0.049,0.043,0.063,0,,Limit [Sort [Seq Scan on flat_geog_spgist]],39,10,5000,0,0,0,0,True
+1,K1,K1g@G-0,K1g,G-0,15,1.481,1.421,1.637,1.329,2.929,0.033,0.031,0.037,0,,Limit [Sort [Seq Scan on flat_geom]],39,10,5000,0,0,0,0,True
+1,K1,K1g@G-1,K1g,G-1,15,0.054,0.051,0.06,0.049,0.107,0.041,0.038,0.046,15,flat_geom_gist_idx,Limit [Index Scan using flat_geom_gist_idx],13,10,5000,0,0,0,0,True
+1,K2,K2@J-0y,K2,J-0y,15,29.501,28.84,30.558,24.975,32.775,0.046,0.045,0.048,0,,Limit [Sort [Seq Scan on jsonb_doc]],981,100,5000,0,0,0,0,True
+1,K2,K2@J-2,K2,J-2,15,1.456,1.394,1.482,1.225,2.454,0.066,0.058,0.073,15,jsonb_doc_expr_geog_gist_idx,Limit [Index Scan using jsonb_doc_expr_geog_gist_idx],103,100,5000,0,0,0,0,True
+1,K2,K2@J-4,K2,J-4,15,0.319,0.302,0.362,0.299,0.374,0.043,0.039,0.052,15,jsonb_geog_gist_idx,Limit [Index Scan using jsonb_geog_gist_idx],104,100,5000,0,0,0,0,True
+1,K2,K2@J-4c,K2,J-4c,15,3.866,3.698,4.0,3.538,4.242,0.038,0.033,0.041,0,,Limit [Sort [Seq Scan on jsonb_geog]],879,100,5000,0,0,0,0,True
+1,K2,K2@Y-0,K2,Y-0,15,3.128,2.937,3.233,2.759,3.559,0.035,0.032,0.037,0,,Limit [Sort [Seq Scan on flat_geog]],39,100,5000,0,0,0,0,True
+1,K2,K2@Y-1,K2,Y-1,15,0.273,0.26,0.288,0.243,0.308,0.043,0.04,0.044,15,flat_geog_gist_idx,Limit [Index Scan using flat_geog_gist_idx],100,100,5000,0,0,0,0,True
+1,K2,K2@Y-2,K2,Y-2,15,3.313,3.167,3.372,2.887,3.572,0.043,0.039,0.054,0,,Limit [Sort [Seq Scan on flat_geog_spgist]],39,100,5000,0,0,0,0,True
+1,K3,K3@G-0,K3,G-0,15,1.648,1.572,1.722,1.456,2.145,0.036,0.035,0.041,0,,Limit [Sort [Seq Scan on flat_geom]],39,10,5000,0,0,0,0,True
+1,K3,K3@G-1,K3,G-1,15,0.074,0.067,0.085,0.058,0.145,0.047,0.043,0.052,15,flat_geom_gist_idx,Limit [Index Scan using flat_geom_gist_idx],13,10,5000,0,0,0,0,True
+1,K3,K3@G-2,K3,G-2,15,1.72,1.632,1.867,1.468,3.617,0.046,0.04,0.057,0,,Limit [Sort [Seq Scan on flat_geom_spgist]],39,10,5000,0,0,0,0,True
+1,K3,K3@G-3,K3,G-3,15,1.8,1.627,1.966,1.447,3.699,0.06,0.045,0.067,0,,Limit [Sort [Seq Scan on flat_geom_brin]],39,10,5000,0,0,0,0,True
+1,K3,K3@J-0g,K3,J-0g,15,28.91,26.308,30.73,23.479,40.024,0.05,0.045,0.059,0,,Limit [Sort [Seq Scan on jsonb_doc]],981,10,5000,0,0,0,0,True
+1,K3,K3@J-1,K3,J-1,15,0.167,0.152,0.188,0.145,0.205,0.075,0.059,0.087,15,jsonb_doc_expr_geom_gist_idx,Limit [Index Scan using jsonb_doc_expr_geom_gist_idx],13,10,5000,0,0,0,0,True
+1,K3,K3@J-3,K3,J-3,15,0.072,0.068,0.086,0.059,0.111,0.048,0.043,0.056,15,jsonb_geom_gist_idx,Limit [Index Scan using jsonb_geom_gist_idx],13,10,5000,0,0,0,0,True
+1,K3,K3@J-3c,K3,J-3c,15,2.389,2.227,2.528,2.091,2.828,0.039,0.036,0.044,0,,Limit [Sort [Seq Scan on jsonb_geom]],879,10,5000,0,0,0,0,True
+1,P,P1@Y-0,P1,Y-0,15,10.226,9.99,10.484,9.551,11.664,0.044,0.037,0.05,0,,Seq Scan on flat_geog,39,5000,5000,0,0,0,0,True
+1,P,P2@Y-0,P2,Y-0,15,5.188,5.004,5.506,4.704,5.865,0.033,0.03,0.035,0,,Seq Scan on flat_geog,39,5000,5000,0,0,0,0,True
+1,P,P3@N-0,P3,N-0,15,14.413,13.504,15.011,13.101,16.272,0.038,0.036,0.043,0,,Seq Scan on flat_numeric,31,5000,5000,0,0,0,0,True
+1,P,P4@J-0y,P4,J-0y,15,36.468,35.16,38.023,32.92,45.688,0.043,0.039,0.045,0,,Seq Scan on jsonb_doc,981,5000,5000,0,0,0,0,True
+2,B1,B1@G-0,B1,G-0,15,0.805,0.762,0.835,0.748,0.868,0.04,0.039,0.042,0,,Seq Scan on flat_geom,39,410,64,4590,0,0,0,True
+2,B1,B1@G-1,B1,G-1,15,0.241,0.224,0.248,0.209,0.254,0.059,0.055,0.06,15,flat_geom_gist_idx,Bitmap Heap Scan on flat_geom_gist [Bitmap Index Scan using flat_geom_gist_idx],42,410,64,0,0,39,0,True
+2,B1,B1@G-2,B1,G-2,15,0.247,0.226,0.261,0.204,0.273,0.061,0.057,0.065,15,flat_geom_spgist_idx,Bitmap Heap Scan on flat_geom_spgist [Bitmap Index Scan using flat_geom_spgist_idx],45,410,64,0,0,39,0,True
+2,B1,B1@G-3,B1,G-3,15,0.87,0.841,0.905,0.763,0.939,0.066,0.058,0.075,0,,Seq Scan on flat_geom_brin,39,410,64,4590,0,0,0,True
+2,B1,B1@J-0g,B1,J-0g,15,24.561,23.321,25.33,21.32,27.087,0.037,0.035,0.038,0,,Seq Scan on jsonb_doc,981,410,1,4590,0,0,0,True
+2,B1,B1@J-1,B1,J-1,15,2.492,2.294,2.554,2.188,2.74,0.081,0.074,0.104,15,jsonb_doc_expr_geom_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geom_gist_idx],342,410,64,0,0,339,0,True
+2,B1,B1@J-3,B1,J-3,15,0.407,0.389,0.428,0.331,0.452,0.059,0.056,0.062,15,jsonb_geom_gist_idx,Bitmap Heap Scan on jsonb_geom_gist [Bitmap Index Scan using jsonb_geom_gist_idx],331,410,64,0,0,328,0,True
+2,B1,B1@J-3c,B1,J-3c,15,1.483,1.387,1.547,1.315,1.627,0.043,0.041,0.046,0,,Seq Scan on jsonb_geom,879,410,64,4590,0,0,0,True
+2,B1,B1@N-0,B1,N-0,15,0.552,0.515,0.569,0.502,0.605,0.062,0.059,0.063,0,,Seq Scan on flat_numeric,31,410,29,4590,0,0,0,True
+2,B1,B1@N-1,B1,N-1,15,0.18,0.165,0.185,0.15,0.199,0.071,0.067,0.074,15,flat_numeric_btree_lat_lon_idx,Bitmap Heap Scan on flat_numeric_btree [Bitmap Index Scan using flat_numeric_btree_lat_lon_idx],35,410,29,0,0,31,0,True
+2,B2,B2@G-0,B2,G-0,15,0.853,0.833,0.902,0.78,0.943,0.044,0.043,0.047,0,,Seq Scan on flat_geom,39,416,500,4584,0,0,0,True
+2,B2,B2@G-1,B2,G-1,15,0.256,0.248,0.267,0.232,0.301,0.068,0.067,0.075,15,flat_geom_gist_idx,Bitmap Heap Scan on flat_geom_gist [Bitmap Index Scan using flat_geom_gist_idx],43,416,500,0,0,39,0,True
+2,B2,B2@G-2,B2,G-2,15,0.283,0.266,0.309,0.245,0.375,0.069,0.067,0.075,15,flat_geom_spgist_idx,Bitmap Heap Scan on flat_geom_spgist [Bitmap Index Scan using flat_geom_spgist_idx],57,416,500,0,0,39,0,True
+2,B2,B2@G-3,B2,G-3,15,0.928,0.89,0.947,0.775,1.105,0.076,0.069,0.082,0,,Seq Scan on flat_geom_brin,39,416,500,4584,0,0,0,True
+2,B2,B2@J-0g,B2,J-0g,15,25.507,24.4,26.203,22.246,27.617,0.036,0.034,0.038,0,,Seq Scan on jsonb_doc,981,416,1,4584,0,0,0,True
+2,B2,B2@J-1,B2,J-1,15,2.575,2.453,2.622,2.243,2.87,0.093,0.085,0.114,15,jsonb_doc_expr_geom_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geom_gist_idx],336,416,500,0,0,332,0,True
+2,B2,B2@J-3,B2,J-3,15,0.441,0.415,0.468,0.347,0.558,0.069,0.065,0.078,15,jsonb_geom_gist_idx,Bitmap Heap Scan on jsonb_geom_gist [Bitmap Index Scan using jsonb_geom_gist_idx],351,416,500,0,0,347,0,True
+2,B2,B2@J-3c,B2,J-3c,15,1.562,1.51,1.701,1.43,2.025,0.047,0.045,0.051,0,,Seq Scan on jsonb_geom,879,416,500,4584,0,0,0,True
+2,B2,B2@N-0,B2,N-0,15,0.639,0.582,0.666,0.559,0.865,0.07,0.065,0.074,0,,Seq Scan on flat_numeric,31,416,101,4584,0,0,0,True
+2,B2,B2@N-1,B2,N-1,15,0.277,0.262,0.301,0.256,0.317,0.081,0.077,0.09,15,flat_numeric_btree_lat_lon_idx,Bitmap Heap Scan on flat_numeric_btree [Bitmap Index Scan using flat_numeric_btree_lat_lon_idx],37,416,101,0,0,31,0,True
+2,B3,B3@G-0,B3,G-0,15,1.124,1.03,1.193,1.002,1.312,0.042,0.04,0.046,0,,Seq Scan on flat_geom,39,1580,1899,3420,0,0,0,True
+2,B3,B3@G-1,B3,G-1,15,1.069,0.955,1.144,0.854,1.389,0.065,0.058,0.067,15,flat_geom_gist_idx,Index Scan using flat_geom_gist_idx,1556,1580,1899,0,0,0,0,True
+2,B3,B3@G-2,B3,G-2,15,0.986,0.901,1.061,0.804,1.104,0.067,0.061,0.076,15,flat_geom_spgist_idx,Index Scan using flat_geom_spgist_idx,870,1580,1899,0,0,0,0,True
+2,B3,B3@G-3,B3,G-3,15,1.174,1.121,1.206,1.016,1.274,0.069,0.067,0.082,0,,Seq Scan on flat_geom_brin,39,1580,1899,3420,0,0,0,True
+2,B3,B3@J-0g,B3,J-0g,15,25.569,24.318,26.341,23.313,27.104,0.038,0.036,0.04,0,,Seq Scan on jsonb_doc,981,1580,1,3420,0,0,0,True
+2,B3,B3@J-1,B3,J-1,15,9.418,8.695,9.663,8.429,10.151,0.091,0.077,0.1,15,jsonb_doc_expr_geom_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geom_gist_idx],832,1580,1899,0,0,823,0,True
+2,B3,B3@J-3,B3,J-3,15,1.258,1.205,1.373,1.178,1.454,0.061,0.058,0.068,15,jsonb_geom_gist_idx,Bitmap Heap Scan on jsonb_geom_gist [Bitmap Index Scan using jsonb_geom_gist_idx],765,1580,1899,0,0,756,0,True
+2,B3,B3@J-3c,B3,J-3c,15,1.753,1.712,1.825,1.637,2.011,0.045,0.043,0.051,0,,Seq Scan on jsonb_geom,879,1580,1899,3420,0,0,0,True
+2,B3,B3@N-0,B3,N-0,15,0.851,0.768,0.885,0.759,0.951,0.067,0.064,0.072,0,,Seq Scan on flat_numeric,31,1580,511,3420,0,0,0,True
+2,B3,B3@N-1,B3,N-1,15,0.522,0.487,0.553,0.451,0.601,0.08,0.073,0.084,15,flat_numeric_btree_lat_lon_idx,Bitmap Heap Scan on flat_numeric_btree [Bitmap Index Scan using flat_numeric_btree_lat_lon_idx],40,1580,511,0,0,31,0,True
+2,B4,B4@G-0,B4,G-0,15,1.759,1.587,1.862,1.398,2.309,0.13,0.114,0.141,0,,Seq Scan on flat_geom,39,3897,4740,1103,0,0,0,True
+2,B4,B4@G-1,B4,G-1,15,2.47,2.408,2.75,2.258,3.064,0.226,0.216,0.245,15,flat_geom_gist_idx,Index Scan using flat_geom_gist_idx,3828,3897,4740,0,0,0,0,True
+2,B4,B4@G-2,B4,G-2,15,2.318,2.141,2.602,2.04,4.711,0.221,0.206,0.252,15,flat_geom_spgist_idx,Index Scan using flat_geom_spgist_idx,2134,3897,4740,0,0,0,0,True
+2,B4,B4@G-3,B4,G-3,15,1.681,1.613,1.861,1.428,2.128,0.237,0.221,0.264,0,,Seq Scan on flat_geom_brin,39,3897,4740,1103,0,0,0,True
+2,B4,B4@J-0g,B4,J-0g,15,25.141,24.507,27.637,23.601,37.547,0.042,0.036,0.05,0,,Seq Scan on jsonb_doc,981,3897,1,1103,0,0,0,True
+2,B4,B4@J-1,B4,J-1,15,22.777,21.75,23.845,21.149,29.873,0.262,0.251,0.28,15,jsonb_doc_expr_geom_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geom_gist_idx],1002,3897,4740,0,0,980,0,True
+2,B4,B4@J-3,B4,J-3,15,2.835,2.571,2.959,2.498,3.281,0.236,0.222,0.242,15,jsonb_geom_gist_idx,Bitmap Heap Scan on jsonb_geom_gist [Bitmap Index Scan using jsonb_geom_gist_idx],900,3897,4740,0,0,878,0,True
+2,B4,B4@J-3c,B4,J-3c,15,2.429,2.296,2.477,2.017,4.736,0.138,0.129,0.156,0,,Seq Scan on jsonb_geom,879,3897,4740,1103,0,0,0,True
+2,B4,B4@N-0,B4,N-0,15,1.335,1.182,1.412,1.108,1.572,0.073,0.068,0.077,0,,Seq Scan on flat_numeric,31,3897,3347,1103,0,0,0,True
+2,B4,B4@N-1,B4,N-1,15,1.404,1.245,1.442,1.081,1.645,0.108,0.101,0.119,0,,Seq Scan on flat_numeric_btree,31,3897,3347,1103,0,0,0,True
+2,B5,B5@G-0,B5,G-0,15,1.269,1.199,1.274,1.144,1.34,0.062,0.058,0.065,0,,Seq Scan on flat_geom,39,0,1,5000,0,0,0,True
+2,B5,B5@G-1,B5,G-1,15,0.038,0.037,0.04,0.034,0.067,0.101,0.097,0.11,15,flat_geom_gist_idx,Bitmap Heap Scan on flat_geom_gist [BitmapOr [Bitmap Index Scan using flat_geom_gist_idx; Bitmap Index Scan using flat_geom_gist_idx]],4,0,1,0,0,0,0,True
+2,B5,B5@G-2,B5,G-2,15,0.068,0.065,0.069,0.054,0.102,0.1,0.097,0.103,15,flat_geom_spgist_idx,Bitmap Heap Scan on flat_geom_spgist [BitmapOr [Bitmap Index Scan using flat_geom_spgist_idx; Bitmap Index Scan using flat_geom_spgist_idx]],20,0,1,0,0,0,0,True
+2,B5,B5@G-3,B5,G-3,15,1.481,1.432,1.519,1.353,1.539,0.114,0.1,0.125,15,flat_geom_brin_idx,Bitmap Heap Scan on flat_geom_brin [BitmapOr [Bitmap Index Scan using flat_geom_brin_idx; Bitmap Index Scan using flat_geom_brin_idx]],43,0,1,0,5000,0,39,True
+2,B5,B5@J-0g,B5,J-0g,15,46.194,46.07,46.431,39.978,47.196,0.047,0.045,0.049,0,,Seq Scan on jsonb_doc,981,0,1,5000,0,0,0,True
+2,B5,B5@J-1,B5,J-1,15,0.045,0.044,0.053,0.04,0.058,0.139,0.125,0.158,15,jsonb_doc_expr_geom_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [BitmapOr [Bitmap Index Scan using jsonb_doc_expr_geom_gist_idx; Bitmap Index Scan using jsonb_doc_expr_geom_gist_idx]],4,0,1,0,0,0,0,True
+2,B5,B5@J-3,B5,J-3,15,0.037,0.037,0.039,0.034,0.067,0.099,0.096,0.102,15,jsonb_geom_gist_idx,Bitmap Heap Scan on jsonb_geom_gist [BitmapOr [Bitmap Index Scan using jsonb_geom_gist_idx; Bitmap Index Scan using jsonb_geom_gist_idx]],4,0,1,0,0,0,0,True
+2,B5,B5@J-3c,B5,J-3c,15,2.038,2.009,2.091,1.858,2.109,0.066,0.06,0.069,0,,Seq Scan on jsonb_geom,879,0,1,5000,0,0,0,True
+2,B5,B5@N-0,B5,N-0,15,0.909,0.852,0.932,0.834,1.612,0.07,0.069,0.082,0,,Seq Scan on flat_numeric,31,0,16,5000,0,0,0,True
+2,B5,B5@N-1,B5,N-1,15,0.902,0.879,0.936,0.849,1.789,0.109,0.1,0.124,0,,Seq Scan on flat_numeric_btree,31,0,16,5000,0,0,0,True
+2,B6,B6@G-0,B6,G-0,15,0.774,0.766,0.801,0.637,1.548,0.053,0.051,0.057,0,,Seq Scan on flat_geom,39,1,1,4999,0,0,0,True
+2,B6,B6@G-1,B6,G-1,15,0.024,0.023,0.025,0.02,0.037,0.082,0.08,0.084,15,flat_geom_gist_idx,Index Scan using flat_geom_gist_idx,3,1,1,0,0,0,0,True
+2,B6,B6@G-2,B6,G-2,15,0.042,0.037,0.051,0.032,0.071,0.084,0.08,0.093,15,flat_geom_spgist_idx,Index Scan using flat_geom_spgist_idx,13,1,1,0,0,0,0,True
+2,B6,B6@G-3,B6,G-3,15,0.81,0.763,0.832,0.643,0.856,0.092,0.08,0.101,0,,Seq Scan on flat_geom_brin,39,1,1,4999,0,0,0,True
+2,B6,B6@J-0g,B6,J-0g,15,26.001,23.458,26.289,21.877,27.75,0.035,0.035,0.037,0,,Seq Scan on jsonb_doc,981,1,1,4999,0,0,0,True
+2,B6,B6@J-1,B6,J-1,15,0.034,0.031,0.036,0.03,0.039,0.112,0.102,0.117,15,jsonb_doc_expr_geom_gist_idx,Index Scan using jsonb_doc_expr_geom_gist_idx,3,1,1,0,0,0,0,True
+2,B6,B6@J-3,B6,J-3,15,0.025,0.024,0.026,0.021,0.027,0.086,0.08,0.09,15,jsonb_geom_gist_idx,Index Scan using jsonb_geom_gist_idx,3,1,1,0,0,0,0,True
+2,B6,B6@J-3c,B6,J-3c,15,1.472,1.358,1.546,1.229,1.6,0.055,0.051,0.062,0,,Seq Scan on jsonb_geom,879,1,1,4999,0,0,0,True
+2,B6,B6@N-0,B6,N-0,15,0.48,0.466,0.499,0.399,0.76,0.067,0.064,0.073,0,,Seq Scan on flat_numeric,31,1,13,4999,0,0,0,True
+2,B6,B6@N-1,B6,N-1,15,0.019,0.018,0.019,0.015,0.025,0.097,0.093,0.106,15,flat_numeric_btree_lat_lon_idx,Bitmap Heap Scan on flat_numeric_btree [Bitmap Index Scan using flat_numeric_btree_lat_lon_idx],3,1,14,0,0,1,0,True
+2,D1,D1@J-0y,D1,J-0y,15,33.19,31.234,34.933,30.449,46.59,0.04,0.037,0.043,0,,Seq Scan on jsonb_doc,981,410,1,4590,0,0,0,True
+2,D1,D1@J-2,D1,J-2,15,2.746,2.621,2.907,2.443,4.298,0.5,0.473,0.577,15,jsonb_doc_expr_geog_gist_idx,Index Scan using jsonb_doc_expr_geog_gist_idx,395,410,1,0,0,0,0,True
+2,D1,D1@J-4,D1,J-4,15,0.595,0.532,0.785,0.42,1.032,0.468,0.425,0.564,15,jsonb_geog_gist_idx,Index Scan using jsonb_geog_gist_idx,393,410,1,0,0,0,0,True
+2,D1,D1@J-4c,D1,J-4c,15,9.002,8.47,9.309,8.155,14.928,0.036,0.034,0.037,0,,Seq Scan on jsonb_geog,879,410,1,4590,0,0,0,True
+2,D1,D1@Y-0,D1,Y-0,15,8.016,7.807,8.388,7.394,8.688,0.034,0.032,0.038,0,,Seq Scan on flat_geog,39,410,1,4590,0,0,0,True
+2,D1,D1@Y-1,D1,Y-1,15,0.436,0.411,0.462,0.395,0.564,0.457,0.426,0.487,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,149,410,1,0,0,0,0,True
+2,D1,D1@Y-2,D1,Y-2,15,0.849,0.766,0.913,0.727,0.963,0.465,0.426,0.516,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,425,410,1,0,0,0,0,True
+2,D1,MD1@G-0,MD1,G-0,15,1.107,1.059,1.172,1.023,2.459,0.092,0.071,0.107,0,,Seq Scan on flat_geom,39,410,2,4590,0,0,0,True
+2,D1,MD1@G-1,MD1,G-1,15,0.581,0.549,0.604,0.529,0.7,0.098,0.076,0.112,15,flat_geom_gist_idx,Bitmap Heap Scan on flat_geom_gist [Bitmap Index Scan using flat_geom_gist_idx],42,410,2,0,0,39,0,True
+2,D1-s,D1-s@J-0y,D1-s,J-0y,15,28.012,26.317,28.933,24.833,40.41,0.039,0.037,0.041,0,,Seq Scan on jsonb_doc,981,410,1,4590,0,0,0,True
+2,D1-s,D1-s@J-2,D1-s,J-2,15,2.763,2.694,2.839,2.352,2.965,0.476,0.433,0.513,15,jsonb_doc_expr_geog_gist_idx,Index Scan using jsonb_doc_expr_geog_gist_idx,395,410,1,0,0,0,0,True
+2,D1-s,D1-s@J-4,D1-s,J-4,15,0.515,0.488,0.584,0.453,0.641,0.428,0.399,0.445,15,jsonb_geog_gist_idx,Index Scan using jsonb_geog_gist_idx,393,410,1,0,0,0,0,True
+2,D1-s,D1-s@J-4c,D1-s,J-4c,15,3.226,3.149,3.469,2.986,3.93,0.033,0.031,0.037,0,,Seq Scan on jsonb_geog,879,410,1,4590,0,0,0,True
+2,D1-s,D1-s@Y-0,D1-s,Y-0,15,2.619,2.414,2.78,2.314,3.283,0.031,0.03,0.035,0,,Seq Scan on flat_geog,39,410,1,4590,0,0,0,True
+2,D1-s,D1-s@Y-1,D1-s,Y-1,15,0.417,0.386,0.492,0.364,0.756,0.463,0.417,0.485,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,149,410,1,0,0,0,0,True
+2,D1-s,D1-s@Y-2,D1-s,Y-2,15,0.845,0.759,0.968,0.68,1.004,0.465,0.429,0.494,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,425,410,1,0,0,0,0,True
+2,D2,D2@J-0y,D2,J-0y,15,32.088,31.667,33.448,31.209,43.955,0.04,0.038,0.046,0,,Seq Scan on jsonb_doc,981,1101,1,3899,0,0,0,True
+2,D2,D2@J-2,D2,J-2,15,6.916,6.69,7.094,6.596,12.815,0.533,0.502,0.548,15,jsonb_doc_expr_geog_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geog_gist_idx],710,1101,1,0,0,699,0,True
+2,D2,D2@J-4,D2,J-4,15,1.498,1.379,1.585,1.341,1.658,0.481,0.435,0.486,15,jsonb_geog_gist_idx,Bitmap Heap Scan on jsonb_geog_gist [Bitmap Index Scan using jsonb_geog_gist_idx],682,1101,1,0,0,668,0,True
+2,D2,D2@J-4c,D2,J-4c,15,7.905,7.595,8.136,7.273,10.199,0.034,0.033,0.035,0,,Seq Scan on jsonb_geog,879,1101,1,3899,0,0,0,True
+2,D2,D2@Y-0,D2,Y-0,15,7.241,6.861,7.952,6.686,8.875,0.037,0.035,0.041,0,,Seq Scan on flat_geog,39,1101,1,3899,0,0,0,True
+2,D2,D2@Y-1,D2,Y-1,15,1.114,1.022,1.224,0.958,1.357,0.476,0.428,0.526,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,418,1101,1,0,0,0,0,True
+2,D2,D2@Y-2,D2,Y-2,15,1.484,1.377,1.585,1.302,3.109,0.488,0.427,0.515,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,951,1101,1,0,0,0,0,True
+2,D2,MD2@G-0,MD2,G-0,15,2.148,1.95,2.162,1.825,2.286,0.081,0.076,0.095,0,,Seq Scan on flat_geom,39,1101,441,3899,0,0,0,True
+2,D2,MD2@G-1,MD2,G-1,15,1.765,1.698,1.914,1.543,1.972,0.098,0.085,0.117,15,flat_geom_gist_idx,Index Scan using flat_geom_gist_idx,1080,1101,441,0,0,0,0,True
+2,D2-s,D2-s@J-0y,D2-s,J-0y,15,26.856,25.876,27.947,25.361,31.418,0.04,0.038,0.044,0,,Seq Scan on jsonb_doc,981,1101,1,3899,0,0,0,True
+2,D2-s,D2-s@J-2,D2-s,J-2,15,7.493,6.907,7.587,6.383,8.19,0.505,0.469,0.525,15,jsonb_doc_expr_geog_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geog_gist_idx],710,1101,1,0,0,699,0,True
+2,D2-s,D2-s@J-4,D2-s,J-4,15,1.454,1.422,1.62,1.256,1.76,0.474,0.445,0.517,15,jsonb_geog_gist_idx,Bitmap Heap Scan on jsonb_geog_gist [Bitmap Index Scan using jsonb_geog_gist_idx],682,1101,1,0,0,668,0,True
+2,D2-s,D2-s@J-4c,D2-s,J-4c,15,3.675,3.362,3.769,3.107,4.054,0.037,0.032,0.039,0,,Seq Scan on jsonb_geog,879,1101,1,3899,0,0,0,True
+2,D2-s,D2-s@Y-0,D2-s,Y-0,15,2.807,2.64,2.987,2.446,5.125,0.035,0.033,0.038,0,,Seq Scan on flat_geog,39,1101,1,3899,0,0,0,True
+2,D2-s,D2-s@Y-1,D2-s,Y-1,15,1.062,0.991,1.203,0.893,2.011,0.462,0.449,0.52,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,418,1101,1,0,0,0,0,True
+2,D2-s,D2-s@Y-2,D2-s,Y-2,15,1.506,1.373,1.61,1.217,2.602,0.469,0.432,0.519,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,951,1101,1,0,0,0,0,True
+2,D3,D3@J-0y,D3,J-0y,15,32.678,31.229,34.936,30.085,45.023,0.039,0.037,0.044,0,,Seq Scan on jsonb_doc,981,599,1,4401,0,0,0,True
+2,D3,D3@J-2,D3,J-2,15,3.912,3.636,4.076,3.452,4.8,0.567,0.537,0.63,15,jsonb_doc_expr_geog_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geog_gist_idx],463,599,1,0,0,454,0,True
+2,D3,D3@J-4,D3,J-4,15,0.85,0.828,0.912,0.793,1.075,0.511,0.498,0.577,15,jsonb_geog_gist_idx,Bitmap Heap Scan on jsonb_geog_gist [Bitmap Index Scan using jsonb_geog_gist_idx],463,599,1,0,0,454,0,True
+2,D3,D3@J-4c,D3,J-4c,15,8.056,7.786,8.358,7.716,14.196,0.034,0.034,0.037,0,,Seq Scan on jsonb_geog,879,599,1,4401,0,0,0,True
+2,D3,D3@Y-0,D3,Y-0,15,7.334,7.132,7.743,7.014,12.685,0.036,0.033,0.042,0,,Seq Scan on flat_geog,39,599,1,4401,0,0,0,True
+2,D3,D3@Y-1,D3,Y-1,15,0.596,0.536,0.622,0.507,0.681,0.532,0.487,0.557,15,flat_geog_gist_idx,Bitmap Heap Scan on flat_geog_gist [Bitmap Index Scan using flat_geog_gist_idx],45,599,1,0,0,39,0,True
+2,D3,D3@Y-2,D3,Y-2,15,0.959,0.89,1.015,0.786,1.145,0.553,0.516,0.599,15,flat_geog_spgist_idx,Bitmap Heap Scan on flat_geog_spgist [Bitmap Index Scan using flat_geog_spgist_idx],188,599,1,0,0,39,0,True
+2,D3-s,D3-s@J-0y,D3-s,J-0y,15,27.508,26.42,29.219,26.169,30.002,0.039,0.037,0.042,0,,Seq Scan on jsonb_doc,981,599,1,4401,0,0,0,True
+2,D3-s,D3-s@J-2,D3-s,J-2,15,4.096,3.765,4.269,3.463,5.944,0.613,0.548,0.676,15,jsonb_doc_expr_geog_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geog_gist_idx],463,599,1,0,0,454,0,True
+2,D3-s,D3-s@J-4,D3-s,J-4,15,0.854,0.789,0.914,0.691,1.369,0.528,0.504,0.582,15,jsonb_geog_gist_idx,Bitmap Heap Scan on jsonb_geog_gist [Bitmap Index Scan using jsonb_geog_gist_idx],463,599,1,0,0,454,0,True
+2,D3-s,D3-s@J-4c,D3-s,J-4c,15,3.365,3.253,3.765,3.12,4.733,0.034,0.031,0.037,0,,Seq Scan on jsonb_geog,879,599,1,4401,0,0,0,True
+2,D3-s,D3-s@Y-0,D3-s,Y-0,15,2.779,2.48,2.848,2.367,4.512,0.034,0.03,0.037,0,,Seq Scan on flat_geog,39,599,1,4401,0,0,0,True
+2,D3-s,D3-s@Y-1,D3-s,Y-1,15,0.58,0.559,0.614,0.525,0.989,0.538,0.507,0.568,15,flat_geog_gist_idx,Bitmap Heap Scan on flat_geog_gist [Bitmap Index Scan using flat_geog_gist_idx],45,599,1,0,0,39,0,True
+2,D3-s,D3-s@Y-2,D3-s,Y-2,15,0.991,0.936,1.129,0.86,1.609,0.555,0.522,0.609,15,flat_geog_spgist_idx,Bitmap Heap Scan on flat_geog_spgist [Bitmap Index Scan using flat_geog_spgist_idx],188,599,1,0,0,39,0,True
+2,D4,D4@J-0y,D4,J-0y,15,32.157,30.693,32.887,29.52,47.259,0.042,0.04,0.047,0,,Seq Scan on jsonb_doc,981,2059,1,2941,0,0,0,True
+2,D4,D4@J-2,D4,J-2,15,12.684,12.329,13.764,12.092,19.449,1.206,1.136,1.276,15,jsonb_doc_expr_geog_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geog_gist_idx],936,2059,1,0,0,914,0,True
+2,D4,D4@J-4,D4,J-4,15,2.38,2.29,2.602,2.223,2.865,1.167,1.046,1.259,15,jsonb_geog_gist_idx,Bitmap Heap Scan on jsonb_geog_gist [Bitmap Index Scan using jsonb_geog_gist_idx],852,2059,1,0,0,826,0,True
+2,D4,D4@J-4c,D4,J-4c,15,6.895,6.347,7.106,6.184,10.144,0.038,0.036,0.055,0,,Seq Scan on jsonb_geog,879,2059,1,2941,0,0,0,True
+2,D4,D4@Y-0,D4,Y-0,15,5.878,5.559,6.287,5.45,6.849,0.036,0.035,0.04,0,,Seq Scan on flat_geog,39,2059,1,2941,0,0,0,True
+2,D4,D4@Y-1,D4,Y-1,15,1.894,1.79,1.924,1.701,2.292,1.124,1.077,1.169,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,685,2059,1,0,0,0,0,True
+2,D4,D4@Y-2,D4,Y-2,15,2.335,2.255,2.462,2.103,2.71,1.154,1.1,1.281,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,1552,2059,1,0,0,0,0,True
+2,D4-s,D4-s@J-0y,D4-s,J-0y,15,27.443,25.563,28.917,24.774,41.116,0.04,0.039,0.046,0,,Seq Scan on jsonb_doc,981,2059,1,2941,0,0,0,True
+2,D4-s,D4-s@J-2,D4-s,J-2,15,12.76,12.202,13.661,11.699,14.31,1.211,1.121,1.324,15,jsonb_doc_expr_geog_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geog_gist_idx],936,2059,1,0,0,914,0,True
+2,D4-s,D4-s@J-4,D4-s,J-4,15,2.322,2.204,2.484,2.075,2.857,1.08,1.035,1.146,15,jsonb_geog_gist_idx,Bitmap Heap Scan on jsonb_geog_gist [Bitmap Index Scan using jsonb_geog_gist_idx],852,2059,1,0,0,826,0,True
+2,D4-s,D4-s@J-4c,D4-s,J-4c,15,3.429,3.247,3.592,3.069,3.725,0.034,0.031,0.036,0,,Seq Scan on jsonb_geog,879,2059,1,2941,0,0,0,True
+2,D4-s,D4-s@Y-0,D4-s,Y-0,15,2.793,2.538,3.02,2.475,3.233,0.034,0.032,0.036,0,,Seq Scan on flat_geog,39,2059,1,2941,0,0,0,True
+2,D4-s,D4-s@Y-1,D4-s,Y-1,15,1.846,1.732,1.974,1.702,2.121,1.06,1.043,1.182,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,685,2059,1,0,0,0,0,True
+2,D4-s,D4-s@Y-2,D4-s,Y-2,15,2.373,2.152,2.436,2.054,2.979,1.188,1.115,1.253,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,1552,2059,1,0,0,0,0,True
+2,D5,D5@J-0y,D5,J-0y,15,33.543,32.904,35.172,31.604,46.966,0.041,0.038,0.055,0,,Seq Scan on jsonb_doc,981,262,1,4738,0,0,0,True
+2,D5,D5@J-2,D5,J-2,15,4.909,4.585,5.591,4.455,7.735,1.062,0.982,1.148,15,jsonb_doc_expr_geog_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geog_gist_idx],455,262,1,309,0,449,0,True
+2,D5,D5@J-4,D5,J-4,15,1.605,1.553,1.836,1.469,2.369,0.928,0.871,1.038,15,jsonb_geog_gist_idx,Bitmap Heap Scan on jsonb_geog_gist [Bitmap Index Scan using jsonb_geog_gist_idx],439,262,1,309,0,432,0,True
+2,D5,D5@J-4c,D5,J-4c,15,9.306,8.728,10.63,8.604,13.982,0.035,0.034,0.04,0,,Seq Scan on jsonb_geog,879,262,1,4738,0,0,0,True
+2,D5,D5@Y-0,D5,Y-0,15,8.544,7.944,8.974,7.689,11.933,0.035,0.032,0.04,0,,Seq Scan on flat_geog,39,262,1,4738,0,0,0,True
+2,D5,D5@Y-1,D5,Y-1,15,1.313,1.24,1.464,1.208,1.581,0.926,0.891,1.019,15,flat_geog_gist_idx,Bitmap Heap Scan on flat_geog_gist [Bitmap Index Scan using flat_geog_gist_idx],46,262,1,309,0,39,0,True
+2,D5,D5@Y-2,D5,Y-2,15,1.707,1.638,1.767,1.477,1.946,0.971,0.891,1.026,15,flat_geog_spgist_idx,Bitmap Heap Scan on flat_geog_spgist [Bitmap Index Scan using flat_geog_spgist_idx],188,262,1,309,0,39,0,True
+2,D5-s,D5-s@J-0y,D5-s,J-0y,15,27.127,26.146,28.271,24.419,30.452,0.037,0.035,0.039,0,,Seq Scan on jsonb_doc,981,262,1,4738,0,0,0,True
+2,D5-s,D5-s@J-2,D5-s,J-2,15,3.95,3.581,4.12,3.427,4.235,1.006,0.919,1.076,15,jsonb_doc_expr_geog_gist_idx,Bitmap Heap Scan on jsonb_doc_expr [Bitmap Index Scan using jsonb_doc_expr_geog_gist_idx],455,262,1,309,0,449,0,True
+2,D5-s,D5-s@J-4,D5-s,J-4,15,0.749,0.711,0.833,0.651,1.076,0.878,0.853,0.927,15,jsonb_geog_gist_idx,Bitmap Heap Scan on jsonb_geog_gist [Bitmap Index Scan using jsonb_geog_gist_idx],439,262,1,309,0,432,0,True
+2,D5-s,D5-s@J-4c,D5-s,J-4c,15,3.156,3.003,3.294,2.948,4.301,0.032,0.031,0.036,0,,Seq Scan on jsonb_geog,879,262,1,4738,0,0,0,True
+2,D5-s,D5-s@Y-0,D5-s,Y-0,15,2.392,2.326,2.592,2.198,2.787,0.032,0.031,0.034,0,,Seq Scan on flat_geog,39,262,1,4738,0,0,0,True
+2,D5-s,D5-s@Y-1,D5-s,Y-1,15,0.471,0.452,0.519,0.426,0.575,0.981,0.866,1.001,15,flat_geog_gist_idx,Bitmap Heap Scan on flat_geog_gist [Bitmap Index Scan using flat_geog_gist_idx],46,262,1,309,0,39,0,True
+2,D5-s,D5-s@Y-2,D5-s,Y-2,15,0.853,0.791,0.934,0.706,1.147,0.973,0.864,1.074,15,flat_geog_spgist_idx,Bitmap Heap Scan on flat_geog_spgist [Bitmap Index Scan using flat_geog_spgist_idx],188,262,1,309,0,39,0,True
+2,D6,D6@J-0y,D6,J-0y,15,34.252,32.046,35.736,30.631,45.876,0.042,0.038,0.053,0,,Seq Scan on jsonb_doc,981,15,1,4985,0,0,0,True
+2,D6,D6@J-2,D6,J-2,15,0.319,0.274,0.338,0.26,0.409,0.502,0.446,0.535,15,jsonb_doc_expr_geog_gist_idx,Index Scan using jsonb_doc_expr_geog_gist_idx,30,15,1,13,0,0,0,True
+2,D6,D6@J-4,D6,J-4,15,0.091,0.088,0.1,0.077,0.19,0.437,0.416,0.455,15,jsonb_geog_gist_idx,Index Scan using jsonb_geog_gist_idx,31,15,1,13,0,0,0,True
+2,D6,D6@J-4c,D6,J-4c,15,9.216,8.85,9.79,8.476,10.874,0.034,0.032,0.041,0,,Seq Scan on jsonb_geog,879,15,1,4985,0,0,0,True
+2,D6,D6@Y-0,D6,Y-0,15,8.457,8.049,9.222,7.729,12.802,0.035,0.03,0.04,0,,Seq Scan on flat_geog,39,15,1,4985,0,0,0,True
+2,D6,D6@Y-1,D6,Y-1,15,0.108,0.101,0.121,0.087,0.186,0.472,0.43,0.491,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,26,15,1,13,0,0,0,True
+2,D6,D6@Y-2,D6,Y-2,15,0.507,0.443,0.577,0.403,0.839,0.478,0.433,0.526,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,173,15,1,13,0,0,0,True
+2,D6,MD6@G-0,MD6,G-0,15,0.686,0.643,0.721,0.611,1.284,0.079,0.065,0.098,0,,Seq Scan on flat_geom,39,15,1,4985,0,0,0,True
+2,D6,MD6@G-1,MD6,G-1,15,0.068,0.064,0.075,0.061,0.119,0.09,0.076,0.104,15,flat_geom_gist_idx,Index Scan using flat_geom_gist_idx,25,15,1,7,0,0,0,True
+2,D6-s,D6-s@J-0y,D6-s,J-0y,15,26.948,26.017,29.492,24.771,36.286,0.038,0.034,0.043,0,,Seq Scan on jsonb_doc,981,15,1,4985,0,0,0,True
+2,D6-s,D6-s@J-2,D6-s,J-2,15,0.291,0.243,0.337,0.229,0.409,0.491,0.432,0.544,15,jsonb_doc_expr_geog_gist_idx,Index Scan using jsonb_doc_expr_geog_gist_idx,30,15,1,13,0,0,0,True
+2,D6-s,D6-s@J-4,D6-s,J-4,15,0.071,0.06,0.074,0.058,0.144,0.427,0.408,0.449,15,jsonb_geog_gist_idx,Index Scan using jsonb_geog_gist_idx,31,15,1,13,0,0,0,True
+2,D6-s,D6-s@J-4c,D6-s,J-4c,15,3.28,3.108,3.526,2.793,3.657,0.033,0.03,0.036,0,,Seq Scan on jsonb_geog,879,15,1,4985,0,0,0,True
+2,D6-s,D6-s@Y-0,D6-s,Y-0,15,2.581,2.446,2.731,2.358,2.993,0.032,0.03,0.034,0,,Seq Scan on flat_geog,39,15,1,4985,0,0,0,True
+2,D6-s,D6-s@Y-1,D6-s,Y-1,15,0.091,0.084,0.116,0.068,0.153,0.453,0.408,0.464,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,26,15,1,13,0,0,0,True
+2,D6-s,D6-s@Y-2,D6-s,Y-2,15,0.428,0.379,0.531,0.322,0.668,0.452,0.419,0.505,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,173,15,1,13,0,0,0,True
+2,D7,D7@J-0y,D7,J-0y,15,30.595,28.28,31.967,26.492,43.91,0.038,0.037,0.04,0,,Seq Scan on jsonb_doc,981,1,1,4999,0,0,0,True
+2,D7,D7@J-2,D7,J-2,15,0.049,0.041,0.065,0.033,0.082,0.501,0.451,0.536,15,jsonb_doc_expr_geog_gist_idx,Index Scan using jsonb_doc_expr_geog_gist_idx,3,1,1,0,0,0,0,True
+2,D7,D7@J-4,D7,J-4,15,0.032,0.027,0.045,0.026,0.072,0.43,0.407,0.465,15,jsonb_geog_gist_idx,Index Scan using jsonb_geog_gist_idx,3,1,1,0,0,0,0,True
+2,D7,D7@J-4c,D7,J-4c,15,5.251,4.794,5.462,4.673,6.312,0.038,0.034,0.042,0,,Seq Scan on jsonb_geog,879,1,1,4999,0,0,0,True
+2,D7,D7@Y-0,D7,Y-0,15,4.383,4.161,4.542,4.003,4.821,0.032,0.031,0.037,0,,Seq Scan on flat_geog,39,1,1,4999,0,0,0,True
+2,D7,D7@Y-1,D7,Y-1,15,0.04,0.034,0.045,0.029,0.059,0.429,0.411,0.461,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,3,1,1,0,0,0,0,True
+2,D7,D7@Y-2,D7,Y-2,15,0.403,0.357,0.456,0.329,0.566,0.454,0.431,0.506,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,150,1,1,0,0,0,0,True
+2,D7-s,D7-s@J-0y,D7-s,J-0y,15,26.432,25.753,29.103,25.127,32.123,0.039,0.035,0.041,0,,Seq Scan on jsonb_doc,981,1,1,4999,0,0,0,True
+2,D7-s,D7-s@J-2,D7-s,J-2,15,0.042,0.036,0.046,0.033,0.095,0.482,0.464,0.528,15,jsonb_doc_expr_geog_gist_idx,Index Scan using jsonb_doc_expr_geog_gist_idx,3,1,1,0,0,0,0,True
+2,D7-s,D7-s@J-4,D7-s,J-4,15,0.033,0.03,0.043,0.025,0.09,0.457,0.408,0.474,15,jsonb_geog_gist_idx,Index Scan using jsonb_geog_gist_idx,3,1,1,0,0,0,0,True
+2,D7-s,D7-s@J-4c,D7-s,J-4c,15,3.389,3.254,3.529,2.903,3.833,0.035,0.031,0.037,0,,Seq Scan on jsonb_geog,879,1,1,4999,0,0,0,True
+2,D7-s,D7-s@Y-0,D7-s,Y-0,15,2.832,2.648,3.441,2.437,4.493,0.036,0.033,0.045,0,,Seq Scan on flat_geog,39,1,1,4999,0,0,0,True
+2,D7-s,D7-s@Y-1,D7-s,Y-1,15,0.038,0.033,0.068,0.028,0.131,0.482,0.451,0.566,15,flat_geog_gist_idx,Index Scan using flat_geog_gist_idx,3,1,1,0,0,0,0,True
+2,D7-s,D7-s@Y-2,D7-s,Y-2,15,0.401,0.368,0.463,0.32,0.828,0.481,0.451,0.521,15,flat_geog_spgist_idx,Index Scan using flat_geog_spgist_idx,150,1,1,0,0,0,0,True
+2,K1,K1@J-0y,K1,J-0y,15,28.241,27.42,29.233,26.398,30.36,0.046,0.044,0.049,0,,Limit [Sort [Seq Scan on jsonb_doc]],981,10,5000,0,0,0,0,True
+2,K1,K1@J-2,K1,J-2,15,0.194,0.18,0.202,0.162,0.247,0.066,0.057,0.074,15,jsonb_doc_expr_geog_gist_idx,Limit [Index Scan using jsonb_doc_expr_geog_gist_idx],14,10,5000,0,0,0,0,True
+2,K1,K1@J-4,K1,J-4,15,0.113,0.111,0.116,0.103,0.123,0.043,0.041,0.045,15,jsonb_geog_gist_idx,Limit [Index Scan using jsonb_geog_gist_idx],14,10,5000,0,0,0,0,True
+2,K1,K1@J-4c,K1,J-4c,15,3.891,3.698,3.979,3.458,4.087,0.041,0.034,0.042,0,,Limit [Sort [Seq Scan on jsonb_geog]],879,10,5000,0,0,0,0,True
+2,K1,K1@Y-0,K1,Y-0,15,3.057,2.983,3.231,2.78,3.389,0.037,0.035,0.039,0,,Limit [Sort [Seq Scan on flat_geog]],39,10,5000,0,0,0,0,True
+2,K1,K1@Y-1,K1,Y-1,15,0.102,0.097,0.108,0.087,0.174,0.043,0.04,0.049,15,flat_geog_gist_idx,Limit [Index Scan using flat_geog_gist_idx],13,10,5000,0,0,0,0,True
+2,K1,K1@Y-2,K1,Y-2,15,3.2,3.097,3.258,2.78,3.78,0.045,0.04,0.052,0,,Limit [Sort [Seq Scan on flat_geog_spgist]],39,10,5000,0,0,0,0,True
+2,K1,K1g@G-0,K1g,G-0,15,1.571,1.504,1.613,1.384,1.715,0.036,0.032,0.038,0,,Limit [Sort [Seq Scan on flat_geom]],39,10,5000,0,0,0,0,True
+2,K1,K1g@G-1,K1g,G-1,15,0.056,0.053,0.059,0.047,0.065,0.04,0.039,0.044,15,flat_geom_gist_idx,Limit [Index Scan using flat_geom_gist_idx],13,10,5000,0,0,0,0,True
+2,K2,K2@J-0y,K2,J-0y,15,28.305,27.157,29.309,24.898,35.93,0.046,0.042,0.048,0,,Limit [Sort [Seq Scan on jsonb_doc]],981,100,5000,0,0,0,0,True
+2,K2,K2@J-2,K2,J-2,15,1.4,1.325,1.467,1.168,1.566,0.062,0.055,0.07,15,jsonb_doc_expr_geog_gist_idx,Limit [Index Scan using jsonb_doc_expr_geog_gist_idx],103,100,5000,0,0,0,0,True
+2,K2,K2@J-4,K2,J-4,15,0.305,0.297,0.324,0.295,0.343,0.039,0.038,0.042,15,jsonb_geog_gist_idx,Limit [Index Scan using jsonb_geog_gist_idx],104,100,5000,0,0,0,0,True
+2,K2,K2@J-4c,K2,J-4c,15,3.783,3.574,3.881,3.391,5.707,0.038,0.034,0.04,0,,Limit [Sort [Seq Scan on jsonb_geog]],879,100,5000,0,0,0,0,True
+2,K2,K2@Y-0,K2,Y-0,15,2.939,2.88,3.052,2.697,3.193,0.033,0.032,0.036,0,,Limit [Sort [Seq Scan on flat_geog]],39,100,5000,0,0,0,0,True
+2,K2,K2@Y-1,K2,Y-1,15,0.254,0.237,0.261,0.224,0.277,0.041,0.036,0.043,15,flat_geog_gist_idx,Limit [Index Scan using flat_geog_gist_idx],100,100,5000,0,0,0,0,True
+2,K2,K2@Y-2,K2,Y-2,15,3.094,2.887,3.292,2.771,3.342,0.048,0.036,0.056,0,,Limit [Sort [Seq Scan on flat_geog_spgist]],39,100,5000,0,0,0,0,True
+2,K3,K3@G-0,K3,G-0,15,1.515,1.457,1.593,1.317,1.841,0.034,0.033,0.037,0,,Limit [Sort [Seq Scan on flat_geom]],39,10,5000,0,0,0,0,True
+2,K3,K3@G-1,K3,G-1,15,0.063,0.061,0.067,0.055,0.099,0.042,0.041,0.046,15,flat_geom_gist_idx,Limit [Index Scan using flat_geom_gist_idx],13,10,5000,0,0,0,0,True
+2,K3,K3@G-2,K3,G-2,15,1.537,1.444,1.638,1.322,1.711,0.04,0.038,0.042,0,,Limit [Sort [Seq Scan on flat_geom_spgist]],39,10,5000,0,0,0,0,True
+2,K3,K3@G-3,K3,G-3,15,1.649,1.599,1.698,1.321,1.796,0.042,0.038,0.045,0,,Limit [Sort [Seq Scan on flat_geom_brin]],39,10,5000,0,0,0,0,True
+2,K3,K3@J-0g,K3,J-0g,15,26.073,25.023,26.833,23.959,27.652,0.044,0.042,0.048,0,,Limit [Sort [Seq Scan on jsonb_doc]],981,10,5000,0,0,0,0,True
+2,K3,K3@J-1,K3,J-1,15,0.157,0.153,0.162,0.149,0.176,0.059,0.056,0.072,15,jsonb_doc_expr_geom_gist_idx,Limit [Index Scan using jsonb_doc_expr_geom_gist_idx],13,10,5000,0,0,0,0,True
+2,K3,K3@J-3,K3,J-3,15,0.065,0.063,0.066,0.055,0.108,0.042,0.039,0.046,15,jsonb_geom_gist_idx,Limit [Index Scan using jsonb_geom_gist_idx],13,10,5000,0,0,0,0,True
+2,K3,K3@J-3c,K3,J-3c,15,2.209,2.132,2.332,1.917,2.405,0.037,0.035,0.04,0,,Limit [Sort [Seq Scan on jsonb_geom]],879,10,5000,0,0,0,0,True
+2,P,P1@Y-0,P1,Y-0,15,10.1,9.892,10.582,9.514,11.083,0.041,0.031,0.049,0,,Seq Scan on flat_geog,39,5000,5000,0,0,0,0,True
+2,P,P2@Y-0,P2,Y-0,15,4.694,4.64,5.0,4.581,6.08,0.032,0.03,0.037,0,,Seq Scan on flat_geog,39,5000,5000,0,0,0,0,True
+2,P,P3@N-0,P3,N-0,15,13.47,13.153,13.79,12.974,16.262,0.035,0.034,0.044,0,,Seq Scan on flat_numeric,31,5000,5000,0,0,0,0,True
+2,P,P4@J-0y,P4,J-0y,15,35.11,34.543,37.53,32.862,46.754,0.042,0.038,0.044,0,,Seq Scan on jsonb_doc,981,5000,5000,0,0,0,0,True

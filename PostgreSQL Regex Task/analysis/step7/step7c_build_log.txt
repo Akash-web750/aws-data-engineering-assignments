@@ -1,0 +1,70 @@
+psql:sql/49_build_measure_gis_indexes.sql:49: NOTICE:  @@TABLESIZE phase=before table=flat_geog heap=319488 table_size=360448 indexes=131072 total=491520 relpages=39 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:49: NOTICE:  @@TABLESIZE phase=before table=flat_geog_gist heap=319488 table_size=360448 indexes=131072 total=491520 relpages=39 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:49: NOTICE:  @@TABLESIZE phase=before table=flat_geog_spgist heap=319488 table_size=360448 indexes=131072 total=491520 relpages=39 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:49: NOTICE:  @@TABLESIZE phase=before table=flat_geom heap=319488 table_size=360448 indexes=131072 total=491520 relpages=39 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:49: NOTICE:  @@TABLESIZE phase=before table=flat_geom_brin heap=319488 table_size=360448 indexes=131072 total=491520 relpages=39 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:49: NOTICE:  @@TABLESIZE phase=before table=flat_geom_gist heap=319488 table_size=360448 indexes=131072 total=491520 relpages=39 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:49: NOTICE:  @@TABLESIZE phase=before table=flat_geom_spgist heap=319488 table_size=360448 indexes=131072 total=491520 relpages=39 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:49: NOTICE:  @@TABLESIZE phase=before table=flat_numeric heap=253952 table_size=286720 indexes=131072 total=417792 relpages=31 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:49: NOTICE:  @@TABLESIZE phase=before table=flat_numeric_btree heap=253952 table_size=286720 indexes=131072 total=417792 relpages=31 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:49: NOTICE:  @@TABLESIZE phase=before table=jsonb_doc heap=8036352 table_size=8077312 indexes=131072 total=8208384 relpages=981 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:49: NOTICE:  @@TABLESIZE phase=before table=jsonb_doc_expr heap=8036352 table_size=8077312 indexes=131072 total=8208384 relpages=981 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:49: NOTICE:  @@TABLESIZE phase=before table=jsonb_geog heap=7200768 table_size=7241728 indexes=131072 total=7372800 relpages=879 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:49: NOTICE:  @@TABLESIZE phase=before table=jsonb_geog_gist heap=7200768 table_size=7241728 indexes=131072 total=7372800 relpages=879 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:49: NOTICE:  @@TABLESIZE phase=before table=jsonb_geom heap=7200768 table_size=7241728 indexes=131072 total=7372800 relpages=879 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:49: NOTICE:  @@TABLESIZE phase=before table=jsonb_geom_gist heap=7200768 table_size=7241728 indexes=131072 total=7372800 relpages=879 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:66: NOTICE:  @@BUILD id=N-1 index=flat_numeric_btree_lat_lon_idx build=1 ms=14.394 wal=157184 bytes=180224 relpages=22
+psql:sql/49_build_measure_gis_indexes.sql:83: NOTICE:  @@BUILD id=N-1 index=flat_numeric_btree_lat_lon_idx build=2 ms=3.688 wal=149904 bytes=180224 relpages=22
+psql:sql/49_build_measure_gis_indexes.sql:99: NOTICE:  @@BUILD id=N-1 index=flat_numeric_btree_lat_lon_idx build=3 ms=3.793 wal=149928 bytes=180224 relpages=22
+psql:sql/49_build_measure_gis_indexes.sql:116: NOTICE:  @@BUILD id=G-1 index=flat_geom_gist_idx build=1 ms=12.122 wal=137576 bytes=212992 relpages=26
+psql:sql/49_build_measure_gis_indexes.sql:133: NOTICE:  @@BUILD id=G-1 index=flat_geom_gist_idx build=2 ms=8.717 wal=137576 bytes=212992 relpages=26
+psql:sql/49_build_measure_gis_indexes.sql:149: NOTICE:  @@BUILD id=G-1 index=flat_geom_gist_idx build=3 ms=9.073 wal=137600 bytes=212992 relpages=26
+psql:sql/49_build_measure_gis_indexes.sql:166: NOTICE:  @@BUILD id=G-2 index=flat_geom_spgist_idx build=1 ms=11.928 wal=192840 bytes=278528 relpages=34
+psql:sql/49_build_measure_gis_indexes.sql:183: NOTICE:  @@BUILD id=G-2 index=flat_geom_spgist_idx build=2 ms=10.341 wal=192616 bytes=270336 relpages=33
+psql:sql/49_build_measure_gis_indexes.sql:199: NOTICE:  @@BUILD id=G-2 index=flat_geom_spgist_idx build=3 ms=10.607 wal=192920 bytes=278528 relpages=34
+psql:sql/49_build_measure_gis_indexes.sql:216: NOTICE:  @@BUILD id=G-3 index=flat_geom_brin_idx build=1 ms=4.374 wal=2024 bytes=24576 relpages=3
+psql:sql/49_build_measure_gis_indexes.sql:233: NOTICE:  @@BUILD id=G-3 index=flat_geom_brin_idx build=2 ms=2.967 wal=2048 bytes=24576 relpages=3
+psql:sql/49_build_measure_gis_indexes.sql:249: NOTICE:  @@BUILD id=G-3 index=flat_geom_brin_idx build=3 ms=3.322 wal=2024 bytes=24576 relpages=3
+psql:sql/49_build_measure_gis_indexes.sql:266: NOTICE:  @@BUILD id=Y-1 index=flat_geog_gist_idx build=1 ms=14.219 wal=206672 bytes=368640 relpages=45
+psql:sql/49_build_measure_gis_indexes.sql:283: NOTICE:  @@BUILD id=Y-1 index=flat_geog_gist_idx build=2 ms=13.026 wal=206888 bytes=385024 relpages=47
+psql:sql/49_build_measure_gis_indexes.sql:299: NOTICE:  @@BUILD id=Y-1 index=flat_geog_gist_idx build=3 ms=13.137 wal=206960 bytes=393216 relpages=48
+psql:sql/49_build_measure_gis_indexes.sql:316: NOTICE:  @@BUILD id=Y-2 index=flat_geog_spgist_idx build=1 ms=14.526 wal=264464 bytes=368640 relpages=45
+psql:sql/49_build_measure_gis_indexes.sql:333: NOTICE:  @@BUILD id=Y-2 index=flat_geog_spgist_idx build=2 ms=13.387 wal=264896 bytes=360448 relpages=44
+psql:sql/49_build_measure_gis_indexes.sql:349: NOTICE:  @@BUILD id=Y-2 index=flat_geog_spgist_idx build=3 ms=13.154 wal=264928 bytes=376832 relpages=46
+psql:sql/49_build_measure_gis_indexes.sql:366: NOTICE:  @@BUILD id=J-1 index=jsonb_doc_expr_geom_gist_idx build=1 ms=39.057 wal=138824 bytes=212992 relpages=26
+psql:sql/49_build_measure_gis_indexes.sql:383: NOTICE:  @@BUILD id=J-1 index=jsonb_doc_expr_geom_gist_idx build=2 ms=36.915 wal=138824 bytes=212992 relpages=26
+psql:sql/49_build_measure_gis_indexes.sql:399: NOTICE:  @@BUILD id=J-1 index=jsonb_doc_expr_geom_gist_idx build=3 ms=38.385 wal=138824 bytes=212992 relpages=26
+psql:sql/49_build_measure_gis_indexes.sql:416: NOTICE:  @@BUILD id=J-2 index=jsonb_doc_expr_geog_gist_idx build=1 ms=40.477 wal=208400 bytes=393216 relpages=48
+psql:sql/49_build_measure_gis_indexes.sql:433: NOTICE:  @@BUILD id=J-2 index=jsonb_doc_expr_geog_gist_idx build=2 ms=40.830 wal=208176 bytes=368640 relpages=45
+psql:sql/49_build_measure_gis_indexes.sql:449: NOTICE:  @@BUILD id=J-2 index=jsonb_doc_expr_geog_gist_idx build=3 ms=39.831 wal=208400 bytes=393216 relpages=48
+psql:sql/49_build_measure_gis_indexes.sql:466: NOTICE:  @@BUILD id=J-3 index=jsonb_geom_gist_idx build=1 ms=12.819 wal=137600 bytes=212992 relpages=26
+psql:sql/49_build_measure_gis_indexes.sql:483: NOTICE:  @@BUILD id=J-3 index=jsonb_geom_gist_idx build=2 ms=9.669 wal=137600 bytes=212992 relpages=26
+psql:sql/49_build_measure_gis_indexes.sql:499: NOTICE:  @@BUILD id=J-3 index=jsonb_geom_gist_idx build=3 ms=9.643 wal=137576 bytes=212992 relpages=26
+psql:sql/49_build_measure_gis_indexes.sql:516: NOTICE:  @@BUILD id=J-4 index=jsonb_geog_gist_idx build=1 ms=17.756 wal=207176 bytes=401408 relpages=49
+psql:sql/49_build_measure_gis_indexes.sql:533: NOTICE:  @@BUILD id=J-4 index=jsonb_geog_gist_idx build=2 ms=13.411 wal=207056 bytes=401408 relpages=49
+psql:sql/49_build_measure_gis_indexes.sql:549: NOTICE:  @@BUILD id=J-4 index=jsonb_geog_gist_idx build=3 ms=13.419 wal=206960 bytes=393216 relpages=48
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@TABLESIZE phase=after table=flat_geog heap=319488 table_size=360448 indexes=131072 total=491520 relpages=39 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@TABLESIZE phase=after table=flat_geog_gist heap=319488 table_size=360448 indexes=524288 total=884736 relpages=39 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@TABLESIZE phase=after table=flat_geog_spgist heap=319488 table_size=360448 indexes=507904 total=868352 relpages=39 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@TABLESIZE phase=after table=flat_geom heap=319488 table_size=360448 indexes=131072 total=491520 relpages=39 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@TABLESIZE phase=after table=flat_geom_brin heap=319488 table_size=360448 indexes=180224 total=540672 relpages=39 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@TABLESIZE phase=after table=flat_geom_gist heap=319488 table_size=360448 indexes=344064 total=704512 relpages=39 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@TABLESIZE phase=after table=flat_geom_spgist heap=319488 table_size=360448 indexes=409600 total=770048 relpages=39 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@TABLESIZE phase=after table=flat_numeric heap=253952 table_size=286720 indexes=131072 total=417792 relpages=31 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@TABLESIZE phase=after table=flat_numeric_btree heap=253952 table_size=286720 indexes=311296 total=598016 relpages=31 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@TABLESIZE phase=after table=jsonb_doc heap=8036352 table_size=8077312 indexes=131072 total=8208384 relpages=981 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@TABLESIZE phase=after table=jsonb_doc_expr heap=8036352 table_size=8077312 indexes=737280 total=8814592 relpages=981 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@TABLESIZE phase=after table=jsonb_geog heap=7200768 table_size=7241728 indexes=131072 total=7372800 relpages=879 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@TABLESIZE phase=after table=jsonb_geog_gist heap=7200768 table_size=7241728 indexes=524288 total=7766016 relpages=879 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@TABLESIZE phase=after table=jsonb_geom heap=7200768 table_size=7241728 indexes=131072 total=7372800 relpages=879 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@TABLESIZE phase=after table=jsonb_geom_gist heap=7200768 table_size=7241728 indexes=344064 total=7585792 relpages=879 reltuples=5000
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@INDEXSIZE phase=after index=flat_geog_gist_idx table=flat_geog_gist method=gist bytes=393216 relpages=48 reltuples=5000 options=
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@INDEXSIZE phase=after index=flat_geog_spgist_idx table=flat_geog_spgist method=spgist bytes=376832 relpages=46 reltuples=5000 options=
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@INDEXSIZE phase=after index=flat_geom_brin_idx table=flat_geom_brin method=brin bytes=24576 relpages=3 reltuples=5000 options=
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@INDEXSIZE phase=after index=flat_geom_gist_idx table=flat_geom_gist method=gist bytes=212992 relpages=26 reltuples=5000 options=
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@INDEXSIZE phase=after index=flat_geom_spgist_idx table=flat_geom_spgist method=spgist bytes=278528 relpages=34 reltuples=5000 options=
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@INDEXSIZE phase=after index=flat_numeric_btree_lat_lon_idx table=flat_numeric_btree method=btree bytes=180224 relpages=22 reltuples=5000 options=
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@INDEXSIZE phase=after index=jsonb_doc_expr_geog_gist_idx table=jsonb_doc_expr method=gist bytes=393216 relpages=48 reltuples=5000 options=
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@INDEXSIZE phase=after index=jsonb_doc_expr_geom_gist_idx table=jsonb_doc_expr method=gist bytes=212992 relpages=26 reltuples=5000 options=
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@INDEXSIZE phase=after index=jsonb_geog_gist_idx table=jsonb_geog_gist method=gist bytes=393216 relpages=48 reltuples=5000 options=
+psql:sql/49_build_measure_gis_indexes.sql:583: NOTICE:  @@INDEXSIZE phase=after index=jsonb_geom_gist_idx table=jsonb_geom_gist method=gist bytes=212992 relpages=26 reltuples=5000 options=
