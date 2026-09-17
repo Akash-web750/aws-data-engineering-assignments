@@ -1,420 +1,561 @@
-# PostgreSQL Regex Task
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17.9-blue)
+![PostGIS](https://img.shields.io/badge/PostGIS-3.6.2-green)
+![Regex](https://img.shields.io/badge/Regex-POSIX%20ARE-informational)
+![JSON](https://img.shields.io/badge/JSON%20%7C%20JSONB-Indexing-orange)
+![Parser](https://img.shields.io/badge/Parser-50%2C000%20%2F%2050%2C000%20PASS-brightgreen)
+![Audit](https://img.shields.io/badge/Final%20Audit-PASS%20WITH%20WARNINGS-yellowgreen)
+![License](https://img.shields.io/badge/License-MIT-brightgreen)
 
-**Status:** `FINAL_CONCLUSION_REPORTED` — the project is complete. The final overall project conclusion
-([docs/Final_Project_Conclusion.md](docs/Final_Project_Conclusion.md)) consolidates Steps 1–7F; it is documentation
-only, with no new experiment and no database change. Final read-only audit, after a documentation-only correction
-pass: [docs/Final_Project_Audit.md](docs/Final_Project_Audit.md) (pass with warnings). Last executed step: PostGIS cleanup verified (Step 7F, Option A,
-343 PASS / 0 FAIL; [docs/Step7F_PostGIS_Cleanup_and_Final_State_Plan.md](docs/Step7F_PostGIS_Cleanup_and_Final_State_Plan.md)).
-Final PostGIS conclusion: [docs/Step7E_PostGIS_Final_Conclusion.md](docs/Step7E_PostGIS_Final_Conclusion.md). Earlier: final JSON vs JSONB comparison consolidated from Steps 6B–6E
-([docs/Step6F_JSON_vs_JSONB_Final_Comparison_Report.md](docs/Step6F_JSON_vs_JSONB_Final_Comparison_Report.md)).
-Write/update experiment:
-[docs/Step6E_JSON_vs_JSONB_Write_Update_Experiment.md](docs/Step6E_JSON_vs_JSONB_Write_Update_Experiment.md).
-Earlier: JSON vs JSONB index experiment done
-([docs/Step6D_JSON_vs_JSONB_Index_Experiment.md](docs/Step6D_JSON_vs_JSONB_Index_Experiment.md)): identical btree
-expression indexes on both types, plus jsonb-only GIN indexes, all verified. No-index queries:
-[docs/Step6C_JSON_vs_JSONB_Query_Experiment.md](docs/Step6C_JSON_vs_JSONB_Query_Experiment.md). Tables and storage:
-[docs/Step6B_Build_JSON_Tables_and_Storage.md](docs/Step6B_Build_JSON_Tables_and_Storage.md); design:
-[docs/Step6A_JSON_vs_JSONB_Experiment_Design.md](docs/Step6A_JSON_vs_JSONB_Experiment_Design.md). Source table (Step 5B, 12/09/2026):
-`log_regex.access_log_flat` was created
-([docs/Step5B_Create_Flat_Table.md](docs/Step5B_Create_Flat_Table.md)) and populated with 5,000 rows from parser run 14
-([docs/Step5B_Populate_Flat_Table.md](docs/Step5B_Populate_Flat_Table.md)); all 57 load checks PASS, no mismatches. It follows the Step 5A flat schema design
-([docs/Step5A_Flat_Schema_Design.md](docs/Step5A_Flat_Schema_Design.md)), with one correction to the zone-ID CHECK.
-Verification at that step: primary key, 4 foreign keys and 22 CHECK constraints present and validated; structural
-checks S-01 … S-15 PASS; all other database objects and rows unchanged. The parser is final: 50,000 / 50,000 field
-values, T-01 … T-10 all PASS ([docs/Step4A_Parser_Validation_Report.md](docs/Step4A_Parser_Validation_Report.md)).
+# PostgreSQL Regex, JSON/JSONB and PostGIS Task
 
-An end-to-end PostgreSQL project covering:
-
-- **Regex** — pattern matching, extraction, validation and replacement in PostgreSQL
-- **JSON / JSONB** — storage, querying, operators and indexing
-- **PostGIS** — spatial types and operations
-- **Geospatial indexing** — GiST / SP-GiST / BRIN and spatial query planning
-- **Performance analysis** — `EXPLAIN (ANALYZE, BUFFERS)`, index strategy, query tuning
+> **Status: `FINAL_CONCLUSION_REPORTED` — the project is complete.**
+> An end-to-end PostgreSQL project that parses 5,000 heterogeneous raw access logs with regular expressions, stores the
+> result in a typed relational table, and then measures **JSON vs JSONB** and **PostGIS spatial indexing** under a fixed,
+> verifiable measurement protocol. Every figure in this repository is recorded output — nothing is estimated.
 
 ---
 
-## Project scope and implemented steps
+## 1. Executive Summary
 
-The project is complete: Steps 1–7F are implemented and verified. The consolidated final report is
-[docs/Final_Project_Conclusion.md](docs/Final_Project_Conclusion.md). The step-by-step record follows.
+- **Problem solved:** 5,000 raw log lines in five different formats had to be turned into 10 named fields per log, each with an exact value, a validity label and its position in the original text — without ever modifying the raw input.
+- **Parser result:** **50,000 / 50,000** field values match the answer key in value *and* validity (100.00 %), with **47,374** values exact at their recorded character positions and all **10 acceptance tests (T-01 … T-10) PASS**.
+- **JSON vs JSONB:** no type wins across the board. json is faster for storing and returning whole documents; jsonb is about **5–13×** faster for value access and is the only type with GIN search and `jsonb_set`.
+- **PostGIS:** **GiST** is the index method to use; geography for metric distance, geometry for degree boxes. Of 109 index-vs-control comparisons, **90** showed a measurable benefit, **3** regressed and **7** were never used by the planner.
+- **Integrity:** the raw input was never modified — proven by per-row fingerprints, a dataset digest and `10 / 10` integrity checks at every step that ran them.
 
-**Step 1, sample data** (see [docs/Sample_Data.md](docs/Sample_Data.md)):
+> 💡 The project separates **fair comparisons** (identical SQL, identical indexes) from **type-only capabilities** (jsonb GIN, `jsonb_set`) and **representation-specific results**, so no capability is ever presented as a type verdict.
 
-- `data/raw_access_logs.csv` — 5,000 RAW LOG rows (150 curated edge cases + 4,850 generated)
-- `data/expected_fields.csv` — answer key for the 10 target fields
-- `data/dataset_manifest.json` — seed, distributions, SHA-256 checksums
-- `data/generate_raw_logs.py`, `data/curated_edge_cases.py` — seeded, standard-library generator
+---
 
-**Step 2, requirements and string variants** (no parser):
+## 2. Objective
 
-- [docs/Step2_Requirements_and_Variants.md](docs/Step2_Requirements_and_Variants.md) — formats, field
-  variants, optional/invalid forms, ambiguity and validity rules, edge-case register, open questions
-- [docs/Step2_Raw_Log_Profile.md](docs/Step2_Raw_Log_Profile.md) and `analysis/raw_log_profile.json` —
-  generated measurements, produced by `analysis/profile_raw_logs.py`
+This project demonstrates, in one continuous pipeline:
 
-**Step 3A, parser design** — [docs/Step3A_Parser_Design.md](docs/Step3A_Parser_Design.md) (decisions C-01…C-09
-confirmed; no code).
+- **Regex** — pattern matching, extraction, validation and replacement inside PostgreSQL
+- **JSON / JSONB** — storage, querying, operators and indexing
+- **PostGIS** — spatial types and operations
+- **Geospatial indexing** — GiST / SP-GiST / BRIN and spatial query planning
+- **Performance analysis** — `EXPLAIN (ANALYZE, BUFFERS)`, index strategy and query tuning
 
-**Step 3B-1, PostgreSQL setup** — [docs/Step3B1_PostgreSQL_Setup.md](docs/Step3B1_PostgreSQL_Setup.md):
+The goal was not only to make it work, but to **prove** it worked: every stage is verified against an independent oracle, and every performance claim follows a pre-agreed measurement rule.
 
-- `sql/00`–`sql/04` and `sql/run_step3b1_setup.ps1` — create `postgresql_regex_task` / `log_regex`, load the RAW LOGS
-  into `log_regex.raw_access_logs` byte-exactly, add fingerprints, load audit, read-only guards and an integrity check
-- `scripts/raw_csv_digest.py` — expected values computed from the CSV without the database
+---
 
-**Step 3B-2, IP validation check** — [docs/Step3B2_IP_Validation.md](docs/Step3B2_IP_Validation.md):
-`sql/05_verify_ip_validation.sql` (read-only, TEMP tables) shows plain `inet` disagrees with the answer key on 5
-values and proves the exact VAL-IP rule (4,986 / 4,986 labelled values, 43 / 43 probes).
+## 3. Project Status
 
-**Step 3B-3, F1 parser** — [docs/Step3B3_F1_Parser.md](docs/Step3B3_F1_Parser.md):
+| Phase | Work | Result |
+|---|---|---|
+| **Step 1** | Seeded synthetic dataset and answer key | ✅ 5,000 rows (150 curated + 4,850 generated) |
+| **Step 2** | Requirements, field variants, raw-log profile | ✅ Contract G-01 … G-09 |
+| **Step 3A** | Regex parser design | ✅ Decisions C-01 … C-09 |
+| **Step 3B-1** | PostgreSQL setup, byte-exact raw load | ✅ 10 / 10 integrity checks |
+| **Step 3B-2** | IP validation rule | ✅ 4,986 / 4,986 values, 43 / 43 probes |
+| **Step 3B-3 … 3B-7** | Parsers F1 … F5 | ✅ Every format matches the answer key |
+| **Step 3C** | Combined all-format validation | ✅ 50,000 / 50,000 field values |
+| **Step 4A** | Final parser validation report | ✅ T-01 … T-10 PASS |
+| **Step 5A / 5B** | Flat schema design, create, populate | ✅ 57 / 57 load checks |
+| **Step 6A … 6F** | JSON vs JSONB: storage, queries, indexes, writes | ✅ Consolidated in Step 6F |
+| **Step 7A … 7F** | PostGIS: setup, spatial indexes, analysis, cleanup | ✅ 943 PASS, then 343 PASS cleanup |
+| **Final** | Overall conclusion + read-only audit | ✅ Audit: PASS WITH WARNINGS |
 
-- `sql/06`–`sql/12` and `sql/run_step3b3_f1_parser.ps1` — answer-key table (read-only), reference data, output tables,
-  validators, F1 detection and extraction, `run_parser()`, evaluation views and the test report
-- Result: 15,280 / 15,280 F1 field values match the answer key in value and validity; deterministic; raw input unchanged
+---
 
-**Step 3B-4, F2 parser** — [docs/Step3B4_F2_Parser.md](docs/Step3B4_F2_Parser.md):
+## 4. Solution Architecture
 
-- `sql/13`–`sql/16` and `sql/run_step3b4_f2_parser.ps1` — F2 reference data (log levels, sentinel phrases), the
-  left-to-right sentence grammar (`f2_candidates()`), the shared core moved out of `sql/10` (`detect_format()` with
-  DET-F2, `run_parser()` for F1 + F2) and the test report
-- Result: 9,920 / 9,920 F2 field values match the answer key in value and validity; 0 DET-F2 false positives; no IP
-  taken from `was blocked from accessing` (45 rows); F1 output identical to Step 3B-3; deterministic; raw input unchanged
+```text
+              data/raw_access_logs.csv
+                          │
+                          │  \copy — byte-exact load (Step 3B-1)
+                          ▼
+              log_regex.raw_access_logs
+        (immutable: guard triggers, per-row SHA-256,
+         dataset digest, verify_raw_access_logs())
+                          │
+                          │  PostgreSQL regex parser
+                          │  detect_format() → f1..f5_candidates() → run_parser()
+                          ▼
+     parser_run / parsed_log / parsed_field / parsed_secondary
+                   (accepted run 14)
+                          │
+                          │  sql/30 load: typed conversions, CHECKs, FKs
+                          ▼
+             log_regex.access_log_flat
+     (71 columns: exact text + validity + positions + typed columns)
+                          │
+            ┌─────────────┴─────────────┐
+            ▼                           ▼
+   log_regex_json                 log_regex_gis
+   json vs jsonb documents        numeric / geometry / geography
+   btree + GIN indexes            GiST / SP-GiST / BRIN indexes
+   (Steps 6A–6F)                  (Steps 7A–7F)
+```
 
-**Step 3B-5, F3 parser** — [docs/Step3B5_F3_Parser.md](docs/Step3B5_F3_Parser.md):
+---
 
-- `sql/17`–`sql/19` and `sql/run_step3b5_f3_parser.ps1` — F3 key paths (`geo.lat`, `geometry.coordinates[1]`, …),
-  `f3_candidates()` (RFC 3164 / RFC 5424 header parsed separately; forward-only regex scanner over the JSON text, no
-  `json`/`jsonb` casts), DET-F3 and F3 truncation in `sql/15`, and the test report
-- Result: 9,850 / 9,850 F3 field values match the answer key in value and validity; NaN INVALID, truncated JSON
-  (EC-135) BROKEN, pretty-printed JSON (EC-144) exact; GeoJSON longitude-first in 132 / 132 rows; F1 + F2 output
-  identical to Step 3B-4; deterministic; raw input unchanged
+## 5. Database Overview
 
-**Step 3B-6, F4 parser** — [docs/Step3B6_F4_Parser.md](docs/Step3B6_F4_Parser.md):
+| Property | Value |
+|---|---|
+| Engine | **PostgreSQL 17.9** (Windows x64) |
+| Spatial extension | **PostGIS 3.6.2** (GEOS 3.14.1dev, PROJ 8.2.1) in schema `postgis` |
+| Database | `postgresql_regex_task` |
+| Core schema | `log_regex` — raw logs, parser objects, flat table |
+| Experiment schemas | `log_regex_json`, `log_regex_json_write`, `log_regex_gis` |
+| Access discipline | All measurements and verifications run in **read-only** sessions |
 
-- `sql/20`–`sql/22` and `sql/run_step3b6_f4_parser.ps1` — F4 extras keys (also the boundary list), `f4_candidates()`
-  (fixed positions → quoted request / referer / user agent → extras cut at known keys; `user=` before the remote-user
-  slot, first `xff` entry before the IP field), DET-F4 and F4 truncation in `sql/15`, and the test report
-- Result: 9,860 / 9,860 F4 field values match the answer key in value and validity; all 2,019 quoted values delimited
-  by their quotes; entity values with spaces complete (129); `POINT(lon lat)` correct in 334 / 334 rows; truncated
-  user agent (EC-136) BROKEN; F1–F3 output identical to Step 3B-5; deterministic; raw input unchanged
+**Final verified state (Step 7F):**
 
-**Step 3B-7, F5 parser** — [docs/Step3B7_F5_Parser.md](docs/Step3B7_F5_Parser.md):
+| Schema | Relations | Contents |
+|---|--:|---|
+| `log_regex` | 49 | raw logs, parser output, flat table, reference data |
+| `log_regex_json` | 16 | json / jsonb document tables + Step 6D index set |
+| `log_regex_json_write` | 8 | isolated write-experiment schema (write tables empty) |
+| `log_regex_gis` | 30 | 15 spatial tables + 15 primary keys, **0 secondary indexes** |
+| `postgis` | 6 | extension objects |
+| `public` | 0 | intentionally empty |
 
-- `sql/23`–`sql/25` and `sql/run_step3b7_f5_parser.ps1` — F5 column map (reference data), `f5_candidates()` (split
-  of the event line at `;` with cumulative positions, values verbatim), DET-F5 (exactly 9 semicolons + column-1
-  timestamp shape from `ref_timestamp_shape`) in `sql/15`, and the test report
-- Result: 5,000 / 5,000 F5 field values match the answer key in value and validity; every line rebuilt exactly from its
-  10 columns; DMS quotes, placeholders, empty columns and UNC paths exact; 9-semicolon header row EC-138 not F5;
-  F1–F4 output identical to Step 3B-6; deterministic; raw input unchanged
+---
 
-**Step 3C, combined all-format validation** — [docs/Step3C_Combined_Parser_Validation.md](docs/Step3C_Combined_Parser_Validation.md):
+## 6. Dataset
 
-- `sql/26_test_combined_parser.sql` and `sql/run_step3c_combined_parser.ps1` — DET-NONE added to `sql/15` (the last
-  detection rule); every parser object re-installed from source; two complete runs over all 5,000 rows; Step 3A
-  acceptance tests T-01 … T-10, diagnostics and secondary-value registers, regression against each format's first
-  accepted run
-- Result: 5,000 / 5,000 rows classified exactly once (9 NONE, incl. the 5 DET-NONE rows); 50,000 / 50,000 field values;
-  record validity 4,750 / 238 / 12 exact; 47,374 + 1,113 positions exact; F1–F5 byte-identical to their accepted runs;
-  deterministic; raw input unchanged
+| Property | Value |
+|---|---|
+| Rows | **5,000** (150 curated edge cases EC-001 … EC-150 + 4,850 generated) |
+| Generator | `data/generate_raw_logs.py`, seed **20260911**, standard library only |
+| Answer key | `data/expected_fields.csv` — 10 fields per log |
+| Manifest | `data/dataset_manifest.json` — seed, distributions, SHA-256 checksums |
+| Verification | `generate_raw_logs.py --check` confirms all three files byte-identical |
 
-**Step 4A, final parser validation report** — [docs/Step4A_Parser_Validation_Report.md](docs/Step4A_Parser_Validation_Report.md):
-concise final report of the Step 3C runs (13 and 14), confirmed with read-only queries. It covers format distribution,
-50,000-field accuracy, value and validity match, record validity, NONE and BROKEN cases, exact positions, determinism,
-raw-input integrity and T-01 … T-10 (all PASS). The 10 known secondary-value annotation differences are reported
-separately from the primary acceptance results. Documentation only; no parser or database changes.
+**Log formats detected** (priority F4 → F3 → F1 → F5 → F2 → NONE):
 
-**Step 5A, flat schema design** — [docs/Step5A_Flat_Schema_Design.md](docs/Step5A_Flat_Schema_Design.md):
+| Format | Shape | Rows |
+|---|---|--:|
+| F1 | pipe / TAB `key=value` | 1,528 |
+| F2 | natural-language sentence | 992 |
+| F3 | syslog header + JSON payload | 985 |
+| F4 | web-server access log + extras | 986 |
+| F5 | semicolon-positional export | 500 |
+| NONE | blank input / junk / header rows | 9 |
 
-- **Table:** `log_regex.access_log_flat`, one row per raw log for one accepted run (currently run 14). PK `log_id` →
-  `raw_access_logs`; `(run_id, log_id)` → `parsed_log`.
-- **Field columns:** each of the 10 fields has exact `text`, `…_validity` (text domain `VALID` / `INVALID` /
-  `PLACEHOLDER` / `MISSING`), `…_start_pos`, `…_source` (parser slot) and `…_missing_reason`. MISSING = NULL value and
-  NULL position.
-- **Typed columns** (VALID values only): `entity_type_code`; timestamp shape, local `timestamp(6)`, UTC offset
-  `interval` and `timestamptz(6)` instant only when the text defines the zone; `numeric(10,7)` coordinates; `inet` IP
-  plus zone ID; `smallint` status code or upper-case status word.
-- **Constraints:** CHECKs for MISSING/NULL, positions, typed columns, NONE rows and the record-validity rule.
-- **Evidence:** a read-only profile of run 14, plus the DDL (Appendix A).
-- **Review corrections:**
-  - the entity code uses the validator's normalisation
-  - IP verification compares `inet` values
-  - 12 AM → 00 and 12 PM → 12
-  - corrected `numeric(10,7)` reasoning, plus load-time rejection of coordinates needing more precision
-  - two extra CHECK rules
-  - `sql/07` and `sql/08` refuse to run while `access_log_flat` exists (`LR003`)
-  - `sql/27_verify_access_log_flat_foreign_keys.sql` (read-only) must pass after install and after every load
+**The 10 target fields:** `entity_type`, `email_address`, `resource_url`, `event_timestamp`, `tool`, `latitude`, `longitude`, `ip_address`, `action_phrase`, `status`.
 
-**Step 5B, create the flat table** — [docs/Step5B_Create_Flat_Table.md](docs/Step5B_Create_Flat_Table.md):
+**Validity labels:** `VALID` · `INVALID` · `PLACEHOLDER` · `MISSING` — and per record: `VALID` · `INVALID` · `BROKEN`.
 
-- `sql/28_create_access_log_flat.sql` — the Step 5A DDL in one transaction. It creates the 3 validity domains and
-  `access_log_flat`:
-  - 71 columns
-  - primary key `(log_id)`, the only index
-  - 4 foreign keys: to `raw_access_logs` and `parsed_log` (`RESTRICT`), to `ref_entity_type` and `ref_timestamp_shape`
-  - 22 CHECK constraints
-  - comments that record the typed-column derivation rules
+---
 
-  It never drops anything and refuses (`LR003`) if the objects exist. Preconditions (`LR005`): raw input 10 / 10 and
-  source run 14 accepted.
-- `sql/29_verify_access_log_flat_structure.sql` (read-only) — S-01 … S-15 (`LR006`): table kind, 0 rows, domains,
-  columns, no JSON/JSONB or PostGIS, keys, CHECK names, and CHECK semantics proven with 212 probe rows. It also checks
-  that the only index is the primary key, plus triggers, comments, raw integrity and the source run.
-- `sql/run_step5b_create_flat_table.ps1` — static guard checks, digest of all other objects and rows, `sql/28`, `sql/27`,
-  `sql/29`, digest again; `-VerifyOnly`
-- **Result:** created and verified; `sql/27` PASSED, S-01 … S-15 PASSED, digest unchanged over 160 items. Refusal tests:
-  `sql/28` again → `LR003`; the `sql/07` / `sql/08` guards → `LR003` against the real table
-- **Correction:** the design's zone-ID CHECK evaluated to NULL (and so passed) for a zone ID without an `inet` value.
-  The implemented CHECK requires a non-NULL IPv6 `inet`, and Appendix A is updated.
+## 7. Project Structure
 
-**Step 5B, populate the flat table** — [docs/Step5B_Populate_Flat_Table.md](docs/Step5B_Populate_Flat_Table.md):
+```text
+PostgreSQL Regex Task/
+│
+├── data/                    # dataset, answer key, manifest, generator (7 files)
+│   ├── raw_access_logs.csv
+│   ├── expected_fields.csv
+│   ├── dataset_manifest.json
+│   ├── generate_raw_logs.py
+│   └── curated_edge_cases.py
+│
+├── sql/                     # 53 numbered SQL files + 17 PowerShell runners
+│   ├── 00–05   database, raw load, protection, IP validation
+│   ├── 06–26   parser: reference data, validators, F1–F5, combined test
+│   ├── 27–31   flat table: create, verify, load, verify
+│   ├── 32–44   JSON / JSONB: build, query, index and write experiments
+│   ├── 45–52   PostGIS: extension, tables, indexes, measurement, cleanup
+│   └── run_step*.ps1        # one runner per executing step
+│
+├── scripts/                 # Python generators and analysers (7 files)
+│
+├── analysis/                # recorded measurement output (70 files)
+│   ├── step6/               # JSON vs JSONB raw EXPLAIN, CSVs, summaries
+│   └── step7/               # PostGIS raw EXPLAIN, verdicts, check reports
+│
+├── docs/                    # 34 step reports, conclusions and the audit
+└── README.md                # this file
+```
 
-- `sql/30_load_access_log_flat.sql` — one transaction:
-  - **Refuses** (`LR007`) unless the table is empty and run 14 is accepted.
-  - **Stages** the rows from `parsed_log` + `parsed_field` and applies the Step 5A conversions to VALID values (entity
-    normalisation, timestamp shape / local / offset / UTC with 12 AM → 00 and 12 PM → 12, `numeric(10,7)` coordinates,
-    `inet` + zone ID, status code or word).
-  - **Enforces** the precision rule (`LR008`), then runs one `INSERT` and a gate before COMMIT: row count, exact round
-    trip, exact substrings.
-- `sql/31_verify_access_log_flat_load.sql` (read-only) — 57 checks (`LR009`) covering:
-  - rows and foreign keys
-  - all CHECKs re-evaluated on every row
-  - correspondence with the parser output and the answer key
-  - typed columns against independent oracles
-  - record and field validity counts, positions, NULLs
-- `sql/run_step5b_populate_flat_table.ps1` — static checks, digest, load, `sql/27`, `sql/29`, `sql/31`, digest;
-  `-VerifyOnly`. `sql/29` S-02 now also accepts the populated state.
-- **Result:**
-  - 5,000 rows; 50,000 / 50,000 field values equal `parsed_field` and the answer key
-  - record validity 4,750 / 238 / 12
-  - 47,374 exact positions; typed counts 4,634 · 4,990 · 4,928 · 2,941 · 2,941 · 4,249 · 4,252 · 4,948 · 1 · 2,035 ·
-    2,666 with 0 oracle mismatches
-  - 0 CHECK violations; all 57 checks PASS, no mismatches
-  - digest of all other objects and rows unchanged; the load refuses to run twice
+---
 
-**Step 6A, JSON vs JSONB experiment design** — [docs/Step6A_JSON_vs_JSONB_Experiment_Design.md](docs/Step6A_JSON_vs_JSONB_Experiment_Design.md)
-(design only; nothing created):
+## 8. Regex Parser
 
-- **Data:** one document per `access_log_flat` row (5,000). It holds the 70 logical leaves: every column except
-  `loaded_at`, nested as `record` + `fields.<field>.{value, validity, start_pos, source, missing_reason, typed keys}`,
-  with MISSING as JSON `null`.
-- **Build:** one minified canonical text is cast to both `json` and `jsonb`. Planned tables
-  `log_regex_json.access_log_json` / `access_log_jsonb` are identical except the `doc` type and have no foreign keys.
-- **Workload:**
-  - 21 head-to-head queries with identical SQL: lookups, whole-document output, 1/10/70-value extraction, equality,
-    range, time-window, pattern and array filters, aggregates, `JSON_VALUE` / `JSON_EXISTS`
-  - `jsonb`-only capability queries: `@>`, `?`, `@?`, document equality
-  - load and index-build write cost
-- **Measurements:**
-  - storage: forks, TOAST, per-document `pg_column_size` and text size, compression and out-of-line counts, WAL
-  - indexes: I-0 baseline, I-1 identical btree expression indexes, I-2/I-3 GIN `jsonb_ops` / `jsonb_path_ops`
-    (jsonb only)
-  - `EXPLAIN (ANALYZE, BUFFERS, SETTINGS, SERIALIZE, MEMORY)`: 15 interleaved runs with fixed session settings
-- **Rules:** equivalence checks E1–E9 (including a full round trip of all 70 values to the flat table), pre-set
-  comparability and difference-threshold rules, and a list of everything that must stay unchanged.
+### 8.1 Design
 
-**Step 6B, JSON and JSONB tables and storage** — [docs/Step6B_Build_JSON_Tables_and_Storage.md](docs/Step6B_Build_JSON_Tables_and_Storage.md):
+| Element | Approach |
+|---|---|
+| Principles | Raw logs read-only · format first, then slots · extract, then judge · candidates, then selection · offsets everywhere · vocabularies stored as data · deterministic and set-based |
+| Pipeline | load → input guard → format detection → event scope → slot extraction → clean-up → primary selection → value state → validation → output |
+| Implementation | PostgreSQL functions in schema `log_regex`: `detect_format()`, `f1_candidates()` … `f5_candidates()`, `run_parser()` |
+| Output tables | `parser_run`, `parsed_log`, `parsed_field`, `parsed_secondary` |
+| Views | `v_parsed_access_logs` (wide output), `v_parser_field_comparison`, `v_parser_mismatches` |
 
-- `sql/32`–`sql/35` and `sql/run_step6b_build_json_tables.ps1` create schema `log_regex_json` with `access_log_json` and
-  `access_log_jsonb`: identical tables except the `doc` type, primary keys only, no foreign keys.
-- **Load:** both tables come from one minified canonical text per flat row (8,416,033 bytes, md5 `aeaef323…`), then
-  VACUUM ANALYZE.
-- **Verification (38 checks, all PASS):**
-  - 5,000 rows each, identical `log_id` sets, byte-exact input text
-  - `json::jsonb = jsonb`
-  - all 70 values round-trip to `access_log_flat` in both tables
-  - no duplicate keys; 82 keys in every document
-  - quotes, backslashes and non-ASCII escaped correctly
-  - MISSING as JSON `null` with the key present
-- **Storage** (`analysis/step6/step6b_storage_measurements.txt`):
-  - uncompressed, `jsonb` documents are larger (+19.5 %)
-  - 2,880 `jsonb` rows cross the ~2 kB TOAST threshold and are pglz-compressed inline, so stored `jsonb` is smaller
-    (heap 8.04 MB vs 10.24 MB)
-  - 1 `json` document is compressed; nothing is stored out of line
-  - this is reported as a threshold effect, not a conclusion
-- **Unchanged:** the `log_regex` digest (203 items, including `access_log_flat` rows) before and after; `sql/27`,
-  `sql/29` and `sql/31` pass. No query indexes, EXPLAIN or benchmarks in this step (they followed in Steps 6C–6E).
+### 8.2 Results
 
-**Step 6C, JSON vs JSONB head-to-head queries** — [docs/Step6C_JSON_vs_JSONB_Query_Experiment.md](docs/Step6C_JSON_vs_JSONB_Query_Experiment.md)
-(measurements and observations; the conclusion followed in Step 6F):
+| Result | Recorded value |
+|---|---|
+| Field values matching the answer key (value **and** validity) | **50,000 / 50,000 (100.00 %)** |
+| Curated edge cases EC-001 … EC-150 | 1,500 / 1,500 |
+| Exact positions (`substr(raw_log, start_pos, length) = value`) | **47,374 / 47,374**, plus 1,113 / 1,113 secondary values |
+| Record validity | VALID 4,750 · INVALID 238 · BROKEN 12 |
+| Field validity (all 50,000) | VALID 46,506 · INVALID 255 · PLACEHOLDER 613 · MISSING 2,626 |
+| Determinism | Runs 13 and 14 identical in all three output tables |
+| Acceptance tests | **T-01 … T-10 — 10 / 10 PASS** |
 
-- **Files:**
-  - `scripts/step6c_json_query_experiment.py` defines the 25 statements (21 query IDs), generates `sql/36`
-    (correctness, 78 checks) and `sql/37` (measurement session), and analyses the output
-  - `sql/run_step6c_json_queries.ps1` runs gates, two separate read-only sessions, gates again, digests and analysis
-- **Protocol:** no indexes; identical SQL on both types; no jsonb-only operators; JIT off, no parallel workers, UTC, I/O
-  timing on; 3 warm-ups + 15 alternating measured runs + 1 per-node detail run per statement and type;
-  `EXPLAIN (ANALYZE, BUFFERS, SETTINGS, SERIALIZE TEXT, MEMORY)`.
-- **Correctness:** json = jsonb = `access_log_flat` oracle for all 25 statements, before and after timing; documents,
-  tables and indexes unchanged (digests).
-- **Measurements** (`analysis/step6/step6c_*`), under the Step 6A rule:
-  - json measurably faster for whole-document output: Q01 0.012 vs 0.030 ms, Q02 3.0 vs 68.7 ms, the latter dominated
-    by jsonb serialisation
-  - jsonb measurably faster for all 23 extraction, filter, aggregate and SQL/JSON statements, by about 5–13× (Q03 about 2×; e.g. Q05
-    1,070 vs 82 ms, Q06 7,413 vs 592 ms)
-  - planning time: no measurable difference
-  - plan shapes, scan estimates and row counts identical (only the Q17/Q18 group-count estimates differ); batch 2
-    reproduced every direction
+### 8.3 IP validation finding
 
-**Step 6D, JSON vs JSONB indexes** — [docs/Step6D_JSON_vs_JSONB_Index_Experiment.md](docs/Step6D_JSON_vs_JSONB_Index_Experiment.md)
-(measurements and observations; the conclusion followed in Step 6F):
+A plain `inet` cast **disagreed with the answer key on 5 of 4,986** labelled IP values (4 leading-zero IPv4 values wrongly accepted, 1 IPv6 zone ID wrongly rejected). The adopted **VAL-IP rule** — strict patterns plus `inet` on the part before `%` — agreed on **4,986 / 4,986** values and **43 / 43** probes.
 
-- **Files:** `scripts/step6d_json_index_experiment.py` generates `sql/38` (per-phase verification), `sql/39` (guarded
-  index builds) and `sql/40` (per-phase measurements); `sql/run_step6d_json_indexes.ps1` runs the phases I-0 → I-1 →
-  I-2 → I-3 → final. The Step 6C baseline is preserved (SHA-256 manifest, 11 files) and re-measured as an I-0 control.
-- **Indexes:**
-  - I-1, the fair comparison: the same five btree expression indexes on both tables (`record_validity`,
-    `entity_type.code`, `status.code::integer`, `latitude.degrees::numeric`, `event_timestamp.utc`); identical sizes
-    (499,712 bytes per table)
-  - jsonb-only: GIN `jsonb_ops` (4.52 MB) and `jsonb_path_ops` (3.73 MB)
-  - no json-via-cast GIN
-- **Verification:** every index valid; every result = `access_log_flat` under default and forced plans (214 checks
-  across phases); documents and `log_regex` unchanged.
-- **Head-to-head at I-1:**
-  - no measurable json/jsonb difference for the 7 statements answered by the index
-  - jsonb still measurably faster where documents are still read (Q16 heap filter, Q11b/Q17 sequential scans, Q09
-    control)
-  - json index builds slower (66–122 vs 16–21 ms)
-  - the planner keeps a sequential scan for Q11b although the forced index path is about 150× faster on json
-- **Capability (jsonb only):** GIN turns containment/jsonpath statements from about 10–12 ms into 0.03–0.8 ms;
-  `jsonb_path_ops` smaller, faster to build and faster here; `?` on nested values and `JSON_EXISTS` not indexable.
+---
 
-**Step 6E, JSON vs JSONB write/update cost experiment design** — [docs/Step6E_JSON_vs_JSONB_Write_Update_Experiment_Design.md](docs/Step6E_JSON_vs_JSONB_Write_Update_Experiment_Design.md)
-(design approved with safeguards; measured — results in
-[docs/Step6E_JSON_vs_JSONB_Write_Update_Experiment.md](docs/Step6E_JSON_vs_JSONB_Write_Update_Experiment.md)):
+## 9. Flat Relational Schema
 
-- **Measurement:**
-  - `scripts/step6e_json_write_measure.py` generates `sql/43` (35 series × 18 rounds + detail runs) and `sql/44`
-    (second session for W1b); `sql/run_step6e_json_writes.ps1` passed 26 / 26 checks
-  - all 756 attempts were correct; 4 measured runs flagged by the WAL rule and excluded
-  - raw output, CSVs and the generated summary are in `analysis/step6/step6e_*`
-- **Findings (no verdict):**
-  - Without secondary indexes json writes faster (1.3–2.5×); with the five btree expression indexes jsonb writes
-    faster (0.51–0.59×), because index maintenance costs json 2.5–6.6× and jsonb 1.1–1.4×.
-  - jsonb writes 11–13 % less WAL for whole-table writes (compressed inline documents), but 5.6–6.1 % more for
-    238-row updates.
-  - Updates are almost never HOT; UA-3 doubles the heap.
-  - GIN adds 1.5–4.3× time and up to 3.9× WAL; `jsonb_path_ops` is cheaper than `jsonb_ops`.
-  - No TOAST growth.
-  - CPU speed dropped about 3× partway through session 1 (laptop running on battery afterwards; the cause is not proven); only interleaved ratios are
-    compared.
+`log_regex.access_log_flat` — the typed, constrained store and the correctness oracle for every later experiment.
 
-- **Setup and preflight:** `scripts/step6e_json_write_experiment.py` generates `sql/41_create_json_write_experiment.sql`
-  (schema, staged canonical text, expected UA-1/UA-2/UA-3 documents, empty `_w` tables) and
-  `sql/42_preflight_json_write_experiment.sql` (41 checks: fingerprint, idle sessions, schema objects, X-0 … X-4
-  definitions created and compared inside a rolled-back transaction). `sql/run_step6e_setup_preflight.ps1` adds
-  static checks, the 6C/6D manifests (`analysis/step6/step6e_baseline_step6d_sha256.txt` new), digests and
-  `sql/34` / `sql/38 final` before and after: **63 / 63 PASS** (`analysis/step6/step6e_preflight_report.txt`).
+| Property | Value |
+|---|---|
+| Grain | One row per raw log (5,000, including the 9 NONE rows), for accepted run 14 |
+| Columns | **71** — identity, record classification, 5 columns per field (× 10), 11 typed columns |
+| Domains | `field_validity_status`, `record_validity_status`, `missing_reason_code` |
+| Keys | Primary key `(log_id)` — the only index; **4 foreign keys**, all validated |
+| Constraints | **22 CHECK constraints** (6 record, 10 per-field, 6 typed) |
+| Load verification | **57 / 57 checks PASS**, 0 CHECK violations, 0 oracle mismatches |
 
-- **Review:** 6A planned W1 (bulk insert with `EXPLAIN … WAL`), optional W2 (238-document update) and the load part of
-  M-08; none had been measured before this step. Index maintenance on writes was a Step 6D gap.
-- **Isolation:** separate schema `log_regex_json_write` with staged canonical text (md5-verified), expected update
-  documents and `_w` copies of the tables. Existing raw, flat, parser and Step 6B/6D objects are never written; proven by
-  digests, `sql/34`, `sql/38` and baseline manifests.
-- **Writes measured:**
-  - bulk insert of 5,000 documents and row-at-a-time inserts
-  - full-document replacement updates with identical new text (head-to-head)
-  - `jsonb_set` and json alternatives, reported separately
-  - index configurations X-0 (primary key) and X-1 (the 6D btree expression indexes) head-to-head; X-2/X-3/X-4 (GIN,
-    including the current 6D set) jsonb only
-- **Method:**
-  - `EXPLAIN (ANALYZE, BUFFERS, WAL)`, commit-inclusive LSN deltas, `pg_stat_wal` / `pg_stat_io` /
-    `pg_stat_checkpointer` deltas, relation growth
-  - reset + `CHECKPOINT` before every measured statement; interleaved rounds; the Step 6A rule
-  - full correctness checks after every round
-- The results report and conclusion move to Step 6F.
+**Typed columns** (populated for VALID values only):
 
-**Step 6F, final JSON vs JSONB comparison** — [docs/Step6F_JSON_vs_JSONB_Final_Comparison_Report.md](docs/Step6F_JSON_vs_JSONB_Final_Comparison_Report.md)
-(consolidation of 6B–6E; no new measurement):
+| Column | Type | Rows |
+|---|---|--:|
+| `entity_type_code` | `text` (normalised, FK) | 4,634 |
+| `event_timestamp_shape` | `text` (FK) | 4,990 |
+| `event_timestamp_local` | `timestamp(6)` | 4,928 |
+| `event_timestamp_utc_offset` / `event_timestamp_utc` | `interval` / `timestamptz(6)` | 2,941 / 2,941 |
+| `latitude_degrees` / `longitude_degrees` | `numeric(10,7)` | 4,249 / 4,252 |
+| `ip_address_inet` / `ip_address_zone_id` | `inet` / `text` | 4,948 / 1 |
+| `status_code` / `status_word` | `smallint` / `text` | 2,035 / 2,666 |
 
-- **Fair comparisons** are kept apart from **jsonb-only capabilities** (GIN operators, `jsonb_set`).
-- **Measured split, no single winner:**
-  - json was faster for returning whole documents and for inserts and full-document updates **without** secondary
-    indexes, and preserves the input text exactly.
-  - jsonb was faster for every value extraction, filter and aggregate (about 5–13× without indexes), and for inserts
-    and updates **with** the five btree expression indexes (json pays text parsing per index entry).
-  - Index-answered queries showed no difference.
-- **Storage and WAL:** jsonb stored 14 % fewer document bytes and wrote 8–13 % less WAL for whole-table writes and
-  single-row inserts, a TOAST inline-compression threshold effect of this dataset; for 238-row updates it wrote 5.6–6.1 %
-  more WAL.
-- **Scope:** 5,000 documents of about 1.7 kB, PostgreSQL 17.9 on one Windows laptop, warm cache, single client; timing
-  ratios are compared only within sessions (caveats in §12 of the report).
+---
 
-**Step 7, PostGIS spatial indexes**:
-- **Documents:**
-  - design: [docs/Step7A_PostGIS_Experiment_Design.md](docs/Step7A_PostGIS_Experiment_Design.md)
-  - installation preflight: [docs/Step7A1_PostGIS_Installation_Preflight.md](docs/Step7A1_PostGIS_Installation_Preflight.md)
-  - post-installation verification: [docs/Step7A2_PostGIS_Post_Installation_Verification.md](docs/Step7A2_PostGIS_Post_Installation_Verification.md)
-  - setup: [docs/Step7B_PostGIS_Setup_Preflight.md](docs/Step7B_PostGIS_Setup_Preflight.md)
-  - index experiment design: [docs/Step7C_Spatial_Index_Experiment_Design.md](docs/Step7C_Spatial_Index_Experiment_Design.md)
-  - index experiment: [docs/Step7C_Spatial_Index_Experiment.md](docs/Step7C_Spatial_Index_Experiment.md)
-  - results analysis: [docs/Step7D_PostGIS_Results_Analysis.md](docs/Step7D_PostGIS_Results_Analysis.md)
-  - final conclusion: [docs/Step7E_PostGIS_Final_Conclusion.md](docs/Step7E_PostGIS_Final_Conclusion.md)
-  - cleanup and final state: [docs/Step7F_PostGIS_Cleanup_and_Final_State_Plan.md](docs/Step7F_PostGIS_Cleanup_and_Final_State_Plan.md)
-- **Setup (7B, 317 / 0):**
-  - PostGIS 3.6.2 in schema `postgis`.
-  - Schema `log_regex_gis` with 15 tables of 5,000 rows copied from `access_log_flat` / `access_log_jsonb` (4,161
-    non-NULL points): numeric, geometry, geography and JSONB variants.
-  - Plain-SQL oracles for boxes, distances and nearest neighbours.
-- **Experiment (7C, 943 PASS / 0 FAIL):**
-  - 10 indexes (B-tree; geometry GiST, SP-GiST, BRIN; geography GiST, SP-GiST; JSONB expression and stored-column
-    GiST), 3 builds each.
-  - 192 query × configuration series in 2 read-only sessions.
-  - Results equal to the oracles in 2,424 / 2,424 checks.
-- **Analysis (7D, no new measurement):**
-  - **Index vs its own control:** 90 measurable benefit, 5 used without measurable benefit, 3 regressions, 7 not used,
-    plus 4 unsupported nearest-neighbour cases (SP-GiST and BRIN have no ordering operator).
-  - **SP-GiST vs GiST:** SP-GiST was never measurably faster than GiST on the same column.
-  - **BRIN:** summarised the 39-page tables as a single block range; the planner did not use it, or it was slower.
-  - **Flat vs JSONB, same type and index:** flat was faster in 14 of 23 indexed series and never slower.
-  - **JSONB storage forms (JSONB-specific):** a stored generated-column index beat the expression index in 21 of 23.
-  - **Planning time:** indexed tables planned measurably slower in 97 of 109 series (never faster); for geography
-    distances it was 0.43–1.30 ms, against about
-    0.04 ms without an index.
-- **Conclusion (7E, scoped to this data and environment):**
-  - GiST is the index method to use; SP-GiST was never measurably faster, and BRIN gave no benefit on 39-page tables.
-  - Geography + GiST for metric distances and nearest neighbours (correct across the antimeridian and pole, planning
-    0.43–1.30 ms).
-  - Geometry + GiST for degree boxes and planar nearest neighbours.
-  - Indexes paid off mainly up to about 22 % of rows and for nearest neighbours; benefits were smaller at larger result
-    sizes (e.g. 2.3–3.1× for the 41 % distance query D4). For 32–78 % boxes the flat-table GiST / SP-GiST / BRIN indexes gave no
-    benefit, while the JSONB GiST indexes still had measurable benefits (J-1 on B3 and B4, J-3 on B3).
-  - Flat coordinates are preferable to JSONB coordinates; within JSONB, a stored generated column beats an expression
-    index for reads.
-  - Write costs were not measured.
-- **Scope:** 5,000 rows (4,161 points), PostgreSQL 17.9 / PostGIS 3.6.2, one Windows laptop on AC power, warm cache, single client.
-- **Final state (7F, `sql/run_step7f_cleanup.ps1`, 343 PASS / 0 FAIL):**
-  - The 10 Step 7C indexes were dropped with `sql/52` in one transaction, after a rolled-back harness (48 PASS on its
-    own, repeated in the full run).
-  - `log_regex_gis` keeps its 15 tables (5,000 rows each, fingerprints unchanged) and 15 primary keys.
-  - PostGIS 3.6.2 stays installed; no object outside `postgis` / `log_regex_gis` depends on it.
-  - `sql/47` passed 155 / 155 and `sql/50 phase before` 113 / 113.
-  - The raw, flat, parser and Step 6 digests and the Step 6C / 6D / 7B / 7F manifests are unchanged.
+## 10. JSON vs JSONB Experiment (Steps 6A–6F)
 
-**Final overall project conclusion** — [docs/Final_Project_Conclusion.md](docs/Final_Project_Conclusion.md)
-(consolidation of Steps 1–7F; no new measurement, no database change):
-- **Parser:** 50,000 / 50,000 field values match the answer key in value and validity; 47,374 exact positions;
-  T-01 … T-10 PASS; raw input unchanged throughout.
-- **Flat table:** typed, constrained primary store and correctness oracle (57 / 57 load checks).
-- **JSON vs JSONB:** no type better across the board (Step 6F).
-  - json: faster for unchanged documents without path indexes, and preserves the exact text.
-  - jsonb: about 5–13× faster value access without indexes (Q03 about 2×), faster writes with btree expression
-    indexes, and the only type with GIN search
-    and `jsonb_set`.
-- **PostGIS** (Step 7E):
-  - GiST is the index method.
-  - Geography + GiST for metric distances and nearest neighbours; geometry + GiST for degree boxes.
-  - Indexes help selective queries and nearest neighbours. For boxes returning 32–78 % of rows the flat-table GiST /
-    SP-GiST / BRIN indexes gave no benefit, while the JSONB GiST indexes still had measurable benefits (J-1 on B3 and
-    B4, J-3 on B3). No BRIN / SP-GiST advantage at this size.
-  - Flat coordinates are never slower than JSONB coordinates. In JSONB, a stored generated column beats an expression
-    index for reads.
-  - Write costs were not measured.
-- **Also in the report:** consolidated comparison table, recommended architecture, use / do-not-use /
-  workload-dependent decisions, methodology and caveats, untested items, threats to validity, future work.
-- **Scope:** 5,000-row synthetic dataset, PostgreSQL 17.9, PostGIS 3.6.2, one Windows laptop, warm cache, single
-  client. Final database state as verified in Step 7F. Nothing committed to git.
+5,000 documents, 82 keys and 70 leaf values each, built from one canonical minified text (8,416,033 bytes) and cast to **both** types — so the comparison is genuinely like-for-like.
 
-## Relationship to the rest of this repository
+### 10.1 Storage
 
-A sibling of the other projects at the repository root. It is **independent** of
-`packers_movers_synthetic_data/`, which is a separate, completed five-version analytics
-project against the `relocation_services` database and is not affected by anything here.
+| Measure | json | jsonb | Difference |
+|---|--:|--:|---|
+| Uncompressed document size | 8,436,033 | 10,084,876 | jsonb **+19.5 %** |
+| Stored bytes (`pg_column_size`) | 8,434,066 | 7,219,683 | jsonb **−14.4 %** |
+| Documents compressed inline | 1 | 2,880 | TOAST threshold effect |
+| Heap | 10,240,000 (1,250 pages) | 8,036,352 (981 pages) | jsonb **−21.5 %** |
+
+### 10.2 Query performance (fair, no secondary indexes)
+
+| Access pattern | Winner | Evidence |
+|---|---|---|
+| Whole documents (Q01, Q02) | **json** | 0.012 vs 0.030 ms · 2.956 vs 68.709 ms |
+| Value extraction, filters, aggregates, SQL/JSON (23 statements) | **jsonb** | ratios 0.08–0.49, about **5–13×** faster |
+| Planning time | = | no measurable difference |
+
+### 10.3 Indexes and writes
+
+| Situation | Result |
+|---|---|
+| Identical btree expression indexes answer the query (7 statements) | **no measurable difference** |
+| Index build time per index | json 66–122 ms vs **jsonb 16–21 ms** |
+| Inserts / updates **without** secondary indexes | **json faster** (×1.29–2.52) |
+| Inserts / updates **with** the 5 btree indexes | **jsonb faster** (0.51–0.59) — json pays text parsing per index entry |
+| WAL, whole-table writes | jsonb **8–13 % less** |
+
+### 10.4 JSONB-only capabilities *(no json counterpart — never used as a type verdict)*
+
+| Capability | Measured |
+|---|---|
+| GIN containment / jsonpath | 10–12 ms → **0.027–0.528 ms** (`jsonb_path_ops`) |
+| GIN cost | index 46–56 % of heap; writes ×1.5–4.3; WAL up to ×3.9 |
+| `jsonb_set` partial update | fastest partial-update mechanism measured (39.2 ms / 238 rows) |
+
+> **Step 6F verdict:** *neither type is better across the board.* The correct choice depends on whether the workload returns whole documents or reads values out of them.
+
+---
+
+## 11. PostGIS Spatial Indexing (Steps 7A–7F)
+
+15 tables of 5,000 rows (4,161 non-NULL points), **10 indexes**, **192 query × configuration series**, two read-only sessions, **7,680 executions**, and **2,424 / 2,424** correctness checks against plain-SQL oracles.
+
+### 11.1 Index vs its own control (109 series)
+
+| Verdict | Series |
+|---|--:|
+| ✅ Measurable benefit | **90** |
+| ➖ Used, no measurable benefit | 5 |
+| ⚠️ Measurable regression | 3 |
+| ⛔ Not used by the planner | 7 |
+| 🚫 Not supported (no ordering operator) | 4 |
+
+### 11.2 Method comparison
+
+| Method | Outcome |
+|---|---|
+| **GiST** | The method to use — and the only one supporting nearest-neighbour ordering |
+| **SP-GiST** | Never measurably faster than GiST on the same column |
+| **BRIN** | 39-page tables collapse into a single block range → not used, or slower |
+
+### 11.3 Representation
+
+| Comparison | Result |
+|---|---|
+| Geography + GiST | Correct metric distances everywhere, including antimeridian and pole; benefit in all 14 distance series (1.41–103×) |
+| Geometry + GiST | Degree boxes and planar nearest neighbours; index 1.85× smaller than geography |
+| Flat vs JSONB coordinates (fair) | Flat faster in 14 of 23 indexed series, **never slower** |
+| JSONB stored column vs expression index | Stored column faster in **21 of 23**, and 3–4× faster to build |
+| Sphere vs spheroid | Identical result sets here; sphere measurably faster for distance to every point (5.188 vs 10.226 ms) |
+
+### 11.4 Cost side
+
+Every index adds planning time — indexed tables planned measurably slower in **97 of 109** series, and geography distance planning reached **0.43–1.30 ms** against about 0.04 ms without an index.
+
+---
+
+## 12. Validation and Integrity
+
+| Verification | Scope | Result |
+|---|---|---|
+| `verify_raw_access_logs()` | Raw input, 10 checks | **10 / 10** in every run that called it |
+| `sql/27` | Flat foreign keys | PASS |
+| `sql/29` | Flat structure (S-01 … S-15, 212 probe rows) | PASS |
+| `sql/31` | Flat load | **57 / 57** |
+| `sql/34` | JSON / JSONB tables | **38 / 38** |
+| `sql/38` | JSON index phases | **70 / 70** |
+| `sql/47` | PostGIS setup | **155 / 155** |
+| `sql/50` | PostGIS index phase | **113 / 745** per phase |
+| Step 7B runner | PostGIS setup | **317 PASS / 0 FAIL** |
+| Step 7C runner | Spatial index experiment | **943 PASS / 0 FAIL / 0 FLAG** |
+| Step 7F runner | Cleanup and final state | **343 PASS / 0 FAIL** |
+
+**Baseline manifests (SHA-256), all re-verified with 0 mismatches:** Step 6C (11 files) · Step 6D (26) · Step 7B (14) · Step 7F (32).
+
+**Safeguards used throughout:** guard SQLSTATEs (`LR001` … `LR026`) that refuse unsafe runs · rolled-back harnesses before real writes · read-only measurement sessions · single-transaction writes · generated SQL checked against a static statement allowlist.
+
+---
+
+## 13. Evidence
+
+This project has no screenshots: the evidence is the **recorded output** itself, committed in `analysis/`.
+
+| Evidence | Location |
+|---|---|
+| Check reports (PASS / FAIL per check) | `analysis/step7/step7b_setup_checks.txt`, `step7c_checks.txt`, `step7f_cleanup_checks.txt`, `analysis/step6/step6e_preflight_report.txt` |
+| Raw `EXPLAIN` output | `analysis/step6/step6c_*_explain.txt`, `step6d_*_explain.txt`, `analysis/step7/step7c_session{1,2}_raw.txt` |
+| Per-execution metrics | `analysis/step6/step6*_executions.csv`, `analysis/step7/step7c_executions.csv` |
+| Verdicts and comparisons | `analysis/step7/step7c_verdicts.csv`, `step7c_comparisons.csv`, `analysis/step6/step6*_comparisons.csv` |
+| Index builds and sizes | `analysis/step7/step7c_builds.csv`, `step7c_sizes.csv`, `analysis/step6/step6d_builds.csv` |
+
+---
+
+## 14. How to Run
+
+Each executing step has its own runner. Connection settings come from environment variables (`PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD`); **no credentials are stored in this repository**.
+
+```bash
+# 1. Database, schema and byte-exact raw load
+powershell -File "sql/run_step3b1_setup.ps1"
+
+# 2. Parser: install and validate all formats (two full runs + T-01..T-10)
+powershell -File "sql/run_step3c_combined_parser.ps1"
+
+# 3. Flat table: create and populate
+powershell -File "sql/run_step5b_create_flat_table.ps1"
+powershell -File "sql/run_step5b_populate_flat_table.ps1"
+
+# 4. JSON vs JSONB: build, query, index and write experiments
+powershell -File "sql/run_step6b_build_json_tables.ps1"
+powershell -File "sql/run_step6c_json_queries.ps1"
+powershell -File "sql/run_step6d_json_indexes.ps1"
+powershell -File "sql/run_step6e_json_writes.ps1"
+
+# 5. PostGIS: setup, spatial index experiment, cleanup
+powershell -File "sql/run_step7b_postgis_setup.ps1"
+powershell -File "sql/run_step7c_spatial_indexes.ps1"
+powershell -File "sql/run_step7f_cleanup.ps1"
+```
+
+Every runner writes a PASS / FAIL report and refuses to continue when a check fails.
+
+---
+
+## 15. Documentation Index
+
+**Start here:**
+
+| Document | Content |
+|---|---|
+| [Final_Project_Conclusion.md](docs/Final_Project_Conclusion.md) | Consolidated report of Steps 1–7F: results, comparison table, recommended architecture, decisions, caveats |
+| [Final_Project_Audit.md](docs/Final_Project_Audit.md) | Read-only audit of the whole project — **PASS WITH WARNINGS** |
+
+**Dataset, requirements and parser:**
+
+| Step | Document |
+|---|---|
+| 1 | [Sample_Data.md](docs/Sample_Data.md) |
+| 2 | [Step2_Requirements_and_Variants.md](docs/Step2_Requirements_and_Variants.md) · [Step2_Raw_Log_Profile.md](docs/Step2_Raw_Log_Profile.md) |
+| 3A | [Step3A_Parser_Design.md](docs/Step3A_Parser_Design.md) |
+| 3B-1 / 3B-2 | [Step3B1_PostgreSQL_Setup.md](docs/Step3B1_PostgreSQL_Setup.md) · [Step3B2_IP_Validation.md](docs/Step3B2_IP_Validation.md) |
+| 3B-3 … 3B-7 | [F1](docs/Step3B3_F1_Parser.md) · [F2](docs/Step3B4_F2_Parser.md) · [F3](docs/Step3B5_F3_Parser.md) · [F4](docs/Step3B6_F4_Parser.md) · [F5](docs/Step3B7_F5_Parser.md) |
+| 3C / 4A | [Step3C_Combined_Parser_Validation.md](docs/Step3C_Combined_Parser_Validation.md) · [Step4A_Parser_Validation_Report.md](docs/Step4A_Parser_Validation_Report.md) |
+
+**Flat schema:**
+
+| Step | Document |
+|---|---|
+| 5A | [Step5A_Flat_Schema_Design.md](docs/Step5A_Flat_Schema_Design.md) |
+| 5B | [Step5B_Create_Flat_Table.md](docs/Step5B_Create_Flat_Table.md) · [Step5B_Populate_Flat_Table.md](docs/Step5B_Populate_Flat_Table.md) |
+
+**JSON vs JSONB:**
+
+| Step | Document |
+|---|---|
+| 6A | [Step6A_JSON_vs_JSONB_Experiment_Design.md](docs/Step6A_JSON_vs_JSONB_Experiment_Design.md) |
+| 6B | [Step6B_Build_JSON_Tables_and_Storage.md](docs/Step6B_Build_JSON_Tables_and_Storage.md) |
+| 6C | [Step6C_JSON_vs_JSONB_Query_Experiment.md](docs/Step6C_JSON_vs_JSONB_Query_Experiment.md) |
+| 6D | [Step6D_JSON_vs_JSONB_Index_Experiment.md](docs/Step6D_JSON_vs_JSONB_Index_Experiment.md) |
+| 6E | [design](docs/Step6E_JSON_vs_JSONB_Write_Update_Experiment_Design.md) · [results](docs/Step6E_JSON_vs_JSONB_Write_Update_Experiment.md) |
+| 6F | [Step6F_JSON_vs_JSONB_Final_Comparison_Report.md](docs/Step6F_JSON_vs_JSONB_Final_Comparison_Report.md) |
+
+**PostGIS:**
+
+| Step | Document |
+|---|---|
+| 7A | [design](docs/Step7A_PostGIS_Experiment_Design.md) · [install preflight](docs/Step7A1_PostGIS_Installation_Preflight.md) · [post-install verification](docs/Step7A2_PostGIS_Post_Installation_Verification.md) |
+| 7B | [Step7B_PostGIS_Setup_Preflight.md](docs/Step7B_PostGIS_Setup_Preflight.md) |
+| 7C | [design](docs/Step7C_Spatial_Index_Experiment_Design.md) · [experiment](docs/Step7C_Spatial_Index_Experiment.md) |
+| 7D / 7E | [Step7D_PostGIS_Results_Analysis.md](docs/Step7D_PostGIS_Results_Analysis.md) · [Step7E_PostGIS_Final_Conclusion.md](docs/Step7E_PostGIS_Final_Conclusion.md) |
+| 7F | [Step7F_PostGIS_Cleanup_and_Final_State_Plan.md](docs/Step7F_PostGIS_Cleanup_and_Final_State_Plan.md) |
+
+---
+
+## 16. Technologies Used
+
+## Database
+
+- PostgreSQL 17.9
+- PostGIS 3.6.2 (GEOS, PROJ)
+
+## Languages
+
+- SQL (POSIX ARE regular expressions, PL/pgSQL)
+- Python 3.10+ (standard library only)
+- PowerShell 5.1 (runners)
+
+## PostgreSQL Features
+
+- Regular expressions, domains, CHECK constraints, foreign keys
+- `json` / `jsonb`, btree expression indexes, GIN (`jsonb_ops`, `jsonb_path_ops`)
+- PostGIS `geometry` / `geography`, GiST / SP-GiST / BRIN
+- `EXPLAIN (ANALYZE, BUFFERS, SETTINGS, SERIALIZE, MEMORY, WAL)`
+
+## Tools
+
+- pgAdmin 4
+- Git and GitHub
+- Visual Studio Code
+
+---
+
+## 17. Measurement Methodology
+
+| Item | Protocol |
+|---|---|
+| Correctness first | Every timed statement verified against an oracle before **and** after timing, in default and forced plan modes |
+| Fixed settings | `jit` off, no parallel workers, UTC, `track_io_timing` on; planner settings at server defaults |
+| Rounds | 3 warm-up + 15 measured rounds, interleaved across the compared configurations |
+| Verdict rule | IQRs must not overlap **and** the faster median ≤ 90 % of the slower; below 0.1 ms the direction must repeat in a second session |
+| Excluded | Forced-plan timings never carry a verdict; only within-session interleaved ratios are compared |
+
+---
+
+## 18. Skills Demonstrated
+
+- PostgreSQL regular expressions (POSIX ARE) and text parsing
+- Deterministic, set-based SQL design
+- Data validation and answer-key driven testing
+- Relational schema design with domains, CHECKs and foreign keys
+- JSON / JSONB modelling, querying and indexing
+- GIN, btree expression and spatial index strategy
+- PostGIS geometry / geography and spatial query planning
+- Performance measurement with `EXPLAIN (ANALYZE, BUFFERS)`
+- Statistical comparison rules and measurement hygiene
+- WAL, TOAST and buffer analysis
+- Data integrity: fingerprints, digests, SHA-256 manifests
+- Reproducible automation with runners and guarded scripts
+- Technical documentation and self-auditing
+- Git version control and repository management
+
+---
+
+## 19. Limitations and Scope
+
+All performance conclusions are scoped to **this dataset and environment** and are not general PostgreSQL rules:
+
+- 5,000 rows / 5,000 documents of about 1.7 kB; spatial tables of 31–39 pages
+- One Windows laptop, PostgreSQL 17.9, PostGIS 3.6.2, default planner settings
+- Warm cache, single client, no concurrency and no replication
+- Storage results depend on the TOAST inline-compression threshold of this data
+- The BRIN result depends on the 39-page table size vs the default `pages_per_range`
+- **Not measured:** write and maintenance cost of spatial indexes, concurrency, cold cache, larger volumes, real (non-synthetic) logs
+
+---
+
+## 20. Future Work
+
+- Validate the parser against real access logs with an independently produced answer key
+- Repeat the JSON experiment with larger documents, out-of-line TOAST and `lz4` compression
+- Measure write and maintenance cost of spatial indexes and generated columns
+- Repeat the spatial experiment at larger table sizes and with other `pages_per_range` values
+- Compare the flat table directly against jsonb for the same filters
+- Test cold cache, concurrency and other PostgreSQL / PostGIS versions
+
+---
+
+## 21. Project Summary
+
+| Component | Status |
+|---|---|
+| Synthetic dataset and answer key | ✅ Completed |
+| Regex parser (F1–F5 + NONE) | ✅ Completed — 50,000 / 50,000 |
+| Parser validation (T-01 … T-10) | ✅ Completed — 10 / 10 PASS |
+| Flat typed schema | ✅ Completed — 57 / 57 checks |
+| JSON vs JSONB experiment | ✅ Completed — Step 6F conclusion |
+| PostGIS spatial index experiment | ✅ Completed — 943 PASS |
+| Results analysis and conclusion | ✅ Completed — Step 7E |
+| Cleanup and final state | ✅ Completed — 343 PASS |
+| Final project conclusion | ✅ Completed |
+| Independent read-only audit | ✅ Completed — PASS WITH WARNINGS |
+
+---
+
+## 22. Relationship to the Rest of This Repository
+
+This project is a sibling of the other assignments at the repository root. It is **independent** of `packers_movers_synthetic_data/`, a separate, completed analytics project against the `relocation_services` database, which is not affected by anything here.
+
+---
+
+# Author
+
+**Akash More**
+
+**Data Engineer**
+
+GitHub Repository:
+
+https://github.com/Akash-web750/aws-data-engineering-assignments
+
+---
+
+# License
+
+This project is licensed under the MIT License.
+
+---
+
+# Acknowledgement
+
+This project was created for learning, portfolio development, interview preparation, and practical experience with PostgreSQL regular expressions, JSON / JSONB modelling and indexing, PostGIS spatial indexing, and disciplined performance measurement.
+
+*All figures in this README are actual recorded output from the project's verification and measurement runs. No value is estimated or invented.*
