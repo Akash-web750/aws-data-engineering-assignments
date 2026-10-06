@@ -1,0 +1,62 @@
+# =============================================================================
+# Assignment 7 - files that must never reach a public repository
+# =============================================================================
+
+# ---- Secrets, credentials, local configuration ------------------------------
+.env
+.env.*
+*.env
+!config/pipeline.example.env
+credentials
+credentials.*
+.aws/
+*.pem
+*.key
+*.crt
+*.p8
+*.p12
+*.pfx
+config.toml
+connections.toml
+
+# Account-specific Snowflake trust policy (contains the storage-integration
+# external ID). Commit only infra/aws/iam/snowflake-trust-policy.example.json.
+infra/aws/iam/snowflake-trust-policy.json
+
+# ---- Generated data ----------------------------------------------------------
+*.csv
+generated/
+
+# ---- Build / deployment artifacts --------------------------------------------
+build/
+dist/
+*.zip
+packaged-template.yaml
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# ---- Python -------------------------------------------------------------------
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+coverage/
+.coverage
+htmlcov/
+
+# ---- Node (not used, but never commit dependencies) ---------------------------
+node_modules/
+
+# ---- Logs, temporary and local-only files ------------------------------------
+*.log
+local/
+tmp/
+temp/
+
+# ---- OS / editor --------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

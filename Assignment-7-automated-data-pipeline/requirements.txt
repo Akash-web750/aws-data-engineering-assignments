@@ -1,0 +1,4 @@
+# Local scripts (deploy, backfill, E2E validation)
+boto3>=1.34
+snowflake-connector-python>=3.10
+python-dotenv>=1.0
