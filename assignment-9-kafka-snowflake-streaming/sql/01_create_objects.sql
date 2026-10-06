@@ -225,3 +225,50 @@ SELECT
     -- Columns added by schema evolution, from the application audit log.
     (SELECT COUNT(*) FROM SCHEMA_EVOLUTION_LOG
       WHERE TARGET_TABLE = 'ORDER_EVENTS')                                AS COLUMNS_ADDED;
+
+-- -----------------------------------------------------------------------------
+-- View: one row per business event (EVENT_ID).
+--
+-- ADDED for the PostgreSQL CDC enhancement. It is a NEW view; the table and
+-- the two views above are not changed by it.
+--
+-- WHY A SECOND DE-DUPLICATED VIEW
+--   ORDER_EVENTS_LATEST removes a Kafka message that was LOADED twice: it
+--   keeps one row per (topic, partition, offset).
+--   With change data capture there is a second way to get a repeat: Debezium
+--   or the CDC bridge can SEND the same event again after a restart. That
+--   repeat is a new Kafka message with a new offset, so ORDER_EVENTS_LATEST
+--   cannot recognise it. The business key EVENT_ID is the same in both
+--   copies, so this view keeps one row per EVENT_ID (the earliest ingested).
+--
+-- A row without EVENT_ID cannot be matched with any other row. COALESCE gives
+-- each such row its own key built from its Kafka position, so those rows are
+-- all kept instead of being collapsed into one.
+--
+-- Like ORDER_EVENTS_LATEST it names the declared columns instead of using
+-- SELECT *, so it keeps working when schema evolution adds columns.
+-- -----------------------------------------------------------------------------
+CREATE OR REPLACE VIEW ORDER_EVENTS_UNIQUE
+    COMMENT = 'One row per business event (EVENT_ID); declared columns only'
+AS
+SELECT
+    EVENT_ID,
+    EVENT_TIME,
+    ORDER_ID,
+    CUSTOMER_ID,
+    PRODUCT,
+    QUANTITY,
+    UNIT_PRICE,
+    STATUS,
+    _KAFKA_TOPIC,
+    _KAFKA_PARTITION,
+    _KAFKA_OFFSET,
+    _KAFKA_TIMESTAMP,
+    _INGESTED_AT,
+    DISCOUNT_PCT
+FROM ORDER_EVENTS
+-- Keep the earliest-ingested copy of each business event.
+QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY COALESCE(EVENT_ID, _KAFKA_TOPIC || ':' || _KAFKA_PARTITION || ':' || _KAFKA_OFFSET)
+    ORDER BY _INGESTED_AT, _KAFKA_PARTITION, _KAFKA_OFFSET
+) = 1;

@@ -9,7 +9,7 @@
 |---|---|
 | Project | Real-time streaming pipeline from a local Kafka broker to Snowflake, with automatic schema evolution |
 | Assignment | **Assignment 3 (Portfolio Assignment 9)**. The assignment brief numbers it 3; the repository folder is numbered 9 for portfolio tracking. Both refer to this project. |
-| Document version | 1.2 |
+| Document version | 1.5 |
 | Last updated | 2026-10-06 |
 | Status | Implemented and verified; see README. |
 | Environment | Local Windows 11 machine (Kafka, producer, consumer) + existing Snowflake account on AWS |
@@ -538,3 +538,129 @@ These are behaviours of Snowflake or Kafka that the design depends on. **Each on
 6. Consumer loop, offset commits, dead-letter path; unit tests.
 7. End-to-end test and the schema evolution demo.
 8. `README.md` with the evidence (command and query output).
+
+---
+
+## 20. Enhancement: PostgreSQL Source Database
+
+This section extends the specification. Sections 1 to 19 are unchanged and still describe the Kafka → Snowflake pipeline.
+
+**Goal.** Give the order events a relational source. The target flow is:
+
+```
+PostgreSQL source DB -> CDC (section 21) -> Kafka -> existing Python consumer -> Snowflake
+```
+
+**Scope of this step.** PostgreSQL connection, a new database, the source table, a one-time load of the existing events, and verification. CDC was specified and implemented afterwards as its own step (section 21).
+
+| Item | Decision |
+|---|---|
+| Server | Local PostgreSQL, `localhost:5432` |
+| Database | `kafka_source_db`, created for this project. No existing database is used or changed |
+| Table | `order_events`, defined in `sql/postgres/01_create_source_table.sql` |
+| Primary key | `event_id` (UUID), the business key shared with Kafka and Snowflake |
+| Columns | The business fields of all three schema versions, typed to match Snowflake (`unit_price NUMERIC(12,2)`, `discount_pct NUMERIC(5,2)`, `shipping_address JSONB`); the original Kafka position of copied rows; `record_source`; `created_at`, `updated_at` |
+| Credentials | Read from the environment or the git-ignored `.env`. No password in the source code; `.env.example` lists the keys with the password empty |
+| Initial data | The existing events are copied once from Snowflake `ORDER_EVENTS` by `source_db/backfill_from_snowflake.py`. Read-only on Snowflake; nothing is sent to Kafka |
+| Idempotency | The load stops if the rows are already present, uses `ON CONFLICT (event_id) DO NOTHING`, and runs in one transaction |
+| Marker for CDC | Copied rows carry `record_source = 'project3_backfill'`, because they are already in Snowflake |
+| Impact on the existing pipeline | None. Producer, consumer, loader, Kafka topics and Snowflake objects are not modified |
+
+**Acceptance for this step.**
+
+1. PostgreSQL is reachable with the configured login.
+2. The database `kafka_source_db` exists.
+3. The table `order_events` exists.
+4. It holds exactly the 300 existing events.
+5. There are no duplicate event ids.
+6. Snowflake `ORDER_EVENTS` still holds 300 rows.
+
+Evidence for each is in README section 11.
+
+---
+
+## 21. Enhancement: Change Data Capture from PostgreSQL
+
+This section extends the specification. Sections 1 to 19 still describe the Kafka → Snowflake pipeline, which this enhancement does not modify.
+
+**Goal.** A row inserted into PostgreSQL `kafka_source_db.order_events` reaches Snowflake `ORDER_EVENTS` without any manual step, through the existing Kafka topic and the existing consumer.
+
+```
+PostgreSQL -> Debezium (Kafka Connect, standalone) -> Kafka pgcdc.public.order_events
+           -> CDC bridge -> Kafka order_events -> existing consumer -> Snowflake
+```
+
+### 21.1 Decisions
+
+| Item | Decision | Reason |
+|---|---|---|
+| CDC tool | Debezium PostgreSQL connector, `pgoutput` | Log-based; `pgoutput` is built into PostgreSQL |
+| Runtime | Kafka Connect in standalone mode | Ships with the installed Kafka; no Docker. Standalone keeps its position in a local file and needs no extra compacted topics, which are a risk on the Windows broker |
+| Transformation | A separate Python bridge, `cdc/` | Keeps `consumer/`, `producer/` and the Snowflake loader unchanged, and makes the conversion unit-testable |
+| Operations | INSERT only in version 1. UPDATE and DELETE are intentionally excluded | `ORDER_EVENTS` is append-only; updates and deletes have no defined meaning there yet |
+| Existing rows | Never published | They are already in Snowflake |
+| Technical columns | Removed by the bridge | They must not become Snowflake columns |
+| New business columns | Forwarded | Snowflake schema evolution keeps working across the new source |
+| Unusable messages | Existing dead-letter topic `order_events_dlq` | No new topic needed |
+| Duplicates | New view `ORDER_EVENTS_UNIQUE`, one row per `EVENT_ID` | A re-sent event has a new Kafka offset, which `ORDER_EVENTS_LATEST` cannot recognise |
+| Snowflake table | Unchanged | No change is required |
+
+### 21.2 Protection of the existing 300 rows
+
+1. Debezium `snapshot.mode=no_data`.
+2. Publication `order_events_cdc_pub`: `WHERE (record_source <> 'project3_backfill') WITH (publish = 'insert')`; `publication.autocreate.mode=disabled`.
+3. The bridge forwards only operation `c` and drops rows marked `project3_backfill`.
+4. Gate: the CDC topic holds no message after Debezium's first start, checked before the bridge is started.
+
+### 21.3 Message contract
+
+The bridge writes to `order_events` exactly what `producer/event_factory.py` produces: the same field names, order, JSON types and timestamp format, with the order id as the message key. Technical columns (`record_source`, `source_kafka_*`, `created_at`, `updated_at`) are removed, null columns are omitted, and any other column is forwarded unchanged.
+
+### 21.4 Delivery
+
+At-least-once at every stage. The bridge commits its position in the CDC topic only after Kafka has confirmed the forwarded messages and any dead letters.
+
+The bridge writes its log output through a queue, so that a console which accepts no output cannot hold the main loop between forwarding an event and committing the position (README section 12, "An incident in the first live run").
+
+### 21.5 Infrastructure changes this enhancement requires
+
+| Change | Scope | Reversible |
+|---|---|---|
+| `wal_level = logical` | Whole PostgreSQL server; needs a service restart by an administrator | Yes (`ALTER SYSTEM RESET` and restart) |
+| `max_slot_wal_keep_size` (recommended) | Whole server; reload only | Yes |
+| Login `cdc_user`, publication, replication slot | `kafka_source_db` (the login is stored per server) | Yes (`sql/postgres/99_cdc_teardown.sql`) |
+| Kafka topics `pgcdc.public.order_events`, `__debezium-heartbeat.pgcdc` | Local broker; created, never deleted | Left in place |
+| One Java process for Kafka Connect, one Python process for the bridge | Local machine | Yes (stop them) |
+| Snowflake view `ORDER_EVENTS_UNIQUE` | Additive | Yes (drop the view) |
+
+### 21.6 Acceptance for the enabling phase
+
+1. After Debezium's first start the CDC topic contains no message, and PostgreSQL and Snowflake both still hold 300 rows.
+2. One row inserted into PostgreSQL produces exactly one message in the CDC topic, one in `order_events`, and one new row in Snowflake (301 in each).
+3. The new row's values in Snowflake equal the inserted values.
+4. `ORDER_EVENTS` gains no column.
+5. An update or a delete in PostgreSQL produces no Kafka message.
+6. Restarting Kafka Connect publishes none of the existing rows.
+
+Status of each is recorded in README section 12.
+
+### 21.7 Result (2026-10-06)
+
+The enhancement is implemented and live.
+
+| # | Acceptance point | Result |
+|---|---|---|
+| 1 | No message in the CDC topic after Debezium's first start; 300 rows on both sides | Met |
+| 2 | One inserted row gives one CDC message, one `order_events` message and one Snowflake row | Met, twice: 300 → 301 → 302 on both sides |
+| 3 | The new row's values in Snowflake equal the inserted values | Met |
+| 4 | `ORDER_EVENTS` gains no column | Met: still 18 columns |
+| 5 | An update or a delete in PostgreSQL produces no Kafka message | Met for an update of a publishable row and for the delete of a temporary row; that temporary row was also excluded by the row filter |
+| 6 | Restarting Kafka Connect publishes none of the existing rows | Not exercised: Kafka Connect was not restarted. The bridge was restarted twice and forwarded nothing again |
+
+### 21.8 Limitations of version 1
+
+- INSERT only. UPDATE and DELETE are intentionally excluded; a row changed or removed in PostgreSQL is not changed in Snowflake.
+- Kafka Connect with Debezium, the bridge and the consumer must all be running for a row to reach Snowflake. Rows inserted while Kafka Connect is stopped are delivered when it starts again.
+- A replication slot that is not read makes PostgreSQL keep its log; `max_slot_wal_keep_size` bounds this, at the price of an invalidated slot if the limit is exceeded.
+- Delivery is at-least-once; `ORDER_EVENTS_UNIQUE` removes a repeated event.
+- Kafka topics must not be deleted on this Windows broker.

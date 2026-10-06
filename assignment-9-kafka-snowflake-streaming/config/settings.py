@@ -201,3 +201,133 @@ def require_snowflake_connection_name() -> str:
             "set it to the name of your connection in the Snowflake config.toml."
         )
     return SNOWFLAKE_CONNECTION_NAME
+
+
+# ----------------------------------------------------------------------------
+# PostgreSQL source database (enhancement: future source of the order events)
+# ----------------------------------------------------------------------------
+# These settings are used only by the ``source_db`` package. The existing
+# producer, consumer and Snowflake loader do not read them.
+
+# A PostgreSQL identifier we are willing to place directly into SQL text
+# (CREATE DATABASE cannot take the name as a bind variable). Lower case only,
+# which is how PostgreSQL stores unquoted names.
+_PG_IDENTIFIER_PATTERN = re.compile(r"^[a-z_][a-z0-9_]*$")
+
+
+def validate_pg_identifier(value: str, setting_name: str = "identifier") -> str:
+    """Return ``value`` if it is a safe, lower-case PostgreSQL identifier.
+
+    Raises:
+        ValueError: if the value contains anything other than lower-case
+            letters, digits and ``_``, or starts with a digit.
+    """
+    if not _PG_IDENTIFIER_PATTERN.match(value):
+        raise ValueError(
+            f"{setting_name} must be a plain lower-case PostgreSQL identifier "
+            f"(letters, digits and _), got {value!r}"
+        )
+    return value
+
+
+# Where the PostgreSQL server listens.
+POSTGRES_HOST: str = _get("POSTGRES_HOST", "localhost")
+POSTGRES_PORT: int = _get_int("POSTGRES_PORT", 5432)
+
+# Login name. The PASSWORD deliberately has no default and must come from the
+# environment or the git-ignored .env file; it is never written in the code.
+POSTGRES_USER: str = _get("POSTGRES_USER", "postgres")
+POSTGRES_PASSWORD: str = _get("POSTGRES_PASSWORD", "")
+
+# Database created for this project. No other database is created or changed.
+POSTGRES_DATABASE: str = validate_pg_identifier(_get("POSTGRES_DATABASE", "kafka_source_db"), "POSTGRES_DATABASE")
+
+# Existing database used ONLY as the place to connect to when issuing
+# CREATE DATABASE (a database cannot be created from inside itself).
+# Nothing is created or changed in it.
+POSTGRES_MAINTENANCE_DATABASE: str = validate_pg_identifier(
+    _get("POSTGRES_MAINTENANCE_DATABASE", "postgres"), "POSTGRES_MAINTENANCE_DATABASE"
+)
+
+# Source table inside POSTGRES_DATABASE (defined in sql/postgres/01_create_source_table.sql).
+POSTGRES_TABLE: str = "order_events"
+
+# Value of order_events.record_source for the rows copied once from the
+# Project 3 production demo. Future CDC uses it to tell these rows, which are
+# ALREADY in Snowflake, from rows created later in PostgreSQL.
+POSTGRES_BACKFILL_SOURCE: str = "project3_backfill"
+
+
+def require_postgres_password() -> str:
+    """Return the configured PostgreSQL password.
+
+    Raises:
+        RuntimeError: if ``POSTGRES_PASSWORD`` is not set, with a message that
+            says where to put it, instead of an obscure login failure later.
+    """
+    if not POSTGRES_PASSWORD:
+        raise RuntimeError(
+            "POSTGRES_PASSWORD is not set. Add it to the .env file in the project root "
+            "(see .env.example). The password is never stored in the source code."
+        )
+    return POSTGRES_PASSWORD
+
+
+# ----------------------------------------------------------------------------
+# Change data capture (CDC): PostgreSQL -> Debezium -> Kafka -> CDC bridge
+# ----------------------------------------------------------------------------
+# Used only by the ``cdc`` package and its scripts. The existing producer,
+# consumer and Snowflake loader do not read these settings.
+
+# Prefix Debezium puts in front of its topic names. Debezium names a table's
+# topic "<prefix>.<schema>.<table>", which gives CDC_SOURCE_TOPIC below.
+CDC_TOPIC_PREFIX: str = _get("CDC_TOPIC_PREFIX", "pgcdc")
+
+# Topic Debezium writes the raw change events to; the bridge reads it.
+CDC_SOURCE_TOPIC: str = _get("CDC_SOURCE_TOPIC", f"{CDC_TOPIC_PREFIX}.public.{POSTGRES_TABLE}")
+
+# Topic the bridge writes to: the EXISTING order-events topic, so the existing
+# consumer picks the messages up without any change.
+CDC_TARGET_TOPIC: str = _get("CDC_TARGET_TOPIC", KAFKA_TOPIC)
+
+# Consumer group of the bridge. Kafka stores the bridge's position in the CDC
+# topic under this name, which is how a restarted bridge resumes.
+CDC_BRIDGE_GROUP_ID: str = _get("CDC_BRIDGE_GROUP_ID", "cdc-bridge")
+
+# The bridge confirms its work (flush to Kafka, then commit its position)
+# after this many forwarded change events, or sooner when the topic is quiet.
+CDC_BRIDGE_COMMIT_EVERY: int = _get_int("CDC_BRIDGE_COMMIT_EVERY", 100)
+
+# PostgreSQL columns that exist for bookkeeping only. The bridge removes them
+# from every message, so they never reach Kafka's order-events topic and never
+# become columns in Snowflake through schema evolution. Any OTHER column,
+# including one added to the table later, is forwarded.
+CDC_TECHNICAL_COLUMNS: frozenset[str] = frozenset(
+    {
+        "record_source",
+        "source_kafka_topic",
+        "source_kafka_partition",
+        "source_kafka_offset",
+        "source_kafka_timestamp",
+        "created_at",
+        "updated_at",
+    }
+)
+
+# Dedicated PostgreSQL login for Debezium (created by sql/postgres/02_cdc_setup.sql).
+# Like every password in this project, POSTGRES_CDC_PASSWORD has no default
+# and lives only in the git-ignored .env file.
+POSTGRES_CDC_USER: str = validate_pg_identifier(_get("POSTGRES_CDC_USER", "cdc_user"), "POSTGRES_CDC_USER")
+POSTGRES_CDC_PASSWORD: str = _get("POSTGRES_CDC_PASSWORD", "")
+
+# Names of the PostgreSQL objects CDC uses. They must match
+# sql/postgres/02_cdc_setup.sql and cdc/debezium-postgres.properties.
+POSTGRES_CDC_PUBLICATION: str = "order_events_cdc_pub"
+POSTGRES_CDC_SLOT: str = "order_events_cdc_slot"
+
+# Address of the Kafka Connect REST interface (local only); used to read the
+# connector's status.
+CONNECT_REST_URL: str = _get("CONNECT_REST_URL", "http://localhost:8083")
+
+# Name of the Debezium connector inside Kafka Connect (see cdc/debezium-postgres.properties).
+CONNECT_CONNECTOR_NAME: str = "order-events-postgres-cdc"

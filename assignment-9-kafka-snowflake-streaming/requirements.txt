@@ -9,3 +9,8 @@ snowflake-connector-python>=3.12
 
 # Loads the optional .env file read by config/settings.py.
 python-dotenv>=1.0
+
+# PostgreSQL driver, used only by the source_db package (PostgreSQL source
+# database). The [binary] extra bundles the client library, so no separate
+# PostgreSQL client installation is needed.
+psycopg[binary]>=3.1
