@@ -1,0 +1,25 @@
+# Snowflake CLI project definition for the Employee Manager Streamlit app.
+# Deploy with:  snow streamlit deploy employee_manager --replace -c <connection>
+definition_version: 2
+entities:
+  employee_manager:
+    type: streamlit
+    # Where the app object is created (schema from sql/01_create_objects.sql).
+    identifier:
+      name: EMPLOYEE_MANAGER
+      database: AI_OPERATOR_DB
+      schema: EMPLOYEE_APP
+    # Warehouse that runs the app and its queries.
+    query_warehouse: EMPLOYEE_APP_WH
+    title: "Employee Manager"
+    comment: "Assignment 8: view, filter, add and edit employees"
+    # Entry point, followed by every file the app needs at run time.
+    # No package file is listed: the app runs on the container runtime, whose
+    # pre-installed Streamlit, Snowpark and pandas are all the app needs.
+    main_file: streamlit_app.py
+    artifacts:
+      - streamlit_app.py
+      - config.py
+      - employee_repository.py
+      - filters.py
+      - validation.py

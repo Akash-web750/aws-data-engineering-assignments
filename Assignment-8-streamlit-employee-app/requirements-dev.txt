@@ -1,0 +1,11 @@
+# Packages for running the app and its tests on a local machine.
+# The deployed app does not use this file: Streamlit in Snowflake provides
+# Streamlit, Snowpark and pandas in its container runtime.
+
+# The app needs st.dialog, which was added in Streamlit 1.37.
+streamlit>=1.37
+snowflake-snowpark-python
+pandas
+
+# Test runner.
+pytest

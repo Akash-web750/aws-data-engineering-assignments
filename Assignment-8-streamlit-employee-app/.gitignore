@@ -1,0 +1,57 @@
+# =============================================================================
+# Assignment 8 - files that must never reach the repository
+# =============================================================================
+
+# ---- Secrets, credentials and local Snowflake configuration ------------------
+.env
+.env.*
+*.env
+config.toml
+connections.toml
+.snowflake/
+.streamlit/secrets.toml
+credentials
+credentials.*
+*.pem
+*.key
+*.p8
+*.p12
+*.pfx
+
+# ---- Snowflake CLI build output -----------------------------------------------
+output/
+
+# ---- Python -------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+
+# ---- Test and tool artifacts --------------------------------------------------
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+test-results/
+
+# ---- Logs and temporary files -------------------------------------------------
+*.log
+*.tmp
+*.bak
+tmp/
+temp/
+
+# ---- IDE and editor files -----------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ---- OS-generated files -------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
