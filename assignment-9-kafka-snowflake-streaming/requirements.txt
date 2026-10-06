@@ -2,7 +2,9 @@
 # Install with:  pip install -r requirements.txt
 
 # Kafka client (producer, consumer, admin). Ships pre-built Windows wheels.
-confluent-kafka>=2.6
+# 2.15.1 is the version the CDC bridge's consumer settings (max.poll.records)
+# were verified with; an older client may not know that setting.
+confluent-kafka>=2.15.1
 
 # Snowflake driver: runs PUT, COPY INTO and the audit-log inserts.
 snowflake-connector-python>=3.12

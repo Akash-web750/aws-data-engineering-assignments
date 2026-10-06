@@ -86,8 +86,9 @@ class FakeCdcConsumer:
         self.seeks: list[tuple[int, int]] = []
         self.closed = False
 
-    def subscribe(self, topics, on_revoke=None) -> None:
-        """Remember the subscription."""
+    def subscribe(self, topics, on_revoke=None, on_lost=None) -> None:
+        """Remember the subscription and the two rebalance callbacks."""
+        self.on_revoke, self.on_lost = on_revoke, on_lost
         self.events.append(("subscribe", tuple(topics)))
 
     def poll(self, timeout):
@@ -99,8 +100,11 @@ class FakeCdcConsumer:
         return None
 
     def commit(self, offsets, asynchronous) -> None:
-        """Record a commit as {partition: next offset}."""
+        """Record a commit as {partition: next offset}, or refuse it if told to."""
         assert asynchronous is False, "commits must be synchronous"
+        if getattr(self, "commit_error", None) is not None:
+            self.events.append(("commit_refused",))
+            raise self.commit_error
         committed = {tp.partition: tp.offset for tp in offsets}
         assert all(tp.topic == CDC_TOPIC for tp in offsets), "the bridge may only commit on the CDC topic"
         self.commits.append(committed)
@@ -743,3 +747,178 @@ def test_position_is_committed_right_after_a_forward_on_a_quiet_topic(parts):
     consumer.on_empty = on_empty
     bridge.run()
     assert committed_while_running[1] == [{0: 1}]
+
+
+# ===========================================================================
+# Part 4: poll interval, lost partitions and rebalances
+# ===========================================================================
+#
+# Background (observed live on 2026-10-06): a bridge whose main loop was held
+# up for more than five minutes logged
+#     Application maximum poll interval (300000ms) exceeded by 95ms
+#     Checkpoint during rebalance failed
+#     KafkaError{code=UNKNOWN_MEMBER_ID,...,str="Commit failed: Broker: Unknown member"}
+# Kafka had removed it from its consumer group, and its commit was refused.
+
+def test_consumer_allows_ten_minutes_between_polls():
+    """The poll interval is raised from the Kafka default of 5 minutes to 10 minutes."""
+    from cdc.bridge import cdc_consumer_config
+
+    config = cdc_consumer_config()
+    assert config["max.poll.interval.ms"] == 600000
+    assert config["max.poll.interval.ms"] == settings.CDC_BRIDGE_MAX_POLL_INTERVAL_MS
+
+
+def test_consumer_caps_the_records_per_poll():
+    """One poll cannot hand over more than one checkpoint batch of change events."""
+    from cdc.bridge import cdc_consumer_config
+
+    config = cdc_consumer_config()
+    assert config["max.poll.records"] == 100
+    assert config["max.poll.records"] == settings.CDC_BRIDGE_MAX_POLL_RECORDS
+    assert config["max.poll.records"] <= settings.CDC_BRIDGE_COMMIT_EVERY
+
+
+def test_poll_interval_is_far_above_the_slowest_normal_loop_pass():
+    """The limit must never be reached by the work of the bridge itself.
+
+    The slowest pass through the main loop is a failed checkpoint: one flush
+    of forwarded messages, one flush of dead letters, the longest retry pause,
+    and the next poll. The poll interval leaves at least three times that.
+    """
+    from cdc.bridge import FLUSH_SECONDS, POLL_SECONDS, cdc_consumer_config
+
+    slowest_pass_seconds = 2 * FLUSH_SECONDS + settings.RETRY_MAX_SECONDS + POLL_SECONDS
+    assert cdc_consumer_config()["max.poll.interval.ms"] / 1000 >= 3 * slowest_pass_seconds
+
+
+def test_fix_keeps_the_delivery_settings_unchanged():
+    """Manual commits, the consumer group and the start position are as before."""
+    from cdc.bridge import cdc_consumer_config
+
+    config = cdc_consumer_config()
+    assert config["enable.auto.commit"] is False            # the bridge still commits itself
+    assert config["group.id"] == settings.CDC_BRIDGE_GROUP_ID == "cdc-bridge"
+    assert config["auto.offset.reset"] == "earliest"
+    # Nothing that would switch off group membership or rebalancing was added.
+    assert not {"group.instance.id", "partition.assignment.strategy", "session.timeout.ms"} & set(config)
+
+
+def test_consumer_is_created_from_exactly_that_configuration(monkeypatch):
+    """create_cdc_consumer passes the tested configuration to the Kafka client unchanged."""
+    import cdc.bridge as bridge_module
+
+    captured: list[dict] = []
+    monkeypatch.setattr(bridge_module, "Consumer", lambda config: captured.append(config) or "client")
+    assert bridge_module.create_cdc_consumer() == "client"
+    assert captured == [bridge_module.cdc_consumer_config()]
+
+
+def test_scratch_group_can_be_requested_without_changing_other_settings():
+    """A different group id changes only the group id."""
+    from cdc.bridge import cdc_consumer_config
+
+    default, other = cdc_consumer_config(), cdc_consumer_config(group_id="some-other-group")
+    assert other["group.id"] == "some-other-group"
+    assert {k: v for k, v in other.items() if k != "group.id"} == {k: v for k, v in default.items() if k != "group.id"}
+
+
+def test_bridge_registers_both_rebalance_callbacks(parts):
+    """The bridge handles a normal revoke and a lost partition separately."""
+    bridge, consumer, _, _, _, _ = parts()
+    consumer.on_empty = bridge.stop
+    bridge.run()
+    assert consumer.on_revoke == bridge._on_partitions_revoked
+    assert consumer.on_lost == bridge._on_partitions_lost
+
+
+def test_normal_revoke_still_checkpoints_before_the_partition_is_handed_over(parts):
+    """An ordinary rebalance: confirm the forwards, then commit, exactly as before the fix."""
+    bridge, consumer, _, _, events, _ = parts()
+    bridge.handle_message(insert(7))
+    bridge._on_partitions_revoked(consumer, [])
+    assert kinds(events) == ["produce", "flush", "dlq_flush", "commit"]
+    assert consumer.commits == [{0: 8}]
+
+
+def test_lost_partition_does_not_attempt_a_commit(parts):
+    """After max.poll.interval.ms is exceeded the bridge is no longer a member: no commit is tried."""
+    bridge, consumer, _, _, events, _ = parts()
+    bridge.handle_message(insert(7))
+    bridge._on_partitions_lost(consumer, [])                # must not raise
+    assert consumer.commits == []
+    assert "commit" not in kinds(events) and "commit_refused" not in kinds(events)
+    assert bridge._pending_count() == 0                     # the uncommitted stretch is forgotten
+
+
+def test_lost_partition_loses_no_event_it_is_read_and_forwarded_again(parts):
+    """At-least-once is kept: the uncommitted event is re-read, forwarded again and then committed."""
+    bridge, consumer, producer, _, _, _ = parts()
+    bridge.handle_message(insert(7))                        # forwarded, not yet committed
+    bridge._on_partitions_lost(consumer, [])                # removed from the group
+    bridge.handle_message(insert(7))                        # after rejoining, Kafka delivers it again
+    assert bridge.checkpoint() is True
+    assert consumer.commits == [{0: 8}]
+    assert len(producer.sent) == 2
+    # Both copies carry the same event_id, which is what ORDER_EVENTS_UNIQUE removes.
+    first, second = (json.loads(sent["value"])["event_id"] for sent in producer.sent)
+    assert first == second
+
+
+def test_commit_refused_with_unknown_member_does_not_crash_the_bridge(parts):
+    """The exact failure from the live log: the refused commit is survived and nothing is committed."""
+
+    class UnknownMember(Exception):
+        """Stands in for KafkaError UNKNOWN_MEMBER_ID ("Commit failed: Broker: Unknown member")."""
+
+    bridge, consumer, _, _, events, _ = parts()
+    consumer.commit_error = UnknownMember("Commit failed: Broker: Unknown member")
+    bridge.handle_message(insert(7))
+    bridge._on_partitions_revoked(consumer, [])             # must not raise into the Kafka client
+    assert consumer.commits == []
+    assert kinds(events)[-1] == "commit_refused"
+    assert bridge._pending_count() == 0
+    # Once the bridge is a member again, the re-read event is committed normally.
+    consumer.commit_error = None
+    bridge.handle_message(insert(7))
+    assert bridge.checkpoint() is True
+    assert consumer.commits == [{0: 8}]
+
+
+def test_poll_interval_error_event_does_not_stop_the_bridge(parts):
+    """Kafka reports the exceeded interval as a non-fatal error event; the loop carries on."""
+
+    class PollIntervalExceeded:
+        """Stands in for KafkaError _MAX_POLL_EXCEEDED."""
+
+        def fatal(self) -> bool:
+            """This error does not make the client unusable."""
+            return False
+
+        def __str__(self) -> str:
+            """Text as the client reports it."""
+            return "Application maximum poll interval (300000ms) exceeded by 95ms"
+
+    class ErrorEvent(FakeMessage):
+        """A poll result that carries an error instead of a change event."""
+
+        def error(self):
+            """Return the poll-interval error."""
+            return PollIntervalExceeded()
+
+    messages = [ErrorEvent(0, None), insert(0), insert(1)]
+    bridge, consumer, producer, _, _, _ = parts(messages=messages)
+    consumer.on_empty = bridge.stop
+    bridge.run()                                            # must not raise
+    assert len(producer.sent) == 2                          # the events after the error were forwarded
+    assert consumer.commits[-1] == {0: 2}
+
+
+def test_dead_letter_handling_is_unchanged_by_the_fix(parts):
+    """An unusable message still goes to the dead-letter topic and is committed past."""
+    bridge, consumer, producer, dead_letter, _, _ = parts()
+    bridge.handle_message(FakeMessage(3, b"not a change event"))
+    assert bridge.checkpoint() is True
+    assert producer.sent == []
+    assert [offset for offset, _ in dead_letter.published] == [3]
+    assert consumer.commits == [{0: 4}]

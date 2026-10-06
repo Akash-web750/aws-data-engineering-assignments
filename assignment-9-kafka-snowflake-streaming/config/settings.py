@@ -298,6 +298,22 @@ CDC_BRIDGE_GROUP_ID: str = _get("CDC_BRIDGE_GROUP_ID", "cdc-bridge")
 # after this many forwarded change events, or sooner when the topic is quiet.
 CDC_BRIDGE_COMMIT_EVERY: int = _get_int("CDC_BRIDGE_COMMIT_EVERY", 100)
 
+# Longest time the bridge's main loop may go without asking Kafka for the next
+# change event (milliseconds) before Kafka decides the bridge is stuck, removes
+# it from its consumer group and hands its partition to someone else.
+# The Kafka default is 300000 (5 minutes). The bridge's slowest normal loop
+# pass is far shorter (two flushes of up to 30 s each plus one retry pause of
+# up to RETRY_MAX_SECONDS), so 10 minutes leaves a wide margin for a slow
+# machine or a short stall, while a bridge that is really stuck is still
+# detected. Must stay above that slowest loop pass; a unit test checks it.
+CDC_BRIDGE_MAX_POLL_INTERVAL_MS: int = _get_int("CDC_BRIDGE_MAX_POLL_INTERVAL_MS", 600000)
+
+# Upper limit on the records one poll hands to the application. The bridge
+# takes one change event per poll and checkpoints every CDC_BRIDGE_COMMIT_EVERY
+# events, so the work between two polls is already small; this caps it
+# explicitly at the same size as one checkpoint batch.
+CDC_BRIDGE_MAX_POLL_RECORDS: int = _get_int("CDC_BRIDGE_MAX_POLL_RECORDS", 100)
+
 # PostgreSQL columns that exist for bookkeeping only. The bridge removes them
 # from every message, so they never reach Kafka's order-events topic and never
 # become columns in Snowflake through schema evolution. Any OTHER column,

@@ -95,26 +95,48 @@ def configure_logging(console: logging.Handler | None = None) -> logging.handler
     return listener
 
 
+def cdc_consumer_config(group_id: str | None = None) -> dict[str, Any]:
+    """Return the configuration of the Kafka consumer that reads Debezium's change events.
+
+    Kept separate from ``create_cdc_consumer`` so the settings can be unit
+    tested without a broker.
+
+    Args:
+        group_id: Consumer group. Defaults to ``CDC_BRIDGE_GROUP_ID``.
+    """
+    return {
+        "bootstrap.servers": settings.KAFKA_BOOTSTRAP_SERVERS,
+        # The local broker listens on IPv4 only (see producer/producer.py).
+        "broker.address.family": "v4",
+        "group.id": group_id or settings.CDC_BRIDGE_GROUP_ID,
+        # The bridge commits its position itself, and only after the
+        # forwarded messages are confirmed. A timer-based commit could
+        # skip change events that were never forwarded.
+        "enable.auto.commit": False,
+        # A brand-new group starts from the oldest change event, so an
+        # insert made before the bridge first started is not missed. This
+        # is safe because Debezium takes no snapshot: the topic holds only
+        # rows inserted after CDC was switched on.
+        "auto.offset.reset": "earliest",
+        # How long the main loop may go without calling poll() before
+        # Kafka treats the bridge as stuck and removes it from its group.
+        # Observed on 2026-10-06 with the 5-minute default: "Application
+        # maximum poll interval (300000ms) exceeded", after which the
+        # bridge's commit was refused with UNKNOWN_MEMBER_ID. 10 minutes
+        # gives a wide margin over the slowest normal loop pass. Being
+        # removed is never a data loss (see _on_partitions_lost), but it
+        # costs a re-read and can send an event twice.
+        "max.poll.interval.ms": settings.CDC_BRIDGE_MAX_POLL_INTERVAL_MS,
+        # Cap on the records handed over per poll, so the work between two
+        # polls stays small.
+        "max.poll.records": settings.CDC_BRIDGE_MAX_POLL_RECORDS,
+        "client.id": "order-events-cdc-bridge",
+    }
+
+
 def create_cdc_consumer() -> Consumer:
     """Create the Kafka consumer that reads Debezium's change events."""
-    return Consumer(
-        {
-            "bootstrap.servers": settings.KAFKA_BOOTSTRAP_SERVERS,
-            # The local broker listens on IPv4 only (see producer/producer.py).
-            "broker.address.family": "v4",
-            "group.id": settings.CDC_BRIDGE_GROUP_ID,
-            # The bridge commits its position itself, and only after the
-            # forwarded messages are confirmed. A timer-based commit could
-            # skip change events that were never forwarded.
-            "enable.auto.commit": False,
-            # A brand-new group starts from the oldest change event, so an
-            # insert made before the bridge first started is not missed. This
-            # is safe because Debezium takes no snapshot: the topic holds only
-            # rows inserted after CDC was switched on.
-            "auto.offset.reset": "earliest",
-            "client.id": "order-events-cdc-bridge",
-        }
-    )
+    return Consumer(cdc_consumer_config())
 
 
 def create_target_producer() -> Producer:
@@ -198,7 +220,15 @@ class CdcBridge:
         """Run until ``stop`` is called. This is the bridge's main loop."""
         # on_revoke: Kafka is taking the partition away (or we are leaving the
         # group). Confirm and commit what has been handled first.
-        self.kafka.subscribe([self.source_topic], on_revoke=self._on_partitions_revoked)
+        #
+        # on_lost: Kafka has ALREADY taken the partition away, because the
+        # bridge was silent for longer than max.poll.interval.ms. A commit is
+        # no longer possible then, so that case is handled separately.
+        self.kafka.subscribe(
+            [self.source_topic],
+            on_revoke=self._on_partitions_revoked,
+            on_lost=self._on_partitions_lost,
+        )
         logger.info(
             "Bridging %s -> %s (inserts only, checkpoint every %d events). Ctrl+C to stop.",
             self.source_topic, self.target_topic, self.commit_every,
@@ -385,6 +415,29 @@ class CdcBridge:
             # Not committed: whoever owns the partition next reads the events again.
             logger.exception("Checkpoint during rebalance failed; the change events will be re-read.")
             self._forget_pending()
+
+    def _on_partitions_lost(self, consumer: Any, partitions: list[TopicPartition]) -> None:
+        """Kafka callback: the bridge has already been removed from its group.
+
+        This happens when the main loop did not call poll() for longer than
+        ``max.poll.interval.ms`` (the machine slept, the process was frozen,
+        ...). Unlike a normal revoke, the bridge is no longer a member, so
+        Kafka refuses any commit with UNKNOWN_MEMBER_ID. Trying one would only
+        fail, so nothing is committed here.
+
+        Nothing is lost: the position was not committed, so after the bridge
+        rejoins the group it reads the change events since its last checkpoint
+        again and forwards them again (at-least-once). An event that had
+        already been forwarded is then sent twice; both copies carry the same
+        ``event_id``, which is what the view ORDER_EVENTS_UNIQUE removes.
+        """
+        pending = self._pending_count()
+        logger.warning(
+            "Removed from the consumer group: the bridge was silent for too long (max.poll.interval.ms is %d ms). "
+            "%d change event(s) since the last checkpoint were not committed and will be read again.",
+            settings.CDC_BRIDGE_MAX_POLL_INTERVAL_MS, pending,
+        )
+        self._forget_pending()
 
 
 def main() -> None:

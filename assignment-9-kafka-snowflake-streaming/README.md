@@ -967,6 +967,8 @@ No Docker and no AWS resource is used. `consumer/`, `producer/`, the Snowflake l
 | Debezium `skipped.operations` | `u,d,t` | A second guard against updates, deletes and truncates |
 | Debezium `decimal.handling.mode` | `double` | `NUMERIC` arrives as a JSON number, as the producer sends it |
 | Bridge consumer group | `cdc-bridge` | The bridge's position in the CDC topic |
+| Bridge `max.poll.interval.ms` | `600000` (10 minutes) | How long the bridge may go without polling before Kafka removes it from its group. Kafka's default is 5 minutes |
+| Bridge `max.poll.records` | `100` | Upper limit on the records one poll hands over; equal to one checkpoint batch |
 
 Files: `cdc/debezium-postgres.properties`, `cdc/connect-standalone.properties`, `sql/postgres/02_cdc_setup.sql`.
 
@@ -1066,9 +1068,9 @@ State after the final run:
 
 | Suite | Command | Result |
 |---|---|---|
-| Whole unit suite | `python -m pytest tests -q` | 273 passed, 35 live skipped |
+| Whole unit suite | `python -m pytest tests -q` | 286 passed, 35 live skipped |
 | Original Project 3 tests | the test files of commit `b3f5847` | 108 passed, 6 live skipped |
-| CDC unit tests | `tests/test_cdc_transform.py`, `tests/test_cdc_bridge.py` | 134 passed |
+| CDC unit tests | `tests/test_cdc_transform.py`, `tests/test_cdc_bridge.py` | 147 passed |
 | CDC live gate (read-only) | `$env:CDC_LIVE = "1"` | 9 passed, 9 skipped |
 | CDC end to end | `$env:CDC_LIVE = "1"; $env:CDC_LIVE_E2E = "1"` | 10 passed, 8 skipped |
 | PostgreSQL source checks | `$env:PG_SOURCE_LIVE = "1"; $env:PG_SOURCE_COMPARE_SNOWFLAKE = "1"` | 11 passed |
@@ -1104,6 +1106,38 @@ In the first live run the bridge forwarded its event correctly, and the event re
 - **The fix.** The bridge now sends its log output through a queue (`configure_logging` in `cdc/bridge.py`). The main loop only puts the log record into memory and carries on to the commit; a separate thread writes to the console. A regression test (`test_a_blocked_console_does_not_block_the_bridge`) proves a log call returns at once even when the console accepts no output. In the final verification run the bridge committed its position immediately after forwarding.
 
 The existing consumer was not changed. It writes its log lines directly to the console, so a suspended console would pause it as well; it commits before it logs, so nothing would be lost or duplicated, only delayed.
+
+### Follow-up: "maximum poll interval exceeded"
+
+A bridge process that was still running from the first live run (started before the logging fix, so still on the earlier code) later reported:
+
+```
+Application maximum poll interval (300000ms) exceeded by 95ms
+Checkpoint during rebalance failed
+KafkaError{code=UNKNOWN_MEMBER_ID,val=25,str="Commit failed: Broker: Unknown member"}
+```
+
+- **Root cause.** Kafka expects a consumer to ask for the next message at least every `max.poll.interval.ms` (default 5 minutes). The bridge's main loop had been held up for longer than that (see the incident above), so Kafka removed it from its consumer group. Its later attempt to commit was then refused, because it was no longer a member. The bridge's own work never takes that long: its slowest loop pass is about two minutes (two flushes of up to 30 s and one retry pause of up to 60 s).
+- **Was data lost?** No. The position had not been committed, so the bridge read from its last checkpoint again after rejoining. That process went on to forward later inserts correctly.
+- **Change 1: more headroom.** The bridge's consumer now sets `max.poll.interval.ms = 600000` (10 minutes) and `max.poll.records = 100`. Both are settings in `config/settings.py` (`CDC_BRIDGE_MAX_POLL_INTERVAL_MS`, `CDC_BRIDGE_MAX_POLL_RECORDS`).
+- **Change 2: a lost partition is handled as what it is.** Kafka tells a consumer separately when its partition was *lost* (it has already been removed) rather than *revoked* (it is about to hand over). The bridge now registers for both. On a normal revoke it still confirms and commits first, as before. On a loss it does not attempt a commit that can only be refused; it logs one clear warning and re-reads from its last checkpoint.
+- **What did not change.** Manual commits after confirmed delivery, the consumer group, rebalancing, at-least-once delivery, INSERT-only forwarding and dead-letter handling are all as they were. `consumer/` and `producer/` were not touched.
+
+Verification (2026-10-06):
+
+| Check | Result |
+|---|---|
+| Unit tests for the settings, the revoke path, the lost path, the refused commit and the error event | 13 new tests; CDC unit tests 147 passed; whole suite 286 passed |
+| A consumer with the bridge's real settings stays silent for 320 s (longer than the old limit), in a scratch group | No poll-interval error; still assigned its partition |
+| The same consumer with a deliberately short interval, in a scratch group | Kafka reported the exceeded interval, called the *lost* callback (not *revoke*), and the consumer rejoined by itself |
+| Live CDC test with a bridge running the new code | 10 passed, 8 skipped. One row inserted in PostgreSQL (`69ab9bd5-0d8f-44e0-86a1-46afbb5e6cfe`) was captured by Debezium (CDC offset 4, operation `c`), forwarded once by the bridge, and is in Snowflake exactly once |
+| Poll-interval warnings in that bridge's output | None |
+| State afterwards | PostgreSQL 305 rows (300 backfill + 5 application); Snowflake 305 rows, 305 distinct `EVENT_ID`; both views 305; still 18 columns |
+
+Two notes on these settings:
+
+- `max.poll.interval.ms` is a margin, not a cure. A bridge that is held up for longer than 10 minutes is still removed from its group; it then recovers as described above. Raising the limit also means a bridge that is truly stuck is noticed after 10 minutes instead of 5.
+- `max.poll.records` is accepted by the Kafka client used here (confluent-kafka 2.15.1). This bridge takes one change event per poll and checkpoints every 100 events, so no effect of the setting was observed; it documents the intended limit. `requirements.txt` now asks for that client version, because an older client may not know the setting.
 
 ### Running it
 
@@ -1150,6 +1184,7 @@ Changed, additively: `config/settings.py`, `.env.example`, `scripts/create_topic
 | **Replication slot and PostgreSQL's log** | A slot nobody reads makes PostgreSQL keep its log files, for the whole server. `max_slot_wal_keep_size = 2GB` limits this; if Connect stays down long enough to exceed it, the slot is invalidated and the changes in that window must be reconciled by hand. If CDC is to stay off, remove the slot with `sql/postgres/99_cdc_teardown.sql` |
 | **`wal_level = logical` is server-wide** | It applies to every database on this PostgreSQL server and slightly increases log volume |
 | **At-least-once delivery** | A restart of Debezium or the bridge can send an event twice. `ORDER_EVENTS_UNIQUE` removes such repeats; `ORDER_EVENTS` itself would hold both copies |
+| **A bridge held up for more than 10 minutes** | Kafka removes it from its consumer group (`max.poll.interval.ms`). It rejoins by itself and re-reads from its last checkpoint; an event forwarded but not yet committed is then sent a second time |
 | **Console output can pause the existing consumer** | See the incident above. The bridge is protected; the consumer was deliberately left unchanged |
 | **Windows: do not delete Kafka topics** | Topic deletion crashes this broker (section 7.1). No script of this enhancement deletes a topic, and the CDC topics are created without automatic deletion |
 | **New JSONB, date or time columns** | A column of one of these types added to PostgreSQL later needs an entry in `cdc/transform.py`; other new columns are forwarded as they are |

@@ -9,7 +9,7 @@
 |---|---|
 | Project | Real-time streaming pipeline from a local Kafka broker to Snowflake, with automatic schema evolution |
 | Assignment | **Assignment 3 (Portfolio Assignment 9)**. The assignment brief numbers it 3; the repository folder is numbered 9 for portfolio tracking. Both refer to this project. |
-| Document version | 1.5 |
+| Document version | 1.6 |
 | Last updated | 2026-10-06 |
 | Status | Implemented and verified; see README. |
 | Environment | Local Windows 11 machine (Kafka, producer, consumer) + existing Snowflake account on AWS |
@@ -619,6 +619,8 @@ The bridge writes to `order_events` exactly what `producer/event_factory.py` pro
 ### 21.4 Delivery
 
 At-least-once at every stage. The bridge commits its position in the CDC topic only after Kafka has confirmed the forwarded messages and any dead letters.
+
+The bridge's consumer allows 10 minutes between polls (`max.poll.interval.ms = 600000`; the Kafka default is 5) and caps the records per poll at 100. If the bridge is nevertheless removed from its consumer group, it does not attempt a commit, which Kafka would refuse; it rejoins and reads again from its last checkpoint, so no change event is lost and one may be forwarded twice.
 
 The bridge writes its log output through a queue, so that a console which accepts no output cannot hold the main loop between forwarding an event and committing the position (README section 12, "An incident in the first live run").
 
