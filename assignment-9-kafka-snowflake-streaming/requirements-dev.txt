@@ -1,0 +1,8 @@
+# Extra packages needed only to run the tests.
+# Install with:  pip install -r requirements-dev.txt
+
+# The runtime packages are needed by the tests as well.
+-r requirements.txt
+
+# Test runner.
+pytest>=8.0

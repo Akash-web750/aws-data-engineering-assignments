@@ -1,0 +1,11 @@
+# Runtime packages for the producer and the consumer.
+# Install with:  pip install -r requirements.txt
+
+# Kafka client (producer, consumer, admin). Ships pre-built Windows wheels.
+confluent-kafka>=2.6
+
+# Snowflake driver: runs PUT, COPY INTO and the audit-log inserts.
+snowflake-connector-python>=3.12
+
+# Loads the optional .env file read by config/settings.py.
+python-dotenv>=1.0

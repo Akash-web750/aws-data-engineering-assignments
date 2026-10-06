@@ -1,0 +1,18 @@
+# Local configuration: machine-specific, never committed.
+.env
+
+# Python caches and test artefacts.
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Temporary micro-batch files, in case BATCH_DIR is pointed inside the repo.
+batches/
+*.ndjson
+*.json.gz
+
+# Kafka downloads, in case the installer is run from inside the repo.
+*.tgz
+
+# Runtime logs written by the helper scripts.
+logs/
