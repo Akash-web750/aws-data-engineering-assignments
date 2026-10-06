@@ -1,3 +1,4 @@
-# Testing
+# Testing: pytest runs the 75 offline unit tests (tests/unit).
 pytest>=8.0
+# moto is not used by the current tests (the handler tests use a StubS3).
 moto[s3]>=5.0

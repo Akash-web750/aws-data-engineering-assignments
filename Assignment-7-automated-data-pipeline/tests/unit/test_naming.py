@@ -1,3 +1,9 @@
+"""Unit tests for naming.py: S3 key format and batch-hour resolution.
+
+The key format is a contract with Snowflake (stage prefix) and with operators
+(one predictable object per UTC hour), so it is pinned exactly here.
+"""
+
 from datetime import datetime, timezone
 
 import pytest

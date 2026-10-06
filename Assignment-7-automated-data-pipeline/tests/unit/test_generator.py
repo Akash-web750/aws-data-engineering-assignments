@@ -1,3 +1,10 @@
+"""Unit tests for generator.py.
+
+Covers determinism (byte-identical output per hour), CSV structure, volume
+bounds, realism of clean rows, and the deliberate defects. Statistical checks
+use one simulated week (168 hourly batches) so they are stable but meaningful.
+"""
+
 import csv
 import io
 from datetime import datetime, timedelta, timezone
@@ -21,6 +28,8 @@ WEEK = [datetime(2026, 9, 28, tzinfo=timezone.utc) + timedelta(hours=h) for h in
 
 def check_reasons(batch):
     seen: set[str] = set()
+    # "now" one day after the batch: clean rows are in the past, while the +365-day
+    # future-timestamp defect is still in the future.
     now = batch.batch_hour + timedelta(days=1)
     return [dq_reasons(row, seen, now) for row in batch.rows]
 

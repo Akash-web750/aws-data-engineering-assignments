@@ -10,12 +10,18 @@
      landing/orders/year=2026/month=10/day=05/orders_20261005_14.csv). The pipe
      loads by position ($1..$15), so the order matters.
    - Every source value is VARCHAR, so malformed values ('two', '2026-13-45...')
-     still load and are flagged later by the DQ dynamic tables.
-   - Ingestion metadata is filled by the pipe (next step):
-       SOURCE_FILE       METADATA$FILENAME
-       SOURCE_ROW_NUMBER METADATA$FILE_ROW_NUMBER
-       LOADED_AT         CURRENT_TIMESTAMP()
-       LOAD_BATCH_ID     batch identifier (derived from the file name / batch_ts)
+     still load and are flagged later by the DQ rules (CURATED.V_ORDERS_DQ).
+     Typed columns here would make the WHOLE file fail to load (Snowpipe
+     ON_ERROR default SKIP_FILE) and the bad rows could never be reported.
+   - Ingestion metadata is filled by the pipe (03b_snowpipe.sql, pipe v2):
+       SOURCE_FILE       METADATA$FILENAME (key relative to the bucket)
+       SOURCE_ROW_NUMBER METADATA$FILE_ROW_NUMBER (1 = first data row)
+       LOADED_AT         CONVERT_TIMEZONE('UTC', METADATA$START_SCAN_TIME), UTC scan time.
+                         Rows loaded by pipe v1 hold America/Los_Angeles time; the
+                         DQ view normalises them into LOADED_AT_UTC.
+       LOAD_BATCH_ID     MD5(SOURCE_FILE | scan time): one ID per file load
+   - (SOURCE_FILE, SOURCE_ROW_NUMBER) uniquely identifies a RAW row and is the
+     reconciliation key used by the DQ view and the EOD procedure.
 
    Metadata-only DDL: no warehouse compute. No CREATE OR REPLACE.
    ============================================================================= */

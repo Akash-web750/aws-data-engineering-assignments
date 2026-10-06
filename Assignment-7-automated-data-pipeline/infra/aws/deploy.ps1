@@ -12,6 +12,18 @@
   $env:AWS_ACCOUNT_ID (or -ExpectedAccount). The bucket name is derived from it:
   a7-orders-pipeline-<AWS_ACCOUNT_ID> (override with -BucketName).
 
+  Why parameterized: the repository is public, so the production account ID must
+  not be stored in it. Requiring the account explicitly and comparing it with the
+  signed-in identity also prevents deploying into the wrong AWS account.
+
+  Prerequisites: AWS CLI v2 signed in (e.g. `aws login`) as an IAM user with
+  CloudFormation/IAM/S3/Lambda/SNS/Scheduler rights; Python 3 on PATH (packaging).
+
+  Safety: the stack is changed only through CloudFormation (no console edits),
+  parameters that are not passed keep their current stack values, and the
+  schedule state is always passed so a re-deploy never silently enables it.
+  Preview production changes with a change set before running this script.
+
 .EXAMPLE
   $env:AWS_ACCOUNT_ID = "<your-aws-account-id>"
   .\infra\aws\deploy.ps1
@@ -28,27 +40,40 @@ param(
     [string]$SnowflakeSnsPrincipalArn
 )
 
+# Stop on the first PowerShell error instead of continuing with a half-deployed stack.
 $ErrorActionPreference = "Stop"
 $ProjectRoot = Resolve-Path (Join-Path $PSScriptRoot "..\..")
 $Template = Join-Path $PSScriptRoot "template.yaml"
+# build/ is git-ignored; the zip is regenerated on every run.
 $ZipPath = Join-Path $ProjectRoot "build\order_generator.zip"
 
+# The AWS CLI is a native executable: its failures do not raise PowerShell errors,
+# so every call goes through this wrapper, which turns a non-zero exit into an exception.
 function Invoke-Aws {
     $output = & aws @args
     if ($LASTEXITCODE -ne 0) { throw "aws $($args -join ' ') failed (exit $LASTEXITCODE)" }
     return $output
 }
 
+# Step 1 - guard against the wrong account: require an explicit target account and
+# compare it with the identity the CLI is actually signed in as.
 Write-Host "== 1. Verify AWS identity"
 if (-not $ExpectedAccount) { throw "Set `$env:AWS_ACCOUNT_ID (or pass -ExpectedAccount) to the target AWS account ID" }
 $account = Invoke-Aws sts get-caller-identity --query Account --output text
 if ($account -ne $ExpectedAccount) { throw "Wrong AWS account: $account (expected $ExpectedAccount)" }
+# S3 bucket names are global; suffixing the account ID makes the name unique and
+# environment-specific without storing it in the repository.
 if (-not $BucketName) { $BucketName = "a7-orders-pipeline-$ExpectedAccount" }
 Write-Host "   account $account, region $Region, bucket $BucketName"
 
 Write-Host "== 2. Validate template"
 Invoke-Aws cloudformation validate-template --region $Region --template-body "file://$Template" | Out-Null
 
+# Step 3 - create or update the stack through a change set (`cloudformation deploy`).
+#   CAPABILITY_NAMED_IAM: the template creates named IAM roles.
+#   --no-fail-on-empty-changeset: re-running with no changes is a success, not an error.
+#   Parameters not listed in --parameter-overrides keep their previous stack values
+#   (e.g. SnowflakeSnsPrincipalArn when -SnowflakeSnsPrincipalArn is omitted).
 Write-Host "== 3. Deploy stack $StackName (ScheduleState=$ScheduleState)"
 $overrides = @("ScheduleState=$ScheduleState", "BucketName=$BucketName")
 if ($SnowflakeSnsPrincipalArn) { $overrides += "SnowflakeSnsPrincipalArn=$SnowflakeSnsPrincipalArn" }
@@ -62,6 +87,10 @@ $outputs = Invoke-Aws cloudformation describe-stacks --region $Region --stack-na
     --query "Stacks[0].Outputs" --output json | ConvertFrom-Json
 $functionName = ($outputs | Where-Object OutputKey -eq "FunctionName").OutputValue
 
+# Steps 4-5 - the stack creates the function with placeholder code; the real code is
+# uploaded here. The deterministic zip (scripts/package_lambda.py) means an unchanged
+# source tree produces the same CodeSha256, so the upload is skipped. Any byte change,
+# comments included, triggers a re-upload.
 Write-Host "== 4. Package Lambda code"
 & python (Join-Path $ProjectRoot "scripts\package_lambda.py") $ZipPath
 if ($LASTEXITCODE -ne 0) { throw "packaging failed" }

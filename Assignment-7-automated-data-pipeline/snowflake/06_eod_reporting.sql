@@ -130,6 +130,11 @@ COMMENT = 'Assignment 7 - daily (IST) data quality summary, one row per REPORT_D
 -- 2. EOD procedure
 --    CALL A7_ORDERS_DB.REPORTING.SP_EOD_DQ_REPORT();                    -- today (IST)
 --    CALL A7_ORDERS_DB.REPORTING.SP_EOD_DQ_REPORT('2026-10-05'::DATE);  -- specific date
+--    Every CALL refreshes both dynamic tables and SENDS ONE EMAIL.
+--    EXECUTE AS OWNER: runs with A7_PIPELINE_ROLE's privileges (DT refresh, pipe
+--    status, email integration usage) regardless of who calls it.
+--    CREATE OR REPLACE replaces the live procedure. Substitute the recipient
+--    placeholder before re-running this statement in production.
 -- -----------------------------------------------------------------------------
 CREATE OR REPLACE PROCEDURE A7_ORDERS_DB.REPORTING.SP_EOD_DQ_REPORT(P_REPORT_DATE DATE DEFAULT NULL)
 RETURNS VARCHAR
@@ -200,6 +205,9 @@ BEGIN
       INTO :v_win_start, :v_win_end;
 
     -- ---- 1. bring both DTs up to date (TARGET_LAG is 6 hours), then verify --
+    -- ALTER ... REFRESH returns one row with "data_timestamp" (the point in time
+    -- the table now reflects). It is read back through RESULT_SCAN and must be
+    -- at or after this run's start; otherwise the report would describe stale data.
     ALTER DYNAMIC TABLE A7_ORDERS_DB.CURATED.ORDERS_GOOD REFRESH;
     SELECT CONVERT_TIMEZONE('UTC', "data_timestamp"::TIMESTAMP_LTZ)::TIMESTAMP_NTZ
       INTO :v_good_ts FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
@@ -269,6 +277,7 @@ BEGIN
       INTO :v_pipe_state;
 
     -- ---- 4. percentages, previous day, 7-day trend -------------------------
+    -- A day with 0 records gets NULL percentages (not 0 %, not a division error).
     v_good_pct := IFF(v_total = 0, NULL, ROUND(100 * v_good / v_total, 2));
     v_bad_pct  := IFF(v_total = 0, NULL, ROUND(100 * v_bad  / v_total, 2));
 
@@ -452,6 +461,12 @@ $$;
 -- -----------------------------------------------------------------------------
 -- 3. Daily task: 23:55 IST. Tasks are created SUSPENDED; do NOT resume until approved.
 --    Runs on A7_PIPELINE_WH (same warehouse as the DT refreshes it triggers).
+--    The CRON time zone is explicit (Asia/Kolkata), independent of the account
+--    time zone. Overlapping runs are not allowed (Snowflake default), and
+--    USER_TASK_TIMEOUT_MS = 600000 stops a run after 10 minutes.
+--    CAUTION: CREATE OR REPLACE TASK recreates the task in the SUSPENDED state.
+--    Re-running this statement against a live deployment stops the daily
+--    report until ALTER TASK ... RESUME is run again.
 -- -----------------------------------------------------------------------------
 CREATE OR REPLACE TASK A7_ORDERS_DB.REPORTING.TASK_EOD_DQ_REPORT
     WAREHOUSE = A7_PIPELINE_WH

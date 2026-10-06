@@ -2,6 +2,8 @@
    Assignment 7 - 00b_admin_email_integration.sql
    -----------------------------------------------------------------------------
    RUN MANUALLY, ONCE, AS ACCOUNTADMIN (Snowsight) - after the prerequisite below.
+   ORDER: before 06_eod_reporting.sql (the EOD procedure sends through this
+   integration). Independent of the ingestion scripts 01-05.
 
    Purpose: Snowflake-native email for the EOD DQ report (no AWS / SES / Lambda).
    The report procedure (owner A7_PIPELINE_ROLE) will call
@@ -24,7 +26,9 @@ USE ROLE ACCOUNTADMIN;
 -- Pre-flight: must return no rows
 SHOW NOTIFICATION INTEGRATIONS LIKE 'A7_EMAIL_INT';
 
--- Restrict delivery to the verified recipient only
+-- Restrict delivery to the verified recipient only. Even a role with USAGE on the
+-- integration cannot email any other address, which limits misuse if the
+-- procedure (or a user of A7_PIPELINE_ROLE) passes a different recipient.
 CREATE NOTIFICATION INTEGRATION A7_EMAIL_INT
     TYPE = EMAIL
     ENABLED = TRUE

@@ -19,11 +19,19 @@ USE ROLE A7_PIPELINE_ROLE;
 
 -- -----------------------------------------------------------------------------
 -- Database settings
+-- 1-day Time Travel: enough to recover from an accidental change within a day,
+-- while keeping storage cost minimal (the data is reproducible from S3 / the
+-- deterministic generator anyway).
 -- -----------------------------------------------------------------------------
 ALTER DATABASE A7_ORDERS_DB SET DATA_RETENTION_TIME_IN_DAYS = 1;
 
 -- -----------------------------------------------------------------------------
 -- Layered schemas
+--   RAW       -> exactly what arrived (text), plus load metadata; never modified
+--   CURATED   -> DQ evaluation (view) and the GOOD / BAD dynamic tables
+--   REPORTING -> daily EOD summary, the procedure that builds it, and its task
+-- Separating layers keeps responsibilities clear and lets privileges be
+-- granted per layer if consumers are added later.
 -- -----------------------------------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS A7_ORDERS_DB.RAW
     COMMENT = 'Raw landing layer for Assignment 7';

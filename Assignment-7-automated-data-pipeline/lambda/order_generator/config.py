@@ -1,4 +1,10 @@
-"""Runtime configuration for the order generator, read from environment variables."""
+"""Runtime configuration for the order generator, read from environment variables.
+
+The Lambda's environment variables are set by the CloudFormation stack
+(infra/aws/template.yaml: S3_BUCKET, S3_LANDING_PREFIX, ROWS_PER_FILE_MIN,
+ROWS_PER_FILE_MAX, DEFECT_RATE). Every setting has a safe default, so the
+generator also runs locally and in unit tests without any AWS configuration.
+"""
 
 from __future__ import annotations
 
@@ -6,6 +12,8 @@ import os
 from dataclasses import dataclass
 
 
+# Treat an unset OR empty variable as "use the default". CloudFormation can pass
+# empty strings, and int("") would otherwise fail the whole invocation.
 def _env_int(name: str, default: int) -> int:
     value = os.environ.get(name)
     return int(value) if value not in (None, "") else default
@@ -16,16 +24,26 @@ def _env_float(name: str, default: float) -> float:
     return float(value) if value not in (None, "") else default
 
 
+# Frozen: the configuration is read once per invocation and must not change
+# while a batch is generated (it feeds the deterministic random seed).
 @dataclass(frozen=True)
 class GeneratorConfig:
+    # Target bucket; empty is allowed for dry runs and tests (the handler refuses
+    # to upload without it).
     bucket: str = ""
+    # Root of the landing area. Snowpipe's stage and the S3 -> SNS notification
+    # filter both point at this prefix, so changing it requires changing them too.
     landing_prefix: str = "landing/orders/"
+    # Rows per hourly file before the time-of-day volume pattern is applied.
     rows_min: int = 80
     rows_max: int = 150
+    # Share of rows that are deliberately corrupted so the Snowflake DQ rules
+    # always have defects to detect (about 8 % by design).
     defect_rate: float = 0.08
     # Changing the salt changes every generated file; keep it stable in production.
     seed_salt: str = "a7-orders"
 
+    # Fail fast on impossible settings instead of producing a silently wrong file.
     def __post_init__(self) -> None:
         if self.rows_min < 1 or self.rows_max < self.rows_min:
             raise ValueError(f"invalid row range: {self.rows_min}..{self.rows_max}")
@@ -34,6 +52,7 @@ class GeneratorConfig:
 
     @classmethod
     def from_env(cls) -> "GeneratorConfig":
+        """Build the configuration from the Lambda environment (defaults when unset)."""
         return cls(
             bucket=os.environ.get("S3_BUCKET", ""),
             landing_prefix=os.environ.get("S3_LANDING_PREFIX", cls.landing_prefix),

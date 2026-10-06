@@ -2,6 +2,12 @@
    Assignment 7 - 00_admin_bootstrap.sql
    -----------------------------------------------------------------------------
    RUN MANUALLY, ONCE, AS ACCOUNTADMIN (Snowsight worksheet, "Run All").
+   ORDER: first Snowflake script (docs/setup.md step 3), after the AWS stack
+   exists. Next: AWS CLI creates the Snowflake read role, then 01 -> 06.
+
+   WHY A SEPARATE ADMIN SCRIPT: account-level objects (roles, warehouses,
+   resource monitors, integrations) need ACCOUNTADMIN. Isolating them keeps the
+   day-to-day project role (A7_PIPELINE_ROLE) least-privileged.
 
    Creates ONLY the account-level objects the project role cannot create itself:
      role                 A7_PIPELINE_ROLE

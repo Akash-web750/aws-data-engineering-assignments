@@ -1,3 +1,9 @@
+"""Unit tests for handler.py (the Lambda entry point).
+
+AWS is never called: a StubS3 records put_object calls, and the autouse fixture
+makes any attempt to create a real boto3 client fail the test.
+"""
+
 import csv
 import io
 

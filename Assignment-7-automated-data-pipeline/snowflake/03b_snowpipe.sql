@@ -32,9 +32,14 @@
    ============================================================================= */
 
 USE ROLE A7_PIPELINE_ROLE;
+-- A current database is required even though every name below is fully
+-- qualified (Snowflake rejected CREATE PIPE without it during deployment).
 USE DATABASE A7_ORDERS_DB;
 USE SCHEMA RAW;
 
+-- ORDER: after 03_landing_table.sql AND after the SNS topic policy allows
+-- Snowflake's principal sns:Subscribe (deploy.ps1 -SnowflakeSnsPrincipalArn).
+-- Creating the pipe subscribes Snowflake's queue to the topic.
 CREATE PIPE A7_ORDERS_DB.RAW.PIPE_ORDERS_INGEST
     AUTO_INGEST = TRUE
     AWS_SNS_TOPIC = 'arn:aws:sns:ap-south-1:<AWS_ACCOUNT_ID>:a7-orders-s3-events'
@@ -92,6 +97,12 @@ FROM
     FROM @A7_ORDERS_DB.RAW.STG_ORDERS_S3
 );
 
--- Validation (metadata only)
+-- Validation (metadata only). Healthy: executionState = RUNNING,
+-- pendingFileCount = 0, numOutstandingMessagesOnChannel = 0.
 SHOW PIPES LIKE 'PIPE_ORDERS_INGEST' IN SCHEMA A7_ORDERS_DB.RAW;
 SELECT SYSTEM$PIPE_STATUS('A7_ORDERS_DB.RAW.PIPE_ORDERS_INGEST');
+
+-- NOT run automatically. ALTER PIPE ... REFRESH loads files already in the
+-- stage (from the last 7 days) that the pipe has not loaded yet. Use it only for
+-- a NEW pipe with no earlier version; on a re-created pipe it would load files a
+-- previous pipe version already loaded (duplicates).

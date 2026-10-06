@@ -62,6 +62,9 @@ USE SCHEMA CURATED;
 
 -- -----------------------------------------------------------------------------
 -- 1. Single DQ definition (copied verbatim from 04_data_quality_validation.sql)
+--    CREATE VIEW IF NOT EXISTS: re-running this script does NOT update an
+--    existing view. If the rules in 04 change, the view must be replaced
+--    deliberately, and the dynamic tables then pick it up at their next refresh.
 -- -----------------------------------------------------------------------------
 CREATE VIEW IF NOT EXISTS A7_ORDERS_DB.CURATED.V_ORDERS_DQ
     COMMENT = 'Assignment 7 - DQ evaluation of RAW.ORDERS_LANDING (rules DQ01-DQ11), one row per RAW row'
@@ -69,6 +72,8 @@ AS
     WITH src AS (
         SELECT
             l.*,
+            -- Safe parsing: TRY_* returns NULL for malformed text instead of failing the
+            -- whole query. Scale 4 keeps decimals (1-arg TRY_TO_NUMBER rounds to integers).
             TRY_TO_TIMESTAMP_NTZ(l.ORDER_TS, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS ORDER_TS_PARSED,
             TRY_TO_NUMBER(l.QUANTITY,   18, 4)                            AS QUANTITY_PARSED,
             TRY_TO_NUMBER(l.UNIT_PRICE, 18, 4)                            AS UNIT_PRICE_PARSED,
@@ -98,19 +103,26 @@ AS
              OR QUANTITY IS NULL OR UNIT_PRICE IS NULL OR AMOUNT IS NULL OR CURRENCY IS NULL
              OR PAYMENT_METHOD IS NULL OR ORDER_STATUS IS NULL OR CITY IS NULL OR BATCH_TS IS NULL
             )                                                                              AS DQ01_FAIL,
+            -- DQ02 / DQ04 / DQ05: value present but not numeric (NULL is DQ01's job).
             COALESCE(QUANTITY   IS NOT NULL AND QUANTITY_PARSED   IS NULL, FALSE)         AS DQ02_FAIL,
+            -- DQ03 / DQ06: evaluated only on parsed values; COALESCE turns NULL into a pass.
             COALESCE(QUANTITY_PARSED <= 0, FALSE)                                         AS DQ03_FAIL,
             COALESCE(UNIT_PRICE IS NOT NULL AND UNIT_PRICE_PARSED IS NULL, FALSE)         AS DQ04_FAIL,
             COALESCE(AMOUNT     IS NOT NULL AND AMOUNT_PARSED     IS NULL, FALSE)         AS DQ05_FAIL,
             COALESCE(AMOUNT_PARSED <= 0, FALSE)                                           AS DQ06_FAIL,
+            -- DQ07: needs all three numbers; 0.01 tolerance absorbs 2-decimal rounding.
             COALESCE(ABS(AMOUNT_PARSED - QUANTITY_PARSED * UNIT_PRICE_PARSED) > 0.01, FALSE) AS DQ07_FAIL,
             -- local@domain.tld; REGEXP_LIKE matches the whole string
             COALESCE(NOT REGEXP_LIKE(CUSTOMER_EMAIL,
                      '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+[.][A-Za-z]{2,}'), FALSE)             AS DQ08_FAIL,
+            -- DQ09: unparseable, or later than the row's ingestion time (LOADED_AT_UTC).
+            -- No clock function here, so the dynamic tables stay INCREMENTAL.
             COALESCE(ORDER_TS IS NOT NULL
                      AND (ORDER_TS_PARSED IS NULL OR ORDER_TS_PARSED > LOADED_AT_UTC), FALSE) AS DQ09_FAIL,
+            -- DQ10: exact, case-sensitive match against the generator's status list.
             COALESCE(ORDER_STATUS NOT IN ('PLACED', 'SHIPPED', 'DELIVERED', 'CANCELLED', 'RETURNED'),
                      FALSE)                                                                AS DQ10_FAIL,
+            -- DQ11: second or later arrival of the same non-NULL ORDER_ID.
             COALESCE(ORDER_ID_OCCURRENCE > 1, FALSE)                                       AS DQ11_FAIL
         FROM ranked
     )
@@ -130,6 +142,7 @@ AS
         ORDER_ID_OCCURRENCE,
         DQ01_FAIL, DQ02_FAIL, DQ03_FAIL, DQ04_FAIL, DQ05_FAIL, DQ06_FAIL,
         DQ07_FAIL, DQ08_FAIL, DQ09_FAIL, DQ10_FAIL, DQ11_FAIL,
+        -- GOOD only when every rule passed; any failure makes the row BAD.
         IFF(DQ01_FAIL OR DQ02_FAIL OR DQ03_FAIL OR DQ04_FAIL OR DQ05_FAIL OR DQ06_FAIL
             OR DQ07_FAIL OR DQ08_FAIL OR DQ09_FAIL OR DQ10_FAIL OR DQ11_FAIL, 'BAD', 'GOOD') AS QUALITY_STATUS,
         -- Every failed rule, in rule order; NULL when GOOD
@@ -150,6 +163,10 @@ AS
 
 -- -----------------------------------------------------------------------------
 -- 2. GOOD records
+--    Both dynamic tables expose the same 26 columns: the source values as text,
+--    the load metadata, the parsed values (for reporting) and the quality
+--    columns. Only the WHERE filter differs, so every RAW row lands in exactly one.
+--    INITIALIZE = ON_CREATE performs the first (incremental) refresh at creation.
 -- -----------------------------------------------------------------------------
 CREATE DYNAMIC TABLE IF NOT EXISTS A7_ORDERS_DB.CURATED.ORDERS_GOOD
     TARGET_LAG = '6 hours'

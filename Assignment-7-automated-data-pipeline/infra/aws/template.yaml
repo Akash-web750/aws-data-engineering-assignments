@@ -52,6 +52,11 @@ Conditions:
 
 Resources:
   # ---------------------------------------------------------------- S3
+  # Dedicated landing bucket (never shared with other projects, because S3
+  # notification settings are bucket-wide).
+  # DeletionPolicy Delete: teardown.ps1 empties it first, then deleting the stack
+  # removes it. UpdateReplacePolicy Retain: if a change ever required REPLACING
+  # the bucket, the old one (with its data) is kept instead of being deleted.
   OrdersBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Delete
@@ -60,6 +65,8 @@ Resources:
     DependsOn: OrdersEventsTopicPolicy
     Properties:
       BucketName: !Ref BucketName
+      # Only *.csv objects under the landing prefix raise events, so other keys can
+      # never trigger Snowpipe.
       NotificationConfiguration:
         TopicConfigurations:
           - Event: s3:ObjectCreated:*
@@ -69,6 +76,10 @@ Resources:
                 Rules:
                   - { Name: prefix, Value: !Ref LandingPrefix }
                   - { Name: suffix, Value: .csv }
+      # Security controls:
+      #   SSE-S3 (AES256) default encryption - free, transparent to Snowflake (no KMS grants).
+      #   All four public-access blocks on - the bucket can never be made public.
+      #   BucketOwnerEnforced - ACLs disabled; access is governed by IAM/policies only.
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
@@ -81,6 +92,9 @@ Resources:
       OwnershipControls:
         Rules:
           - ObjectOwnership: BucketOwnerEnforced
+      # Cost control: landing files are only needed until Snowpipe has loaded them
+      # (the data then lives in Snowflake), so they expire after LandingRetentionDays.
+      # No versioning is enabled, so expiry really frees the storage.
       LifecycleConfiguration:
         Rules:
           - Id: expire-landing-files
@@ -94,6 +108,8 @@ Resources:
       Tags:
         - { Key: Project, Value: assignment-7-automated-data-pipeline }
 
+  # Deny any request not made over TLS (aws:SecureTransport = false), for every
+  # principal, on the bucket and all its objects.
   OrdersBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
@@ -125,6 +141,11 @@ Resources:
       Tags:
         - { Key: Project, Value: assignment-7-automated-data-pipeline }
 
+  # Least privilege on the topic:
+  #   publish   - only the S3 service, only for THIS bucket (SourceArn), only from
+  #               this account (SourceAccount, prevents confused-deputy use)
+  #   subscribe - only Snowflake's principal, added once its ARN is known
+  #               (parameter SnowflakeSnsPrincipalArn; empty = statement omitted)
   OrdersEventsTopicPolicy:
     Type: AWS::SNS::TopicPolicy
     Properties:
@@ -152,6 +173,9 @@ Resources:
             - !Ref AWS::NoValue
 
   # ---------------------------------------------------------------- Lambda
+  # Log group owned by the stack (instead of Lambda auto-creating it) so that
+  # retention is enforced (cost control) and the IAM policy can target it exactly.
+  # The only monitoring in AWS is these logs; no alarms are defined.
   GeneratorLogGroup:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Delete
@@ -159,6 +183,9 @@ Resources:
       LogGroupName: !Sub "/aws/lambda/${FunctionName}"
       RetentionInDays: !Ref LogRetentionDays
 
+  # Execution role, least privilege: write-only into the landing prefix (no
+  # read/list/delete, no other buckets) plus writing its own log streams. The trust
+  # policy's aws:SourceAccount condition limits it to this account's Lambda service.
   GeneratorRole:
     Type: AWS::IAM::Role
     Properties:
@@ -192,6 +219,10 @@ Resources:
       Tags:
         - { Key: Project, Value: assignment-7-automated-data-pipeline }
 
+  # Sizing: arm64 (cheaper per GB-second than x86), 128 MB and a 30 s timeout are
+  # ample for one ~25 KB CSV (stdlib + runtime-provided boto3 only).
+  # No reserved concurrency: new accounts can have a low concurrency limit, and the
+  # schedule invokes the function only once per hour.
   GeneratorFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -222,6 +253,9 @@ Resources:
       Tags:
         - { Key: Project, Value: assignment-7-automated-data-pipeline }
 
+  # Asynchronous invocations (EventBridge Scheduler): at most one Lambda retry,
+  # and events older than an hour are dropped. A retry is safe because the same
+  # hour produces identical bytes at the same key.
   GeneratorAsyncConfig:
     Type: AWS::Lambda::EventInvokeConfig
     Properties:
@@ -231,6 +265,8 @@ Resources:
       MaximumEventAgeInSeconds: 3600
 
   # ---------------------------------------------------------------- Schedule
+  # EventBridge Scheduler assumes this role to call the function; it can invoke
+  # only the generator.
   SchedulerRole:
     Type: AWS::IAM::Role
     Properties:
@@ -255,6 +291,10 @@ Resources:
       Tags:
         - { Key: Project, Value: assignment-7-automated-data-pipeline }
 
+  # Minute 5 of every UTC hour: the previous hour is complete, so every generated
+  # order_ts is already in the past. The state is a stack parameter (default
+  # DISABLED) and is switched on only at go-live (deploy.ps1 -ScheduleState ENABLED).
+  # FlexibleTimeWindow OFF = run on time. Input "{}" = no run_ts -> previous hour.
   HourlySchedule:
     Type: AWS::Scheduler::Schedule
     Properties:

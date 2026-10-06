@@ -27,12 +27,17 @@ USE DATABASE A7_ORDERS_DB;
 --
 -- TRIM_SPACE = TRUE removes only leading/trailing blanks. The generator's email
 --   defect has an INTERNAL space ('name @domain'), so DQ still sees it.
--- EMPTY_FIELD_AS_NULL + NULL_IF turn blank required fields into NULLs
---   (MISSING_REQUIRED_FIELD).
--- Defaults that matter: ERROR_ON_COLUMN_COUNT_MISMATCH = TRUE, ENCODING = UTF8,
---   RECORD_DELIMITER = newline. The pipe in 03 uses a COPY transformation
---   (SELECT $1..$15), where the column-count check is not enforced; 03 adds
---   its own guard.
+-- EMPTY_FIELD_AS_NULL + NULL_IF turn blank required fields into NULLs, which
+--   rule DQ01_REQUIRED_FIELDS then flags.
+-- FIELD_OPTIONALLY_ENCLOSED_BY = '"' reads values the generator had to quote
+--   (e.g. the defect value "12,50" that contains the delimiter).
+-- Defaults that matter: ENCODING = UTF8, RECORD_DELIMITER = newline,
+--   ERROR_ON_COLUMN_COUNT_MISMATCH = TRUE.
+-- Structurally broken files: the pipe (03b_snowpipe.sql) maps $1..$15 with a
+--   COPY transformation and sets no ON_ERROR, so Snowpipe's default SKIP_FILE
+--   applies to load errors. No additional column-count guard is implemented.
+--   Malformed VALUES, as opposed to broken structure, still load and are
+--   flagged by the DQ rules.
 -- -----------------------------------------------------------------------------
 CREATE FILE FORMAT IF NOT EXISTS RAW.FF_ORDERS_CSV
     TYPE = CSV

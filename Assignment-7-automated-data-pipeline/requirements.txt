@@ -1,4 +1,7 @@
-# Local scripts (deploy, backfill, E2E validation)
+# Optional local tooling for ad-hoc verification (AWS SDK, Snowflake connector, .env loading).
+# Not needed for the tests or the packaging script: scripts/package_lambda.py uses only
+# the standard library, and handler.py imports boto3 lazily, where the AWS Lambda
+# runtime supplies it.
 boto3>=1.34
 snowflake-connector-python>=3.10
 python-dotenv>=1.0

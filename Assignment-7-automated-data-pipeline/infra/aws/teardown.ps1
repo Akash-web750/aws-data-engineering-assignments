@@ -2,6 +2,14 @@
 .SYNOPSIS
   Remove ONLY the Assignment 7 AWS resources: empty the project bucket, then delete the stack.
 
+  Scope: only the a7-orders-pipeline stack, the objects in ITS bucket (read from
+  the stack outputs, never typed by hand) and the CLI-created
+  a7-snowflake-s3-access-role. Snowflake objects are removed separately
+  (docs/setup.md, Teardown).
+
+  DESTRUCTIVE: deletes all landing files and stops ingestion. Never run it
+  against the live deployment unless decommissioning is intended.
+
 .EXAMPLE
   $env:AWS_ACCOUNT_ID = "<your-aws-account-id>"
   .\infra\aws\teardown.ps1            # asks for confirmation
@@ -17,9 +25,12 @@ param(
 $ErrorActionPreference = "Stop"
 if (-not $ExpectedAccount) { throw "Set `$env:AWS_ACCOUNT_ID (or pass -ExpectedAccount) to the target AWS account ID" }
 
+# Same account guard as deploy.ps1: refuse to delete anything in an account other
+# than the one explicitly named.
 $account = aws sts get-caller-identity --query Account --output text
 if ($LASTEXITCODE -ne 0 -or $account -ne $ExpectedAccount) { throw "Wrong or unknown AWS account: $account" }
 
+# The bucket name comes from the stack outputs, so only this project's bucket is touched.
 $bucket = aws cloudformation describe-stacks --region $Region --stack-name $StackName `
     --query "Stacks[0].Outputs[?OutputKey=='BucketName'].OutputValue" --output text
 if ($LASTEXITCODE -ne 0 -or -not $bucket) { throw "Stack $StackName not found in $Region" }
@@ -29,6 +40,8 @@ if (-not $Force) {
     if ($answer -ne $StackName) { Write-Host "Aborted."; exit 1 }
 }
 
+# CloudFormation cannot delete a non-empty bucket, so it is emptied first. The
+# bucket is unversioned, so removing the current objects is sufficient.
 Write-Host "Emptying s3://$bucket"
 aws s3 rm "s3://$bucket" --recursive --region $Region
 if ($LASTEXITCODE -ne 0) { throw "failed to empty bucket" }
