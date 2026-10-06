@@ -9,7 +9,7 @@
 |---|---|
 | Project | Real-time streaming pipeline from a local Kafka broker to Snowflake, with automatic schema evolution |
 | Assignment | **Assignment 3 (Portfolio Assignment 9)**. The assignment brief numbers it 3; the repository folder is numbered 9 for portfolio tracking. Both refer to this project. |
-| Document version | 1.6 |
+| Document version | 1.7 |
 | Last updated | 2026-10-06 |
 | Status | Implemented and verified; see README. |
 | Environment | Local Windows 11 machine (Kafka, producer, consumer) + existing Snowflake account on AWS |
@@ -666,3 +666,33 @@ The enhancement is implemented and live.
 - A replication slot that is not read makes PostgreSQL keep its log; `max_slot_wal_keep_size` bounds this, at the price of an invalidated slot if the limit is exceeded.
 - Delivery is at-least-once; `ORDER_EVENTS_UNIQUE` removes a repeated event.
 - Kafka topics must not be deleted on this Windows broker.
+
+---
+
+## 22. Local Process Orchestration
+
+This section adds two scripts that start and stop the pipeline. It changes no pipeline logic: sections 1 to 21 are unaffected.
+
+| Item | Decision |
+|---|---|
+| Entry points | `scripts/start_pipeline.ps1`, `scripts/stop_pipeline.ps1` (shared code in `scripts/pipeline_common.ps1`) |
+| Managed services | Kafka broker, Kafka Connect with Debezium, Snowflake consumer, CDC bridge |
+| Not managed | The producer (demo data; run by hand only) and PostgreSQL (a Windows service; only checked for reachability) |
+| How services are started | With the existing commands: `start_kafka.ps1 -Background`, `start_connect.ps1 -Background`, `python -m consumer.consumer`, `python -m cdc.bridge`. Hidden background processes, output to log files |
+| Start order | Broker, Kafka Connect, consumer, bridge |
+| Stop order | Bridge, consumer, Kafka Connect, broker |
+| Duplicate protection | A service is not started if one of this project's processes runs it, or if its Kafka consumer group has a connected member |
+| Process identification | By command line (Kafka main class, Kafka Connect main class, `-m <module>`) or by the PID file written at start. Never by image name |
+| Stopping | Orderly first: a Ctrl+Break (Python services) or Ctrl+C (Java services) event is delivered to the service's own console by `scripts/request_graceful_stop.py`. A service that does not exit in time is ended by its process id |
+| Runtime files | Logs and PID files in `<KAFKA_HOME>\run-logs`, outside the repository |
+| Never done | Stopping PostgreSQL; stopping a process by image name; deleting or altering topics, Kafka data, consumer groups, Debezium offsets or the replication slot; running a teardown |
+
+**Acceptance.**
+
+1. `start_pipeline.ps1` brings all four services up from a stopped state and reports `Pipeline Status: READY`.
+2. A second run starts nothing.
+3. With the pipeline started only by the script, one row inserted into PostgreSQL appears exactly once in Snowflake.
+4. `stop_pipeline.ps1` stops the four services and reports `Pipeline Status: STOPPED`; PostgreSQL keeps running.
+5. No topic, Kafka data, Debezium offset or replication slot is removed by either script.
+
+Status of each is recorded in README section 13.

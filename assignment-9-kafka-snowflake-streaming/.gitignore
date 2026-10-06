@@ -16,3 +16,11 @@ batches/
 
 # Runtime logs written by the helper scripts.
 logs/
+
+# Runtime files of the pipeline orchestration (scripts/start_pipeline.ps1).
+# They are written to <KAFKA_HOME>\run-logs, outside the repository; these
+# rules only matter if that folder is ever pointed inside it.
+run-logs/
+*.log
+*.log.previous
+*.pid

@@ -85,6 +85,7 @@ Nothing is **BLOCKED**.
 | [tests/](tests/) | Unit tests and the live end-to-end test |
 | [source_db/](source_db/) | Enhancement: PostgreSQL source database, its setup and one-time backfill (section 11) |
 | [cdc/](cdc/) | Enhancement: CDC bridge and Debezium / Kafka Connect configuration; live and verified (section 12) |
+| `scripts/start_pipeline.ps1`, `scripts/stop_pipeline.ps1` | Start and stop the whole pipeline with one command each (section 13) |
 
 ---
 
@@ -1199,3 +1200,112 @@ Changed, additively: `config/settings.py`, `.env.example`, `scripts/create_topic
 3. Optionally `ALTER SYSTEM RESET wal_level;` and restart PostgreSQL. Leaving it at `logical` is harmless.
 4. Leave the Kafka topics in place.
 5. Remove `C:\kafka\connect-plugins` and `C:\kafka\connect-data`.
+
+---
+
+## 13. Starting and stopping the whole pipeline
+
+Two scripts replace the separate terminals and commands of section 12.
+
+```powershell
+.\scripts\start_pipeline.ps1               # start everything that is not running yet
+.\scripts\stop_pipeline.ps1                # stop everything, in an orderly way
+.\scripts\stop_pipeline.ps1 -KeepBroker    # stop the three services, leave the Kafka broker running
+```
+
+They only orchestrate processes. No pipeline logic, configuration, topic, consumer group or SQL was changed for them; `consumer/`, `producer/` and `cdc/` are untouched.
+
+### What is managed
+
+| Service | Started with (unchanged, existing command) | Runs as | Log in `C:\kafka\run-logs` |
+|---|---|---|---|
+| Kafka broker | `scripts\start_kafka.ps1 -Background` | hidden Java process | `broker.out.log` |
+| Kafka Connect + Debezium | `scripts\start_connect.ps1 -Background` | hidden Java process | `connect.out.log` |
+| Snowflake consumer | `python -m consumer.consumer` | hidden Python process | `consumer.log` |
+| CDC bridge | `python -m cdc.bridge` | hidden Python process | `cdc-bridge.log` |
+
+`pipeline.log` in the same folder records what the two scripts did. When a service is started again, its previous log is kept as `<name>.log.previous`. The folder is outside the repository, so runtime files cannot be committed.
+
+**Not managed, on purpose.**
+
+- **The producer.** It generates demo data and is only ever run by hand.
+- **PostgreSQL.** It runs as a Windows service. The scripts only look whether it answers and show that in the summary; they never start, stop or reconfigure it.
+
+### Starting
+
+Order: Kafka broker → (missing topics, if any) → Kafka Connect → consumer → CDC bridge. Each step is skipped if the service is already running.
+
+```
+Kafka Broker       : RUNNING (started)
+Kafka Connect      : RUNNING (started)
+Snowflake Consumer : RUNNING (started)
+CDC Bridge         : RUNNING (started)
+PostgreSQL         : RUNNING (not managed by this script)
+
+Pipeline Status: READY
+```
+
+If a service does not come up, the summary says `Pipeline Status: NOT READY`, names the service and gives the path of its log; the script ends with exit code 1.
+
+**No duplicates.** Before starting a service the script checks, in this order:
+
+1. Is one of this project's processes already running it? A process counts as ours only if its command line names the service (`kafka.Kafka`, `ConnectStandalone`, `-m cdc.bridge`, `-m consumer.consumer`) or its process id is the one recorded in the PID file written at start.
+2. For the two Python services: does Kafka report a connected member in the service's consumer group? This catches a service that runs but cannot be seen from the current session, for example one started from an Administrator window.
+
+Running `start_pipeline.ps1` a second time therefore starts nothing and reports `RUNNING (already running)`.
+
+**Topics.** If one of the required topics is missing (for example on a freshly reset broker), the existing `create_topics.ps1 -IncludeCdc` is run. Existing topics are never altered or deleted.
+
+### Stopping
+
+Order: CDC bridge → consumer → Kafka Connect → Kafka broker, the reverse of starting.
+
+Each service is first **asked** to shut down, the way Ctrl+C would, and given time to do it: the consumer finishes and commits its batch, the bridge commits its position, Kafka Connect saves how far Debezium has read, the broker closes its files cleanly. Only a service that has not exited after that is ended, by its own process id. Nothing is lost in that case either: every service repeats its last uncommitted piece of work after the next start.
+
+- Windows has no signal one process can send another. `scripts/request_graceful_stop.py` therefore attaches to the hidden console of the target and generates the key event there, so only that service receives it.
+- The Python services are sent Ctrl+Break, which both handle exactly like Ctrl+C and which a shell cannot switch off. The Java services are sent Ctrl+C, because on Ctrl+Break a Java program only prints a thread dump.
+- A service that is already stopped counts as success.
+- The broker is left running if a service that uses it could not be stopped, and with `-KeepBroker`.
+
+**Never done by these scripts:** stopping a process by image name (`taskkill /IM java.exe` and the like), stopping PostgreSQL, deleting a topic, Kafka data, a consumer group, Debezium's offsets or the replication slot, or running the CDC teardown.
+
+### Requirements
+
+- `POSTGRES_CDC_PASSWORD` must be in `.env`, because `start_connect.ps1` reads the CDC login from there. Without it Kafka Connect is reported as `FAILED` with that reason.
+- Run both scripts from the same kind of session. A service started from an Administrator window cannot be stopped from a normal one; `stop_pipeline.ps1` then reports it as `STILL RUNNING (started from another session …)` and leaves it alone.
+- `python` must resolve to the interpreter that has the project's packages installed.
+
+### Verification (2026-10-06)
+
+| Check | Result |
+|---|---|
+| Orchestration tests (`tests/test_pipeline_scripts.py`) | 69 passed: the safety rules, the helper, and a real orderly stop of a hidden background process |
+| `start_pipeline.ps1` while all four services were already running | Reported all four as running, `Pipeline Status: READY`; **0 new processes** were created |
+| The same, for the two Python services that were running in an Administrator session | Recognised through their consumer groups; not started a second time |
+| `stop_pipeline.ps1` against services owned by an Administrator session | Stopped nothing it could not identify, reported each as still running, and left the broker running because they still used it |
+| Start, duplicate check, orderly stop and restart of a Python service through the scripts' own functions | Verified with a stand-in service: started hidden, recognised by command line and PID file, not started twice, shut down in an orderly way on Ctrl+Break, PID file removed, previous log kept |
+| Orderly stop of a process started through a `.bat` wrapper, as Kafka and Kafka Connect are | Verified with a stand-in: the child shut down on Ctrl+C and the wrapper ended by itself |
+| A shell that ignores Ctrl+C (Git Bash) | Found and handled: the Python services are stopped with Ctrl+Break, which worked from both PowerShell and Git Bash |
+| Starting all four real services from a fully stopped state with `start_pipeline.ps1` | **Verified:** all four `RUNNING (started)`, `Pipeline Status: READY`, exit code 0, in 56 s |
+| A second run with the real services running | **Verified:** all four `RUNNING (already running)`; 0 new processes; still exactly one `cdc.bridge` and one `consumer.consumer` |
+| A missing prerequisite | **Verified:** without `POSTGRES_CDC_PASSWORD` in `.env`, Kafka Connect was reported as `FAILED` with that reason, the other three services started, and the result was `NOT READY` with exit code 1. After the password was added, the next run started only Kafka Connect and reported `READY` |
+| One PostgreSQL insert reaching Snowflake with the pipeline started only by the script | **Verified:** CDC live gate and end-to-end test, 10 passed and 8 skipped. Event `271fe9b6-2f44-4fad-97f6-a76ea73595b2` is in Snowflake exactly once; PostgreSQL and Snowflake both went from 307 to 308 rows |
+| Stopping the four real services with `stop_pipeline.ps1` | **Verified three times** (once from an Administrator session, twice from a normal one): each service "shut down in an orderly way", `Pipeline Status: STOPPED`, exit code 0, in 14 s. The consumer and the bridge logged their own shutdown (`Stop requested (signal 21)`, `Stopped.`) |
+| The broker's shutdown was clean | **Verified:** the following start showed no log recovery and no error in the broker log |
+| Nothing was re-published after every service had been restarted | **Verified:** CDC topic still 8 messages, 308 rows on both sides, no duplicate; the live gate passed again (9 passed) |
+| PostgreSQL after stopping | **Verified:** service `Running`; 308 rows; replication slot, publication and `cdc_user` all still present |
+| Kafka after stopping | **Verified:** all 9 topic data folders present, none marked for deletion; Debezium's offsets file unchanged; no PID file left behind |
+| Unrelated processes | **Verified:** pgAdmin (a Python program) kept running through every stop. Two other shell processes ended during the stop, which matches the two `.bat` launcher shells of the broker and Kafka Connect |
+| The producer | **Verified:** never started by the scripts |
+
+The stop from a normal session could only be tested after the services that had been started from an Administrator window were stopped there; the scripts cannot stop those from a normal session, and say so.
+
+### Limitations
+
+| Limitation | Detail |
+|---|---|
+| Not a Windows service | Nothing is started at boot or restarted after a crash. After a reboot, run `start_pipeline.ps1` again |
+| One session type | See "Requirements": services started as Administrator are not stopped from a normal session |
+| Orderly stop depends on the service | If a Java service was started from a shell that ignores Ctrl+C, it does not receive the request and is ended after the waiting time (60 s for Kafka Connect, 90 s for the broker). This is safe, only slower and not clean |
+| Recognition by command line | Another project that also runs `python -m cdc.bridge` or `python -m consumer.consumer` on this machine would be taken for this one |
+| While the pipeline is stopped | PostgreSQL keeps its log for the replication slot (up to `max_slot_wal_keep_size`); rows inserted meanwhile are delivered after the next start |
